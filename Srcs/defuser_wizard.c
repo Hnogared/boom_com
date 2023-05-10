@@ -666,11 +666,12 @@ char    *print_command_prompt(int *fd, char *curr_cmd, char *last_cmd, int *view
     printw("Command: %-0300s", cmd);
     move(LINES - 1, 9 + strlen(cmd));
     
-    halfdelay(1);
-    ch = getch();
-    nocbreak();
+    //halfdelay(1);
+    //ch = getch();
+    //nocbreak();
+    ch = get_keypress();
     
-    if (ch == '\n')
+	if (ch == '\n')
     {
         // Write to serial port
         if (cmd[0] == '@')
