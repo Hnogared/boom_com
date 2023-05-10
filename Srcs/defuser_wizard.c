@@ -1,12 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <termios.h>
-#include <unistd.h>
-#include <ncurses.h>
-#include <sys/ioctl.h>
-#include <fcntl.h>
-#include <dirent.h>
+#include "../Includes/defuser_wizard.h"
 
 char     prompt = '$';
 char    *g_port = NULL;
@@ -53,18 +45,6 @@ int get_baudrate(struct termios *toptions)
         return (42000);
     if (cfgetispeed(toptions) == B9600)
         return (9600);
-    return (0);
-}
-
-int chrstr(char c, char *str)
-{
-    int i;
-
-    i = -1;
-    while (str[++i]){
-        if (str[i] == c)
-            return (1);
-    }
     return (0);
 }
 
