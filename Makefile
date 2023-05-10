@@ -4,7 +4,8 @@ SRCSRAW	= defuser_wizard.c	\
 		  strings_utils.c	\
 		  loading_menus.c	\
 		  select_menus.c	\
-		  defusing_menu.c
+		  main_menu.c		\
+		  check_cmds.c
 SRCSDIR	= Srcs
 SRCS	= $(addprefix $(SRCSDIR)/, $(SRCSRAW))
 

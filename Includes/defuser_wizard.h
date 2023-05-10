@@ -27,14 +27,16 @@ int		play_connect(char *port_name, int baudrate, struct termios *toptions);
 /* select_menus.c file */
 int		menu_baudrate_select(void);
 
-char    *menu_port_select(void);
+char	*menu_port_select(void);
 
-/* defusing_menu.c file */
+/* main_menu.c file */
 int		menu_defusing(int *fd, struct termios *toptions);
-char    *print_output(int fd, char *last_out, int view);
-char    *print_prompt(int *fd, char *curr_cmd, char *last_cmd, int *view, struct termios *toptions);
+char	*print_output(int fd, char *last_out, int view);
+char	*print_prompt(int *fd, char *curr_cmd, char *last_cmd, int *view, struct termios *toptions);
 
 /* check_cmds.c file */
-int check_help_cmds(char *command, int *view);
+int		check_view_cmds(char *command, int *view);
+int		check_help_cmds(char *command, int *view);
+int		check_conn_cmds(int *fd, char *command, int *view, struct termios *toptions);
 
 #endif
