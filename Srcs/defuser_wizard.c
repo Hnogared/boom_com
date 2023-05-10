@@ -66,110 +66,6 @@ int    get_keypress()
     return (0);
 }
 
-int    play_startup()
-{
-    int     i;
-    int     ch;
-    char    *padding;
-    char    *loading_bar;
-    
-    padding = "----------------------";
-    loading_bar = "############################################################";
-    
-    clear();
-    
-    mvprintw(0, 0, "Booting system");
-    halfdelay(5);
-    getch();
-    nocbreak();
-    
-    clear();
-    
-    cbreak();
-    timeout(100);
-        
-    i = 0;
-    while(i < 20)
-    {
-        mvprintw(0, 0, "%s ======[%.*s", padding, i * 3, "CONFEDERATION BOMB DEFUSER v4.6");
-        printw("]====== %s", padding);
-        getch();
-        i++;
-    }
-    
-    timeout(50);
-    
-    i = 0;
-    while (i <= 60)
-    {
-        mvprintw(3, 0, "LOADING SCRIPTS...");
-        if (i == 60)
-            printw(" (OK)");
-        printw("\n[%d%%][%.*s]", i * 100 / 60, i, loading_bar);
-        getch();
-        i++;
-    }
-    
-    i = 0;
-    while (i <= 30)
-    {
-        mvprintw(6, 0, "CHECKING FOR UPDATES...");
-        if (i == 30)
-            printw(" (Up to date)");
-        printw("\n[%d%%][%.*s]", i * 100 / 30, i * 2, loading_bar);
-        getch();
-        i++;
-    }
-    
-    i = 0;
-    while (i <= 30)
-    {
-        mvprintw(9, 0, "LOADING INTERFACE...");
-        if (i >= 20)
-            printw(" (OK)");
-        printw("\n[%d%%][%.*s]", i * 3 * 100 / 30 > 100 ? 100 : i * 3 * 100 / 30, i * 3, loading_bar);
-        mvprintw(12, 0, "LOADING MANUAL...");
-        if (i == 30)
-            printw(" (OK)");
-        printw("\n[%d%%][%.*s]", i * 100 / 30, i * 2, loading_bar);
-        getch();
-        i++;
-    }
-    
-    timeout(100);
-    
-    i = 0;
-    while (i <= 4)
-    {
-        mvprintw(15, 0, "CONFIGURING PORTS...");
-        if (i == 4)
-            printw(" (OK)");
-        if (i >= 1)
-            printw("\n [01] Open");
-        if (i >= 2)
-            printw("\n [02] Open");
-        if (i >= 3)
-            printw("\n [03] Open");
-        if (i == 4)
-            printw("\n [04] Open");
-        getch();
-        i++;
-    }
-    
-    mvprintw(LINES - 3, 0, "System operational.");
-    mvprintw(LINES - 1, 0, "I have read and agree to the terms of service (press space to confirm) ");
-    
-    nocbreak();
-    if (get_keypress() != ' ')
-    {
-        mvprintw(LINES - 1, 0, "Are you sure you don't want to agree to the terms of service and exit ? (y/N) ");
-        ch = get_keypress();
-        if (ch == 'y' || ch == 'Y')
-            return (1);
-    }
-    return (0);
-}
-
 char    **get_files_tab(char *directory)
 {
     int             i;
@@ -193,165 +89,6 @@ char    **get_files_tab(char *directory)
         closedir(d);
     }
     return (files_tab);
-}
-
-char    *menu_port_select(void)
-{
-    int     i;
-    int     ch;
-    char    *port;
-    char    **files_tab;
-
-    ch = 0;
-    files_tab = get_files_tab("/dev");
-    while (1)
-    {
-        clear();
-        refresh();
-        
-        mvprintw(0, 0, "[PORT SELECTION MENU]______________________________________________________________________\n");
-        if (files_tab)
-        {
-            i = 0;
-            while (files_tab[i])
-            {
-                printw(" [%02d]   %s\n", i + 1, files_tab[i]);
-                i++;
-            }
-            printw("\n [R]    Refresh\n");
-            printw(" [ESC]  Cancel\n");
-            if (ch)
-                mvprintw(LINES - 1, 0, ">> [ERROR] Invalid input, please try again: ");
-            else
-                mvprintw(LINES - 2, 0, "\nPlease type one of the above (1-%d | r-R | ESC) to proceed: ", i);
-        }
-        else
-            break ;
-        ch = get_keypress();
-        if (ch >= '1' && ch <= i + '0' && files_tab[ch - '0' - 1])
-        {
-            port = files_tab[ch - '0' - 1];
-            free(files_tab);
-            return(port);
-        }
-        if (ch == 'r' || ch == 'R')
-        {
-            ch = 0;
-            free(files_tab);
-            files_tab = get_files_tab("/dev");
-        }
-        if (ch == '\e')
-        {
-            free(files_tab);
-            break ;
-        }
-    }
-    return(NULL);
-}
-
-int menu_baudrate_select(void)
-{
-    int ch;
-
-    ch = 0;
-    while (1)
-    {
-        clear();
-        refresh();
-        
-        mvprintw(0, 0, "[BAUD RATE SELECTION MENU]_________________________________________________________________\n");
-        printw("This is where you select the connection speed between *CONFEDERATION BOMB DEFUSER v4.6*\nand the bomb.\n");
-        printw("The data/commands sent to the bomb have to be synchronized to its speed for it to be able\nto interpret them correctly.\n");
-        printw("Please be aware that an incorrect synchronisation speed may send corrupted data/commands tothe bomb and trigger its defense mechanisms.\n\n");
-        printw("For more informations on the topic of synchronizing communication speeds with a lethal bombplease read the fucking manual.\n\n");
-        printw(" [01]   9600\n");
-        printw(" [02]   42000\n");
-        printw(" [03]   115200\n");
-        printw("\n [ESC]  Cancel\n");
-        if (ch)
-            mvprintw(LINES - 1, 0, ">> [ERROR] Invalid input, please try again: ");
-        else
-            mvprintw(LINES - 2, 0, "\nPlease type one of the above (1-3 | ESC) to proceed: ");
-        ch = get_keypress();
-        if (ch >= '1' && ch <= '3')
-            return (ch - '0');
-        if (ch == 27)
-            return (0);
-    }
-    return(0);
-}
-
-int menu_port_connect(char *port_name, int baudrate, struct termios *toptions)
-{
-    int     i;
-    int     fd;
-    int     delay;
-    char    *loading_bar;
-    char    *separation;
-    
-    i = 0;
-    clear();
-    loading_bar = "########################################";
-    separation = "___________________________________________________________________________________________";
-    while (i <= 60)
-    {
-        mvprintw(0, 0, "[BOMB DEFUSER] Establishing connection...\n\n");
-        printw("Please DO NOT at any time shut down the defuser during this process.");
-
-        // Open serial port
-        if (i == 55)
-        {
-            fd = open(port_name, O_RDWR | O_NOCTTY);
-            if (fd == -1) {
-                endwin();
-                perror("open");
-                printf("%s\n", port_name);
-                return (-1);
-            }
-            *toptions = set_termios_opt(fd, baudrate);
-        }
-        
-        printw("\n%s\n\n\n", separation);
-        printw("Opening port...");
-        if (i >= 20)
-            printw(" (OK)");
-        printw("\nLOADING [%d%%][%.*s]\n", (i * 100 / 20) > 100 ? 100 : (i * 100 / 20), i * 2, loading_bar);
-        
-        if (i >= 20)
-        {
-            printw("\n\n\nDecoding encryption...");
-            if (i >= 40)
-                printw(" (OK)");
-            printw("\nLOADING [%d%%][%.*s]\n", ((i - 20) * 100 / 20) > 100 ? 100 : ((i - 20) * 100 / 20), (i - 20) * 2, loading_bar);
-        }
-        
-        if (i >= 40)
-        {
-            printw("\n\n\nAnalyzing firmware...");
-            if (i == 60)
-                printw(" (OK)");
-            printw("\nLOADING [%d%%][%.*s]\n", (i - 40) * 100 / 20, (i - 40) * 2, loading_bar);
-        }
-        
-        mvprintw(LINES - 4, 0, "%s\n", separation);
-        printw("PROGRESS [%d%%][%.*s]\n", i * 100 / 60, i, "############################################################");
-        
-        if (i == 60)
-            printw("Connecting to device.");
-        
-        delay = 100;
-        if (i < 20 || i > 40)
-            delay = 50;
-        if (i == 60)
-            delay = 150;
-        
-        cbreak();
-        timeout(delay);
-        getch();
-        nocbreak();
-        i++;
-    }
-    return (fd);
 }
 
 int check_help_cmds(char *command, int *view)
@@ -473,7 +210,7 @@ int check_conn_cmds(int *fd, char *command, int *view, struct termios *toptions)
         if (temp)
             g_port = ft_strjoin("/dev/", temp);
         if (g_port && *fd && cfgetispeed(toptions))
-            *fd = menu_port_connect(g_port, cfgetispeed(toptions), toptions);
+            *fd = play_connect(g_port, cfgetispeed(toptions), toptions);
         return (1);
     }
     else if (!left_strcmp("set-baudrate\n", command))
@@ -487,7 +224,7 @@ int check_conn_cmds(int *fd, char *command, int *view, struct termios *toptions)
         if (baudrate)
         {
             if (!*fd)
-                *fd = menu_port_connect(g_port, cfgetispeed(toptions), toptions);
+                *fd = play_connect(g_port, cfgetispeed(toptions), toptions);
             *toptions = set_termios_opt(*fd, baudrate);
         }
         return (1);
