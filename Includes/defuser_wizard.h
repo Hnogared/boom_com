@@ -29,4 +29,9 @@ int		menu_baudrate_select(void);
 
 char    *menu_port_select(void);
 
+/* defusing_menu.c file */
+int		menu_defusing(int *fd, struct termios *toptions);
+char    *print_output(int fd, char *last_out, int view);
+char    *print_prompt(int *fd, char *curr_cmd, char *last_cmd, int *view, struct termios *toptions);
+
 #endif
