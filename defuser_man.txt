@@ -1,0 +1,271 @@
+
+
+
+
+
+
+
+------------------ ======[CONFEDERATION BOMB DEFUSER v4.6 MANUAL]====== -------------------
+
+
+			  A user-friendly guide on how to defuse
+			potentially lethal exploding devices using
+			  the *CONFEDERATION BOMB DEFUSER v4.6*.
+
+
+
+
+
+
+
+
+
+
+		      @copyrighted(Confederation.tm)-Raxus Prime-1977
+
+ 0. Summary (p. 1)
+
+ I. Fresh start
+  1. Introduction (p. 3)
+  2. How it works (p. 4)
+  3. The interface (p. 5) 
+
+ II. How to
+  4. Connecting to a bomb (p. 7)
+  5. Using the disarmer (p. 9)
+
+ III. Documentation
+  6. The Gate Firewall
+  7. About timers
+  8. Rootkit  
+
+
+
+
+
+
+
+                                          -1-
+
+I. Fresh start
+
+1. Introduction
+
+The *CONFEDERATION BOMB DEFUSER v4.6* is an interface for using disarming tools on
+terrorist devices.
+
+There are two types of commands that can be sent through the program :
+ * Direct instructions that will be interpreted by the defuser itself.
+ * Instructions starting with '@' that will be sent to the bomb to interact with it.
+
+Please be aware that the Confederation cannot be taken as responsible for the outcome of
+any command sent to a bomb.
+The Confederation also won't consider itself responsible for any galactopolitical events
+the use of its tool lead to.
+
+If you have questions, requests or improvement ideas concerning the above cited program,
+you can contact us at notourproblem@gmail.com.
+
+
+
+
+					  -3-
+
+2. How it works (it just does you don't want to look at the code trust me)
+
+The *CONFEDERATION BOMB DEFUSER v4.6* is based on the C++3PO language.
+
+It will guide you through the disarming of several different devices following the
+standard rules of bomb making across the galaxy.
+It will do so by responding to commands you will send it and by providing you access to
+this manual.
+It is also an interpret between you and the problematic device thanks to its bomb-
+communicating extensions.
+
+
+
+
+
+
+
+
+
+
+
+
+                                          -4-
+
+3. The interface
+
+Useful commands:
+# exit			Close *CONFEDERATION BOMB DEFUSER v4.6*.
+# help nav		Display the commands for navigating through the defuser.
+# bomb view		Switch to bomb view only.
+# defuser view		Switch to defuser view only.
+# split view		Split the screen horizontally between the bomb and defuser views.
+
+* [keypress] 'TAB'	Cycle through the different views.
+
+Once launched, the *CONFEDERATION BOMB DEFUSER v4.6* presents itself on the 'DEFUSER GUI'
+tab. This is the window which represents your interactions with the defuse program and all
+of its tools.
+The output of the commands you send to the program's command interpreter will be displayed
+on this tab.
+
+You can access a second tab called 'BOMB INTERPRETER' by calling the 'bomb_view' command.
+This tab shows the output of the commands you send to the bomb you are connected to, if you
+are connected to one.
+To send a command specifically to the bomb, simply prefix it with a '@'.
+
+                                          -5-
+
+Using the 'split_view', you will switch to a view divided horizontally displaying both the
+'BOMB INTERPRETER' and 'DEFUSER GUI' tabs.
+The division will dynamically move right underneath the display of the first tab.
+
+You can rapidly cycle through all the display modes by pressing the 'TAB' key on your
+holo-keyboard.
+
+The view will automatically switch to the split view if a bomb command is run while the
+view is set to display only the 'DEFUSER GUI' tab or if a defuser command is run while the
+view is set to dispaly only the 'BOMB INTERPRETER' tab for an uninterrupted workflow.
+
+
+
+
+
+
+
+
+
+
+
+
+                                          -6-
+
+II. How to
+
+4. Connecting to a bomb
+
+Useful commands:
+# help connect	Quick guide on how to connect to a bomb.
+# set-port	Change the defuser output USB port.
+# set-baudrate	Change the port data transfer rate.
+
+The *CONFEDERATION BOMB DEFUSER v4.6* makes it easy to get access to a machine.
+Please make sure your personal defuser is connected through USB wire to the bomb.  
+You must first set the USB port you want to use as output to the bomb using 'set_port'.
+After setting up a port successfully, you will have to set a baud rate with 'set_baudrate'.
+
+Selecting the correct USB:
+Obviously, the USB port you will want to chose is the one being actively connected via
+cable to the machine to defuse.
+To help with chosing the port, the port setting menu -which lists all active ports at the
+exact moment- comes with a refresh option to help determining which one is the one you are 
+looking for.
+
+
+                                          -7-
+
+Choosing a baud rate:
+The baud rate corresponds to the speed at which this program will attempt to communicate
+with the bomb, which has its own rate predefined.
+It is primordial for them to run at the same rate to be able to exchange information
+without corrupting it, which could cause the bomb to misinterpret commands you send.
+There is currently no reliable way to extract the speed of a bomb without some guessing,
+making it trickier to get than the port.
+Here are recommended steps for guessing the correct baud rate according to your detonator :
+ 1) Set up a port using 'set_port'.
+ 2) Select an arbitrary baud via 'set_baudrate' and connect to the bomb.
+ 3) Check if it reacts to the connection : it should if you selected the correct port.
+    If it doesn't, then try to go back to step 1 and select a different output port. 
+ 4) If your bomb reacts to the connection but won't output on the 'BOMB INTERPRETER', then
+    you might have an incorrect baud rate selected : retry step 2 you should.
+    Else the communication has been safely established with the device.
+
+Please be careful to not send any command to the bomb while executing these steps, it might
+get corrupted and misinterpreted, which could lead to you exploding.
+The Confederation won't take any responsibility for casualties caused by an incorrect baud
+setup.
+
+
+                                          -8-
+
+5. Using the disarmer
+
+This program is to be used only for defusing circuits that are being used in a bomb system.
+Please refrain from connecting to any robot of the type R2D2, as they are prone to baud
+overload if too many instructions are sent to them via USB.
+
+Your commands will only have an effect it you are connected to a bomb, but never forget
+that you might in fact be connected to a bomb while using this program, don't take the
+situation too losely.
+
+We won't take responsibility for any human and/or informatic error while in use of the
+program.
+This manual can't be considered as a justification for giving us any amount of
+responsibility for what said error may have caused.
+
+
+
+
+
+
+
+
+                                          -9-
+
+III. Documentation
+
+6. The Gate Firewall
+
+The now forgotten Gate Firewall logo:
+
+                                       [][][][]
+                                     []        []
+                                    []          []
+                                    []          []
+                                     []        []
+                                       [][][][]
+
+Although having a great name and having been used a lot in the past, the Gate Firewall with
+its famous ring shaped logo doesn't stand up to its name anymore.
+
+It is an archaic connection restriction service that even an Earthling can crack open with
+ease now because of its reliance on simplistic binary 8 BUS I/O logic.
+
+The weakness of GF protection makes it a target of choice for hackers looking for an easy
+point of entry into a system.
+
+                                          -10-
+
+7. About timers
+
+Timers along with clocks are the guardians of order and reason, especially since the
+development of jump drives and lightspeed travel.
+It is known that a lightspeed traveler always keeps a clock on board -but also at home- to
+get reminded on how the meaning of passing time really is relative. You could spend your
+whole day at Tatooine watching pod racers without seeing it go by, or you could spend every
+hour long minute questioning your life choices solving a bomb.
+
+All of that to say that timers are primordial in a bomb system, which is to say that if you
+get to avoid the timer to get to its goal, you might have a chance to render the whole unit
+inoffensive.
+A long history of badly conceived timers has been known to just give up when cut off from
+their main power source. 
+It is also well known among bomb lovers that removing the wrong source of electricity from
+the timers of well developed bombs might make it go crazy and make them regret taking that
+last decision.
+
+It all comes down to the quality of the device you are facing.
+Try at your own risk.
+
+
+                                          -11-
+
+8. Rootkit
+
+Rootkits 
+
+                                          -12-
+ROOTKIT
