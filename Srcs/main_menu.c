@@ -1,4 +1,27 @@
-#include "../Include/defuser_wizard.h"
+#include "../Includes/defuser_wizard.h"
+
+char	g_prompt = '$';
+
+int	exec_command(int *fd, char *command, int *view, struct termios *toptions)
+{
+	if (!left_strcmp("exit\n", command))
+		exit_helper(*fd, command);
+	if (!left_strcmp("man\n", command))
+	{
+		system("less defuser_man.txt");
+		return (1);
+	}
+	if (check_help_cmds(command, view))
+		return (0);
+	if (check_view_cmds(command, view) || check_conn_cmds(fd, command, view, toptions))
+		return (1);
+	if (*view)
+	{
+		printw("ERROR >> Unknown command : %s\n", command);
+		printw("Type 'help' for a list of all defusing assistant commands or get the manual (cmd 'man').");
+	}
+	return (0);
+}
 
 char	*print_output(int fd, char *last_out, int view)
 {
@@ -37,7 +60,7 @@ char	*print_prompt(int *fd, char *curr_cmd, char *last_cmd, int *view, struct te
 		cmd = strdup(curr_cmd);
 	else
 		cmd = (char *) calloc(255, sizeof(char));
-		
+
 	if (last_cmd)
 	{
 		if (exec_command(fd, last_cmd, view, toptions))
@@ -99,7 +122,7 @@ char	*print_prompt(int *fd, char *curr_cmd, char *last_cmd, int *view, struct te
 	return (cmd);
 }
 
-int menu_defusing(int *fd, struct termios *toptions)
+int	menu_defusing(int *fd, struct termios *toptions)
 {
 	int		view;
 	char	*cmd = NULL;
@@ -122,12 +145,12 @@ int menu_defusing(int *fd, struct termios *toptions)
 		{
 			temp_out = crop(out);
 			if (strstr(out, "SUPERUSER"))
-				prompt = '#';
+				g_prompt = '#';
 		}
 		out = print_output(*fd, temp_out, view);
 		if ((view == 0 || view == 2) && *fd)
 		{
-			printw("\nUSER ~ %c ", prompt);
+			printw("\nUSER ~ %c ", g_prompt);
 			if (cmd && cmd[0] == '@')
 				printw(cmd + 1);
 			printw("\n");

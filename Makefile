@@ -1,7 +1,9 @@
 NAME	= defuser_wizard
 
 SRCSRAW	= defuser_wizard.c	\
+		  setup_functions.c	\
 		  strings_utils.c	\
+		  display_utils.c	\
 		  loading_menus.c	\
 		  select_menus.c	\
 		  main_menu.c		\

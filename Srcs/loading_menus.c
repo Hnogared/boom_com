@@ -6,21 +6,22 @@ int	play_startup(void)
 	int		ch;
 	char	*padding;
 	char	*loading_bar;
-	
+
 	padding = "----------------------";
 	loading_bar = "############################################################";
 	
 	clear();
-	
+
+	curs_set(0);
 	mvprintw(0, 0, "Booting system");
-	halfdelay(5);
+	timeout(500);
 	getch();
 	nocbreak();
-	
+
 	clear();
 	
 	cbreak();
-	timeout(100);
+	timeout(50);
 		
 	i = 0;
 	while(i < 20)
@@ -31,14 +32,14 @@ int	play_startup(void)
 		i++;
 	}
 	
-	timeout(50);
+	timeout(30);
 	
 	i = 0;
 	while (i <= 60)
 	{
 		mvprintw(3, 0, "LOADING SCRIPTS...");
 		if (i == 60)
-			printw(" (OK)");
+			printw("\t(OK)");
 		printw("\n[%d%%][%.*s]", i * 100 / 60, i, loading_bar);
 		getch();
 		i++;
@@ -49,7 +50,7 @@ int	play_startup(void)
 	{
 		mvprintw(6, 0, "CHECKING FOR UPDATES...");
 		if (i == 30)
-			printw(" (Up to date)");
+			printw("\t(Up to date)");
 		printw("\n[%d%%][%.*s]", i * 100 / 30, i * 2, loading_bar);
 		getch();
 		i++;
@@ -60,43 +61,48 @@ int	play_startup(void)
 	{
 		mvprintw(9, 0, "LOADING INTERFACE...");
 		if (i >= 20)
-			printw(" (OK)");
-		printw("\n[%d%%][%.*s]", i * 3 * 100 / 30 > 100 ? 100 : i * 3 * 100 / 30, i * 3, loading_bar);
+			printw("\t(OK)");
+		printw("\n[%d%%][%.*s]", i * 2 * 100 / 30 > 100 ? 100 : i * 2 * 100 / 30, i * 2, loading_bar);
 		mvprintw(12, 0, "LOADING MANUAL...");
 		if (i == 30)
-			printw(" (OK)");
-		printw("\n[%d%%][%.*s]", i * 100 / 30, i * 2, loading_bar);
+			printw("\t(OK)");
+		printw("\n[%d%%][%.*s]", i * 100 / 30, i * 3, loading_bar);
 		getch();
 		i++;
 	}
 	
 	timeout(100);
 	
+	put_separation(15);
+
 	i = 0;
 	while (i <= 4)
 	{
-		mvprintw(15, 0, "CONFIGURING PORTS...");
+		mvprintw(18, 0, "CONFIGURING PORTS...");
 		if (i == 4)
-			printw(" (OK)");
+			printw("\t(OK)");
 		if (i >= 1)
-			printw("\n [01] Open");
+			printw("\n [01] Ready");
 		if (i >= 2)
-			printw("\n [02] Open");
+			printw("\n [02] Ready");
 		if (i >= 3)
-			printw("\n [03] Open");
+			printw("\n [03] Ready");
 		if (i == 4)
-			printw("\n [04] Open");
+			printw("\n [04] Ready");
 		getch();
 		i++;
 	}
 	
-	mvprintw(LINES - 3, 0, "System operational.");
-	mvprintw(LINES - 1, 0, "I have read and agree to the terms of service (press space to confirm) ");
+	put_separation(LINES - 6);
+	
+	mvprintw(LINES - 4, 0, "System operational.\n\n");
+	curs_set(1);
+	printw("I have read and agree to the terms of service (press space to confirm) ");
 	
 	nocbreak();
 	if (get_keypress() != ' ')
 	{
-		mvprintw(LINES - 1, 0, "Are you sure you don't want to agree to the terms of service and exit ? (y/N) ");
+		mvprintw(LINES - 2, 0, "Are you sure you don't want to agree to the terms of service and exit ? (y/N) ");
 		ch = get_keypress();
 		if (ch == 'y' || ch == 'Y')
 			return (1);
@@ -110,12 +116,11 @@ int play_connect(char *port_name, int baudrate, struct termios *toptions)
 	int		fd;
 	int		delay;
 	char	*loading_bar;
-	char	*separation;
 	
 	i = 0;
 	clear();
 	loading_bar = "########################################";
-	separation = "___________________________________________________________________________________________";
+	curs_set(0);
 	while (i <= 60)
 	{
 		mvprintw(0, 0, "[BOMB DEFUSER] Establishing connection...\n\n");
@@ -126,6 +131,7 @@ int play_connect(char *port_name, int baudrate, struct termios *toptions)
 		{
 			fd = open(port_name, O_RDWR | O_NOCTTY);
 			if (fd == -1) {
+				curs_set(1);
 				endwin();
 				perror("open");
 				printf("%s\n", port_name);
@@ -134,8 +140,9 @@ int play_connect(char *port_name, int baudrate, struct termios *toptions)
 			*toptions = set_termios_opt(fd, baudrate);
 		}
 		
-		printw("\n%s\n\n\n", separation);
-		printw("Opening port...");
+		put_separation(3);
+
+		printw("\nOpening port...");
 		if (i >= 20)
 			printw(" (OK)");
 		printw("\nLOADING [%d%%][%.*s]\n", (i * 100 / 20) > 100 ? 100 : (i * 100 / 20), i * 2, loading_bar);
@@ -155,18 +162,13 @@ int play_connect(char *port_name, int baudrate, struct termios *toptions)
 				printw(" (OK)");
 			printw("\nLOADING [%d%%][%.*s]\n", (i - 40) * 100 / 20, (i - 40) * 2, loading_bar);
 		}
-		
-		mvprintw(LINES - 4, 0, "%s\n", separation);
-		printw("PROGRESS [%d%%][%.*s]\n", i * 100 / 60, i, "############################################################");
-		
-		if (i == 60)
-			printw("Connecting to device.");
+	
+		put_separation(LINES - 4);
+		printw("\n\nPROGRESS [%d%%][%.*s]\n", i * 100 / 60, i, "############################################################");
 		
 		delay = 100;
 		if (i < 20 || i > 40)
 			delay = 50;
-		if (i == 60)
-			delay = 150;
 		
 		cbreak();
 		timeout(delay);
@@ -174,5 +176,6 @@ int play_connect(char *port_name, int baudrate, struct termios *toptions)
 		nocbreak();
 		i++;
 	}
+	curs_set(1);
 	return (fd);
 }
