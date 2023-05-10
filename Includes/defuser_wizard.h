@@ -34,4 +34,7 @@ int		menu_defusing(int *fd, struct termios *toptions);
 char    *print_output(int fd, char *last_out, int view);
 char    *print_prompt(int *fd, char *curr_cmd, char *last_cmd, int *view, struct termios *toptions);
 
+/* check_cmds.c file */
+int check_help_cmds(char *command, int *view);
+
 #endif

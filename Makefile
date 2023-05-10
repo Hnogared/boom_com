@@ -3,7 +3,8 @@ NAME	= defuser_wizard
 SRCSRAW	= defuser_wizard.c	\
 		  strings_utils.c	\
 		  loading_menus.c	\
-		  select_menus.c
+		  select_menus.c	\
+		  defusing_menu.c
 SRCSDIR	= Srcs
 SRCS	= $(addprefix $(SRCSDIR)/, $(SRCSRAW))
 
