@@ -74,14 +74,13 @@ char	*print_prompt(int *fd, char *curr_cmd, char *last_cmd, int *view, struct te
 		printw("Type 'help_connect' or read the manual (cmd 'man') for how to connect to a bomb.");
 	}
 	// Print command prompt
-	mvprintw(LINES - 2, 0, "___________________________________________________________________________________________\n");
+	put_separation(LINES - 2);
 	printw("Command: %-0300s", cmd);
 	move(LINES - 1, 9 + strlen(cmd));
 	
-	//halfdelay(1);
-	//ch = getch();
-	//nocbreak();
-	ch = get_keypress();
+	halfdelay(1);
+	ch = getch();
+	nocbreak();
 	
 	if (ch == '\n')
 	{
@@ -105,20 +104,12 @@ char	*print_prompt(int *fd, char *curr_cmd, char *last_cmd, int *view, struct te
 				*view = 2;
 		}
 	}
-	else if (ch == 127)
-	{
-		// Backspace
-		if (strlen(cmd) > 0)
-			cmd[strlen(cmd) - 1] = '\0';
-	}
-	else if (ch != ERR)
-	{
-		// Add character to command buffer
-		if (strlen(cmd) < 253 && !((ch == ' ' || ch == '\t') && !strlen(cmd)))
-			cmd[strlen(cmd)] = ch;
-	}
-	if (ch == '\t')
+	else if (ch == 127 && strlen(cmd) > 0)
+		cmd[strlen(cmd) - 1] = '\0';
+	else if (ch == '\t')
 		*view = (*view + 1) % 3;
+	else if ((ch != '\n' && strlen(cmd) < 253 && ch != ERR && ch != '\t') || (ch == ' ' && strlen(cmd)))
+		cmd[strlen(cmd)] = ch;
 	return (cmd);
 }
 
@@ -148,7 +139,7 @@ int	menu_defusing(int *fd, struct termios *toptions)
 				g_prompt = '#';
 		}
 		out = print_output(*fd, temp_out, view);
-		if ((view == 0 || view == 2) && *fd)
+		if ((view == 0 || view == 2) && *fd >= 0)
 		{
 			printw("\nUSER ~ %c ", g_prompt);
 			if (cmd && cmd[0] == '@')

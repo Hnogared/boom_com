@@ -81,17 +81,16 @@ int play_connect(char *port_name, int baudrate, struct termios *toptions)
 	i = 0;
 	clear();
 	curs_set(0);
+	mvprintw(0, 0, "[BOMB DEFUSER] Establishing connection...\n\n");
+	printw("Please DO NOT at any time shut down the defuser during this process.");
+	put_separation(-1);
 	while (i <= 60)
 	{
-		mvprintw(0, 0, "[BOMB DEFUSER] Establishing connection...\n\n");
-		printw("Please DO NOT at any time shut down the defuser during this process.");
-		put_separation(3);
-
 		put_loading("OPENING PORT...", "\t(OK)", 5, i * 3, 60);
-		if (i >= 20)
+		if (i > 20 && i <= 40)
 			put_loading("DECODING ENCRYPTION...", "\t(OK)", LINES / 2, (i - 20) * 3, 60);
-		if (i >= 40)
-			put_loading("ANALYSING FIRMWARE...", "\t(OK)", LINES - 8, (i - 40) * 3, 60);
+		if (i > 40 && i <= 60)
+			put_loading("ANALYSING FIRMWARE...", "\t(OK)", LINES - 7, (i - 40) * 3, 60);
 		put_separation(LINES - 4);
 		put_loading("PROGRESS", NULL, LINES - 2, i, 60);
 
@@ -106,7 +105,7 @@ int play_connect(char *port_name, int baudrate, struct termios *toptions)
 			printf("%s\n", port_name);
 			return (-1);
 		}
-		else
+		else if (i == 55)
 			*toptions = set_termios_opt(fd, baudrate);
 		
 		delay = 100;

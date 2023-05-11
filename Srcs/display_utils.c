@@ -6,7 +6,10 @@ void	put_separation(int line)
 
 	sep = "_________________________________________________________________________________________________________________________";
 	if (line < 0)
-		line = 0;
+	{
+		printw("\n%.*s", COLS, sep);
+		return ;
+	}
 	if (line > LINES)
 		line = LINES;
 	mvprintw(line, 0, "%.*s", COLS, sep);
