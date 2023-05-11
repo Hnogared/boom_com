@@ -60,13 +60,11 @@ char	*print_prompt(int *fd, char *curr_cmd, char *last_cmd, int *view, struct te
 		cmd = strdup(curr_cmd);
 	else
 		cmd = (char *) calloc(255, sizeof(char));
-
 	if (last_cmd)
 	{
 		if (exec_command(fd, last_cmd, view, toptions))
 			return (NULL);
 	}
-	
 	if (!*fd)
 	{
 		mvprintw(LINES - 5, 0, "___________________________________________________________________________________________");
@@ -82,33 +80,30 @@ char	*print_prompt(int *fd, char *curr_cmd, char *last_cmd, int *view, struct te
 	ch = getch();
 	nocbreak();
 	
-	if (ch == '\n')
+	if (ch == '\n' && cmd[0] == '@')
 	{
-		// Write to serial port
-		if (cmd[0] == '@')
+		if (write(*fd, cmd + 1, strlen(cmd + 1)) == -1)
 		{
-			if (write(*fd, cmd + 1, strlen(cmd + 1)) == -1)
-			{
-				endwin();
-				perror("write");
-				exit(1);
-			}
-			memset(cmd, 0, strlen(cmd));
-			if (*view == 1)
-				*view = 2;
+			endwin();
+			perror("write");
+			exit(1);
 		}
-		else if (cmd[0] != '@' && strlen(cmd) < 253)
-		{
-			cmd[strlen(cmd)] = ch;
-			if (*view == 0)
-				*view = 2;
-		}
+		memset(cmd, 0, strlen(cmd));
+		if (*view == 1)
+			*view = 2;
+	}
+	else if (ch == '\n' && strlen(cmd) < 253)
+	{
+		cmd[strlen(cmd)] = ch;
+		if (*view == 0)
+			*view = 2;
 	}
 	else if (ch == 127 && strlen(cmd) > 0)
 		cmd[strlen(cmd) - 1] = '\0';
 	else if (ch == '\t')
 		*view = (*view + 1) % 3;
-	else if ((ch != '\n' && strlen(cmd) < 253 && ch != ERR && ch != '\t') || (ch == ' ' && strlen(cmd)))
+	else if (((ch != ERR && ch > ' ' && ch != 127) || (ch == ' ' && strlen(cmd)))
+		&& strlen(cmd) < 253)
 		cmd[strlen(cmd)] = ch;
 	return (cmd);
 }

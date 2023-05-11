@@ -11,6 +11,13 @@
 # include <fcntl.h>
 # include <dirent.h>
 
+typedef struct
+{
+	int				fd;
+	char			*port;
+	struct termios	*toptions;
+} portopts;
+
 extern char	*g_port;
 
 /* strings_utils.c file */
