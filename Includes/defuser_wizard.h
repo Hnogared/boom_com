@@ -22,6 +22,7 @@ void			free_str_tab(char **str_tab);
 
 /* display_utils.c file */
 void	put_separation(int line);
+void	put_loading(char *name, char *confirm, int line_pos, int progress, int length);
 
 /* loading_menus.c file */
 int				play_startup(void);

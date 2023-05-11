@@ -5,23 +5,18 @@ int	play_startup(void)
 	int		i;
 	int		ch;
 	char	*padding;
-	char	*loading_bar;
 
 	padding = "----------------------";
-	loading_bar = "############################################################";
 	
 	clear();
-
 	curs_set(0);
 	mvprintw(0, 0, "Booting system");
 	timeout(500);
 	getch();
-	nocbreak();
-
 	clear();
 	
 	cbreak();
-	timeout(50);
+	timeout(30);
 		
 	i = 0;
 	while(i < 20)
@@ -32,41 +27,18 @@ int	play_startup(void)
 		i++;
 	}
 	
-	timeout(30);
-	
 	i = 0;
-	while (i <= 60)
+	while (i <= 120)
 	{
-		mvprintw(3, 0, "LOADING SCRIPTS...");
-		if (i == 60)
-			printw("\t(OK)");
-		printw("\n[%d%%][%.*s]", i * 100 / 60, i, loading_bar);
-		getch();
-		i++;
-	}
-	
-	i = 0;
-	while (i <= 30)
-	{
-		mvprintw(6, 0, "CHECKING FOR UPDATES...");
-		if (i == 30)
-			printw("\t(Up to date)");
-		printw("\n[%d%%][%.*s]", i * 100 / 30, i * 2, loading_bar);
-		getch();
-		i++;
-	}
-	
-	i = 0;
-	while (i <= 30)
-	{
-		mvprintw(9, 0, "LOADING INTERFACE...");
-		if (i >= 20)
-			printw("\t(OK)");
-		printw("\n[%d%%][%.*s]", i * 2 * 100 / 30 > 100 ? 100 : i * 2 * 100 / 30, i * 2, loading_bar);
-		mvprintw(12, 0, "LOADING MANUAL...");
-		if (i == 30)
-			printw("\t(OK)");
-		printw("\n[%d%%][%.*s]", i * 100 / 30, i * 3, loading_bar);
+		if (i <= 60)
+			put_loading("LOADING SCRIPTS...", "\t(OK)", 3, i, 60);
+		if (i > 60 && i <= 90)
+			put_loading("CHECKING FOR UPDATES...", "\t(UP TO DATE)", 6, (i - 60) * 2, 60);
+		if (i > 90)
+		{
+			put_loading("LOADING INTERFACE...", "\t(OK)", 9, (i - 90) * 2, 60);
+			put_loading("LOADING MANUAL...", "\t(OK)", 12, (i - 90) * 3, 60);
+		}
 		getch();
 		i++;
 	}
@@ -75,34 +47,24 @@ int	play_startup(void)
 	
 	put_separation(15);
 
-	i = 0;
+	mvprintw(18, 0, "CONFIGURING PORTS...");
+	i = 1;
 	while (i <= 4)
 	{
-		mvprintw(18, 0, "CONFIGURING PORTS...");
-		if (i == 4)
-			printw("\t(OK)");
-		if (i >= 1)
-			printw("\n [01] Ready");
-		if (i >= 2)
-			printw("\n [02] Ready");
-		if (i >= 3)
-			printw("\n [03] Ready");
-		if (i == 4)
-			printw("\n [04] Ready");
+		printw("\n [0%d] Ready", i++);
 		getch();
-		i++;
 	}
 	
 	put_separation(LINES - 6);
 	
 	mvprintw(LINES - 4, 0, "System operational.\n\n");
 	curs_set(1);
-	printw("I have read and agree to the terms of service (press space to confirm) ");
+	printw("I read and agree to the terms of service (press space to confirm) ");
 	
 	nocbreak();
 	if (get_keypress() != ' ')
 	{
-		mvprintw(LINES - 2, 0, "Are you sure you don't want to agree to the terms of service and exit ? (y/N) ");
+		mvprintw(LINES - 2, 0, "Disagree to the terms of service and exit ? (y/N) ");
 		ch = get_keypress();
 		if (ch == 'y' || ch == 'Y')
 			return (1);
@@ -115,61 +77,42 @@ int play_connect(char *port_name, int baudrate, struct termios *toptions)
 	int		i;
 	int		fd;
 	int		delay;
-	char	*loading_bar;
 	
 	i = 0;
 	clear();
-	loading_bar = "########################################";
 	curs_set(0);
 	while (i <= 60)
 	{
 		mvprintw(0, 0, "[BOMB DEFUSER] Establishing connection...\n\n");
 		printw("Please DO NOT at any time shut down the defuser during this process.");
+		put_separation(3);
+
+		put_loading("OPENING PORT...", "\t(OK)", 5, i * 3, 60);
+		if (i >= 20)
+			put_loading("DECODING ENCRYPTION...", "\t(OK)", LINES / 2, (i - 20) * 3, 60);
+		if (i >= 40)
+			put_loading("ANALYSING FIRMWARE...", "\t(OK)", LINES - 8, (i - 40) * 3, 60);
+		put_separation(LINES - 4);
+		put_loading("PROGRESS", NULL, LINES - 2, i, 60);
 
 		// Open serial port
 		if (i == 55)
-		{
 			fd = open(port_name, O_RDWR | O_NOCTTY);
-			if (fd == -1) {
-				curs_set(1);
-				endwin();
-				perror("open");
-				printf("%s\n", port_name);
-				return (-1);
-			}
+		if (fd == -1 && i >= 55)
+		{
+			curs_set(1);
+			endwin();
+			perror("open");
+			printf("%s\n", port_name);
+			return (-1);
+		}
+		else
 			*toptions = set_termios_opt(fd, baudrate);
-		}
-		
-		put_separation(3);
-
-		printw("\nOpening port...");
-		if (i >= 20)
-			printw(" (OK)");
-		printw("\nLOADING [%d%%][%.*s]\n", (i * 100 / 20) > 100 ? 100 : (i * 100 / 20), i * 2, loading_bar);
-		
-		if (i >= 20)
-		{
-			printw("\n\n\nDecoding encryption...");
-			if (i >= 40)
-				printw(" (OK)");
-			printw("\nLOADING [%d%%][%.*s]\n", ((i - 20) * 100 / 20) > 100 ? 100 : ((i - 20) * 100 / 20), (i - 20) * 2, loading_bar);
-		}
-		
-		if (i >= 40)
-		{
-			printw("\n\n\nAnalyzing firmware...");
-			if (i == 60)
-				printw(" (OK)");
-			printw("\nLOADING [%d%%][%.*s]\n", (i - 40) * 100 / 20, (i - 40) * 2, loading_bar);
-		}
-	
-		put_separation(LINES - 4);
-		printw("\n\nPROGRESS [%d%%][%.*s]\n", i * 100 / 60, i, "############################################################");
 		
 		delay = 100;
-		if (i < 20 || i > 40)
-			delay = 50;
-		
+		if (i < 30 || i > 45)
+			delay = 75;
+
 		cbreak();
 		timeout(delay);
 		getch();
