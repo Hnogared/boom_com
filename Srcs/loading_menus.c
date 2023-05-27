@@ -72,10 +72,9 @@ int	play_startup(void)
 	return (0);
 }
 
-int play_connect(char *port_name, int baudrate, struct termios *toptions)
+void	play_connect(char *port_name, portopts *conn_options)
 {
 	int		i;
-	int		fd;
 	int		delay;
 	
 	i = 0;
@@ -96,17 +95,17 @@ int play_connect(char *port_name, int baudrate, struct termios *toptions)
 
 		// Open serial port
 		if (i == 55)
-			fd = open(port_name, O_RDWR | O_NOCTTY);
-		if (fd == -1 && i >= 55)
+			conn_options->fd = open(port_name, O_RDWR | O_NOCTTY);
+		if (conn_options->fd == -1 && i >= 55)
 		{
 			curs_set(1);
 			endwin();
 			perror("open");
 			printf("%s\n", port_name);
-			return (-1);
+			return ;
 		}
 		else if (i == 55)
-			*toptions = set_termios_opt(fd, baudrate);
+			*conn_options->toptions = set_termios_opt(conn_options->fd, cfgetispeed(conn_options->toptions));
 		
 		delay = 100;
 		if (i < 30 || i > 45)
@@ -119,5 +118,4 @@ int play_connect(char *port_name, int baudrate, struct termios *toptions)
 		i++;
 	}
 	curs_set(1);
-	return (fd);
 }

@@ -14,9 +14,10 @@
 typedef struct
 {
 	int				fd;
+	int				baudrate;
 	char			*port;
 	struct termios	*toptions;
-} portopts;
+}	portopts;
 
 extern char	*g_port;
 
@@ -28,27 +29,27 @@ char			*ft_strjoin(char *dest, char *src);
 void			free_str_tab(char **str_tab);
 
 /* display_utils.c file */
-void	put_separation(int line);
-void	put_loading(char *name, char *confirm, int line_pos, int progress, int length);
+void			put_separation(int line);
+void			put_loading(char *name, char *confirm, int line_pos, int progress, int length);
 
 /* loading_menus.c file */
 int				play_startup(void);
-int				play_connect(char *port_name, int baudrate, struct termios *toptions);
+void			play_connect(char *port_name, portopts *conn_options);
 
 /* select_menus.c file */
 int				menu_baudrate_select(void);
 char			*menu_port_select(void);
 
 /* main_menu.c file */
-int				exec_command(int *fd, char *command, int *view, struct termios *toptions);
-int				menu_defusing(int *fd, struct termios *toptions);
+int				exec_command(portopts *conn_options, char *command, int *view);
+int				menu_defusing(portopts *conn_options);
 char			*print_output(int fd, char *last_out, int view);
-char			*print_prompt(int *fd, char *curr_cmd, char *last_cmd, int *view, struct termios *toptions);
+char			*print_prompt(portopts *conn_options, char *curr_cmd, char *last_cmd, int *view);
 
 /* check_cmds.c file */
 int				check_view_cmds(char *command, int *view);
 int				check_help_cmds(char *command, int *view);
-int				check_conn_cmds(int *fd, char *command, int *view, struct termios *toptions);
+int				check_conn_cmds(portopts *conn_options, char *command, int *view);
 
 /* setup_functions.c */
 int				get_keypress(void);

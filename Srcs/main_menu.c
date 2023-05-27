@@ -2,10 +2,10 @@
 
 char	g_prompt = '$';
 
-int	exec_command(int *fd, char *command, int *view, struct termios *toptions)
+int	exec_command(portopts *conn_options, char *command, int *view)
 {
 	if (!left_strcmp("exit\n", command))
-		exit_helper(*fd, command);
+		exit_helper(conn_options->fd, command);
 	if (!left_strcmp("man\n", command))
 	{
 		system("less defuser_man.txt");
@@ -13,7 +13,7 @@ int	exec_command(int *fd, char *command, int *view, struct termios *toptions)
 	}
 	if (check_help_cmds(command, view))
 		return (0);
-	if (check_view_cmds(command, view) || check_conn_cmds(fd, command, view, toptions))
+	if (check_view_cmds(command, view) || check_conn_cmds(conn_options, command, view))
 		return (1);
 	if (*view)
 	{
@@ -51,7 +51,7 @@ char	*print_output(int fd, char *last_out, int view)
 	return (last_out);
 }
 
-char	*print_prompt(int *fd, char *curr_cmd, char *last_cmd, int *view, struct termios *toptions)
+char	*print_prompt(portopts *conn_options, char *curr_cmd, char *last_cmd, int *view)
 {
 	int		ch;
 	char	*cmd;
@@ -62,10 +62,10 @@ char	*print_prompt(int *fd, char *curr_cmd, char *last_cmd, int *view, struct te
 		cmd = (char *) calloc(255, sizeof(char));
 	if (last_cmd)
 	{
-		if (exec_command(fd, last_cmd, view, toptions))
+		if (exec_command(conn_options, last_cmd, view))
 			return (NULL);
 	}
-	if (!*fd)
+	if (conn_options->fd < 0)
 	{
 		mvprintw(LINES - 5, 0, "___________________________________________________________________________________________");
 		printw("/!\\ Currently not connected to any device. /!\\\n");
@@ -82,7 +82,7 @@ char	*print_prompt(int *fd, char *curr_cmd, char *last_cmd, int *view, struct te
 	
 	if (ch == '\n' && cmd[0] == '@')
 	{
-		if (write(*fd, cmd + 1, strlen(cmd + 1)) == -1)
+		if (write(conn_options->fd, cmd + 1, strlen(cmd + 1)) == -1)
 		{
 			endwin();
 			perror("write");
@@ -108,7 +108,7 @@ char	*print_prompt(int *fd, char *curr_cmd, char *last_cmd, int *view, struct te
 	return (cmd);
 }
 
-int	menu_defusing(int *fd, struct termios *toptions)
+int	menu_defusing(portopts *conn_options)
 {
 	int		view;
 	char	*cmd = NULL;
@@ -124,17 +124,17 @@ int	menu_defusing(int *fd, struct termios *toptions)
 		
 		// Print the output of the bomb
 		if (view == 0)
-			mvprintw(0, 0, "[1 BOMB INTERPRETOR][2 ...]_________________________________(PORT %-15.15s @ %06d)", g_port, get_baudrate(toptions));
+			mvprintw(0, 0, "[1 BOMB INTERPRETOR][2 ...]_________________________________(PORT %-15.15s @ %06d)", g_port, get_baudrate(conn_options->toptions));
 		if (view == 2)
-			mvprintw(0, 0, "[1 BOMB INTERPRETOR]________________________________________(PORT %-15.15s @ %06d)", g_port, get_baudrate(toptions));
+			mvprintw(0, 0, "[1 BOMB INTERPRETOR]________________________________________(PORT %-15.15s @ %06d)", g_port, get_baudrate(conn_options->toptions));
 		if (out)
 		{
 			temp_out = crop(out);
 			if (strstr(out, "SUPERUSER"))
 				g_prompt = '#';
 		}
-		out = print_output(*fd, temp_out, view);
-		if ((view == 0 || view == 2) && *fd >= 0)
+		out = print_output(conn_options->fd, temp_out, view);
+		if ((view == 0 || view == 2) && conn_options->fd >= 0)
 		{
 			printw("\nUSER ~ %c ", g_prompt);
 			if (cmd && cmd[0] == '@')
@@ -144,11 +144,11 @@ int	menu_defusing(int *fd, struct termios *toptions)
 		
 		// Print the debugger console and the output of the rpi
 		if (view == 1)
-			mvprintw(0, 0, "[1 ...][2 DEFUSER GUI]______________________________________(PORT %-15.15s @ %06d)\n", g_port, get_baudrate(toptions));
+			mvprintw(0, 0, "[1 ...][2 DEFUSER GUI]______________________________________(PORT %-15.15s @ %06d)\n", g_port, get_baudrate(conn_options->toptions));
 		if (view == 2)
 			printw("______________________[2 DEFUSER GUI]______________________________________________________\n");
 		temp_cmd = cmd;
-		cmd = print_prompt(fd, cmd, last_cmd, &view, toptions);
+		cmd = print_prompt(conn_options, cmd, last_cmd, &view);
 		if (temp_cmd)
 			free(temp_cmd);
 		if (!cmd || (cmd && cmd[strlen(cmd) - 1] == '\n'))

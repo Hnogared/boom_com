@@ -20,11 +20,11 @@ int	get_keypress(void)
 
 int	get_baudrate(struct termios *toptions)
 {
-	if (cfgetispeed(toptions) == B115200)
+	if (toptions && cfgetispeed(toptions) == B115200)
 		return (115200);
-	if (cfgetispeed(toptions) == B38400)
+	if (toptions && cfgetispeed(toptions) == B38400)
 		return (42000);
-	if (cfgetispeed(toptions) == B9600)
+	if (toptions && cfgetispeed(toptions) == B9600)
 		return (9600);
 	return (0);
 }

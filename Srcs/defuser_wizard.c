@@ -4,22 +4,23 @@ char	*g_port = NULL;
 
 int	main(void)
 {
-    int				fd;
-    struct termios	toptions;
+    portopts	*conn_options;
 
     // Initialize ncurses
     initscr();
     cbreak();
     noecho();
 
-    fd = -1;
-    if (play_startup())
-		exit_helper(fd, NULL);
+	conn_options = (portopts *) calloc(1, sizeof(portopts));
+    conn_options->fd = -1;
+    conn_options->toptions = NULL;
+	if (play_startup())
+		exit_helper(conn_options->fd, NULL);
 
-    menu_defusing(&fd, &toptions);
+    menu_defusing(conn_options);
 
     endwin();
-    close(fd);
+    close(conn_options->fd);
 
     return 0;
 }

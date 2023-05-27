@@ -20,7 +20,7 @@ int	check_view_cmds(char *command, int *view)
 	return (0);
 }
 
-int	check_conn_cmds(int *fd, char *command, int *view, struct termios *toptions)
+int	check_conn_cmds(portopts *conn_options, char *command, int *view)
 {
 	int		baudrate;
 	char	*temp;
@@ -30,8 +30,8 @@ int	check_conn_cmds(int *fd, char *command, int *view, struct termios *toptions)
 		temp = menu_port_select();
 		if (temp)
 			g_port = ft_strjoin("/dev/", temp);
-		if (g_port && *fd && cfgetispeed(toptions))
-			*fd = play_connect(g_port, cfgetispeed(toptions), toptions);
+		if (g_port && conn_options->fd && cfgetispeed(conn_options->toptions))
+			play_connect(g_port, conn_options);
 		return (1);
 	}
 	else if (!left_strcmp("set-baudrate\n", command))
@@ -44,9 +44,9 @@ int	check_conn_cmds(int *fd, char *command, int *view, struct termios *toptions)
 		baudrate = menu_baudrate_select();
 		if (baudrate)
 		{
-			if (!*fd)
-				*fd = play_connect(g_port, cfgetispeed(toptions), toptions);
-			*toptions = set_termios_opt(*fd, baudrate);
+			if (conn_options->fd < -1)
+				play_connect(g_port, conn_options);
+			*conn_options->toptions = set_termios_opt(conn_options->fd, conn_options->baudrate);
 		}
 		return (1);
 	}
