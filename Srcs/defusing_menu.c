@@ -1,23 +1,21 @@
 #include "../Includes/defuser_wizard.h"
 
-char	g_prompt = '$';
-
-int	exec_command(portopts **conn_options, char *command, dispopts **disp_options)
+int	exec_command(portopts **conn_options, dispopts **disp_options)
 {
-	if (!left_strcmp("exit\n", command))
-		exit_helper((*conn_options)->fd, command);
-	if (!left_strcmp("man\n", command))
+	if (!left_strcmp("exit\n", (*disp_options)->cmd))
+		exit_helper((*conn_options)->fd, NULL);
+	if (!left_strcmp("man\n", (*disp_options)->cmd))
 	{
 		system("less defuser_man.txt");
 		return (1);
 	}
-	if (check_help_cmds(command, disp_options))
+	if (check_help_cmds((*disp_options)->cmd, disp_options))
 		return (0);
-	if (check_view_cmds(command, disp_options) || check_conn_cmds(conn_options, command, disp_options))
+	if (check_view_cmds((*disp_options)->cmd, disp_options) || check_conn_cmds(conn_options, (*disp_options)->cmd, disp_options))
 		return (1);
 	if ((*disp_options)->view)
 	{
-		printw("ERROR >> Unknown command : %s\n", command);
+		printw("ERROR >> Unknown command : %s\n", (*disp_options)->cmd);
 		printw("Type 'help' for a list of all defusing assistant commands or get the manual (cmd 'man').");
 	}
 	return (0);
@@ -51,19 +49,54 @@ char	*print_output(int fd, char *last_out, dispopts **disp_options)
 	return (last_out);
 }
 
-char	*print_prompt(portopts **conn_options, char *curr_cmd, char *last_cmd, dispopts **disp_options)
+void	update_command(dispopts **disp_options, portopts **conn_options)
 {
 	int		ch;
-	char	*cmd;
+
+	halfdelay(1);
+	ch = getch();
+	nocbreak();
 	
-	if (curr_cmd)
-		cmd = strdup(curr_cmd);
-	else
-		cmd = (char *) calloc(255, sizeof(char));
-	if (last_cmd)
+	if (ch == '\n' && (*disp_options)->cmd[0] == '@')
 	{
-		if (exec_command(conn_options, last_cmd, disp_options))
-			return (NULL);
+		if (write((*conn_options)->fd, (*disp_options)->cmd + 1, (*disp_options)->cmd_len - 1) == -1)
+		{
+			endwin();
+			perror("write");
+			exit(1);
+		}
+		memset((*disp_options)->cmd, 0, (*disp_options)->cmd_len);
+		(*disp_options)->cmd_len = 0;
+		if ((*disp_options)->view == 1)
+			(*disp_options)->view = 2;
+	}
+	else if (ch == '\n' && (*disp_options)->cmd_len < 253)
+	{
+		(*disp_options)->cmd[(*disp_options)->cmd_len] = ch;
+		if ((*disp_options)->view == 0)
+			(*disp_options)->view = 2;
+	}
+	else if (ch == 127 && (*disp_options)->cmd_len > 0)
+	{
+		(*disp_options)->cmd[(*disp_options)->cmd_len - 1] = '\0';
+		(*disp_options)->cmd_len--;
+	}
+	else if (ch == '\t')
+		(*disp_options)->view = ((*disp_options)->view + 1) % 3;
+	else if (((ch != ERR && ch > ' ' && ch != 127) || (ch == ' ' && (*disp_options)->cmd_len))
+		&& (*disp_options)->cmd_len < 253)
+	{
+		(*disp_options)->cmd[(*disp_options)->cmd_len] = ch;
+		(*disp_options)->cmd_len++;
+	}
+}
+
+void	print_prompt(portopts **conn_options, dispopts **disp_options)
+{
+	if ((*disp_options)->cmd[(*disp_options)->cmd_len] == '\n')
+	{
+		if (exec_command(conn_options, disp_options))
+			return ;
 	}
 	if ((*conn_options)->fd < 0)
 	{
@@ -73,46 +106,14 @@ char	*print_prompt(portopts **conn_options, char *curr_cmd, char *last_cmd, disp
 	}
 	// Print command prompt
 	put_separation(LINES - 2, COLS);
-	printw("Command: %-300s", cmd);
-	move(LINES - 1, 9 + strlen(cmd));
+	printw("Command: %-300s", (*disp_options)->cmd);
+	move(LINES - 1, 9 + (*disp_options)->cmd_len);
 	
-	halfdelay(1);
-	ch = get_keypress();
-	nocbreak();
-	
-	if (ch == '\n' && cmd[0] == '@')
-	{
-		if (write((*conn_options)->fd, cmd + 1, strlen(cmd + 1)) == -1)
-		{
-			endwin();
-			perror("write");
-			exit(1);
-		}
-		memset(cmd, 0, strlen(cmd));
-		if ((*disp_options)->view == 1)
-			(*disp_options)->view = 2;
-	}
-	else if (ch == '\n' && strlen(cmd) < 253)
-	{
-		cmd[strlen(cmd)] = ch;
-		if ((*disp_options)->view == 0)
-			(*disp_options)->view = 2;
-	}
-	else if (ch == 127 && strlen(cmd) > 0)
-		cmd[strlen(cmd) - 1] = '\0';
-	else if (ch == '\t')
-		(*disp_options)->view = ((*disp_options)->view + 1) % 3;
-	else if (((ch != ERR && ch > ' ' && ch != 127) || (ch == ' ' && strlen(cmd)))
-		&& strlen(cmd) < 253)
-		cmd[strlen(cmd)] = ch;
-	return (cmd);
+	update_command(disp_options, conn_options);
 }
 
 int	menu_defusing(portopts **conn_options, dispopts **disp_options)
 {
-	char	*cmd = NULL;
-	char	*temp_cmd;
-	char	*last_cmd = NULL;
 	char	*out = NULL;
 	char	*temp_out = NULL;
 
@@ -132,18 +133,18 @@ int	menu_defusing(portopts **conn_options, dispopts **disp_options)
 			mvprintw(0, COLS - 31, "(PORT %-15.15s @ %06d)\n", (*conn_options)->port, get_baudrate((*conn_options)->toptions));
 		else
 			mvprintw(0, COLS - 9, "(No port)\n");
-		if (out && g_prompt == '$')
+		if (out && (*disp_options)->prompt_char == '$')
 		{
 			temp_out = crop(out);
 			if (strstr(out, "SUPERUSER"))
-				g_prompt = '#';
+				(*disp_options)->prompt_char = '#';
 		}
 		out = print_output((*conn_options)->fd, temp_out, disp_options);
 		if (((*disp_options)->view == 0 || (*disp_options)->view == 2) && (*conn_options)->fd >= 0)
 		{
-			printw("\nUSER ~ %c ", g_prompt);
-			if (cmd && cmd[0] == '@')
-				printw(cmd + 1);
+			printw("\nUSER ~ %c ", (*disp_options)->prompt_char);
+			if ((*disp_options)->cmd && (*disp_options)->cmd[0] == '@')
+				printw((*disp_options)->cmd + 1);
 			printw("\n");
 		}
 		
@@ -154,23 +155,7 @@ int	menu_defusing(portopts **conn_options, dispopts **disp_options)
 			put_separation(-1, COLS - 37);
 			printw("\n");
 		}
-		temp_cmd = cmd;
-		cmd = print_prompt(conn_options, cmd, last_cmd, disp_options);
-		if (temp_cmd)
-			free(temp_cmd);
-		if (!cmd || (cmd && cmd[strlen(cmd) - 1] == '\n'))
-		{
-			if (last_cmd)
-			{
-				free(last_cmd);
-				last_cmd = NULL;
-			}
-			if (cmd)
-			{
-				last_cmd = strdup(cmd);
-				memset(cmd, 0, strlen(cmd));
-			}
-		}
+		print_prompt(conn_options, disp_options);
 	}
 	return (0);
 }

@@ -25,8 +25,11 @@ typedef struct	portopts
 typedef struct	dispopts
 {
 	int		view;
-	char	*command;
+	int		cmd_len;
+	char	prompt_char;
+	char	cmd[255];
 	char	*bomb_output;
+	WINDOW	*win;
 }				dispopts;
 
 /* strings_utils.c file */
@@ -49,10 +52,10 @@ int				menu_baudrate_select(void);
 char			*menu_port_select(void);
 
 /* defusing_menu.c file */
-int				exec_command(portopts **conn_options, char *command, dispopts **disp_options);
+int				exec_command(portopts **conn_options, dispopts **disp_options);
 int				menu_defusing(portopts **conn_options, dispopts **disp_options);
 char			*print_output(int fd, char *last_out, dispopts **disp_options);
-char			*print_prompt(portopts **conn_options, char *curr_cmd, char *last_cmd, dispopts **disp_options);
+void			print_prompt(portopts **conn_options, dispopts **disp_options);
 
 /* check_cmds.c file */
 int				check_view_cmds(char *command, dispopts **disp_options);
