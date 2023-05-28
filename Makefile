@@ -1,25 +1,26 @@
-NAME	= defuser_wizard
+NAME		= defuser_wizard
 
-SRCSRAW	= defuser_wizard.c	\
-		  setup_functions.c	\
-		  strings_utils.c	\
-		  display_utils.c	\
-		  loading_menus.c	\
-		  select_menus.c	\
-		  main_menu.c		\
-		  check_cmds.c
-SRCSDIR	= Srcs
-SRCS	= $(addprefix $(SRCSDIR)/, $(SRCSRAW))
+SRCS_DIR	= Srcs
+SRCS_MAIN	= main.c			\
+		  	  loading_menus.c	\
+		  	  select_menus.c	\
+		  	  defusing_menu.c
 
-OBJS	= $(addprefix $(OBJSDIR)/, $(SRCSRAW:.c=.o))
-OBJSDIR	= Objs
+UTILS_DIR	= Srcs/Utils
+SRCS_UTILS	= check_cmds.c		\
+		  	  display_utils.c	\
+		  	  setup_functions.c	\
+		  	  strings_utils.c	\
 
-INCL	= Includes
+OBJS_DIR	= Objs
+OBJS		= $(addprefix $(OBJS_DIR)/, $(SRCS_MAIN:.c=.o) $(SRCS_UTILS:.c=.o))
 
-CC		= gcc
-CFLAGS	= -Wall -Werror -Wextra -lncurses
+INCL		= Includes
 
-RM		= rm -rf
+CC			= gcc
+CFLAGS		= -Wall -Werror -Wextra -lncurses
+
+RM			= rm -rf
 
 
 all:		$(NAME)
@@ -27,10 +28,17 @@ all:		$(NAME)
 $(NAME):	$(OBJS)
 	$(CC) $^ -o $@ -I $(INCL) $(CFLAGS)
 
-$(OBJSDIR)/%.o:	$(SRCSDIR)/%.c
-	@if [ ! -d $(OBJSDIR) ]; then	\
-		mkdir $(OBJSDIR);			\
-		echo "mkdir $(OBJSDIR)";	\
+$(OBJS_DIR)/%.o:	$(SRCS_DIR)/%.c
+	@if [ ! -d $(OBJS_DIR) ]; then	\
+		mkdir $(OBJS_DIR);			\
+		echo "mkdir $(OBJS_DIR)";	\
+	fi
+	$(CC) -c $< -o $@ -I $(INCL) $(CFLAGS)
+
+$(OBJS_DIR)/%.o:	$(UTILS_DIR)/%.c
+	@if [ ! -d $(OBJS_DIR) ]; then	\
+		mkdir $(OBJS_DIR);			\
+		echo "mkdir $(OBJS_DIR)";	\
 	fi
 	$(CC) -c $< -o $@ -I $(INCL) $(CFLAGS)
 

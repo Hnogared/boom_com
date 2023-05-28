@@ -10,16 +10,24 @@
 # include <sys/ioctl.h>
 # include <fcntl.h>
 # include <dirent.h>
+# include <errno.h>
 
-typedef struct
+# define BUFF_SIZE	9
+
+typedef struct	portopts
 {
 	int				fd;
 	int				baudrate;
 	char			*port;
 	struct termios	*toptions;
-}	portopts;
+}				portopts;
 
-extern char	*g_port;
+typedef struct	dispopts
+{
+	int		view;
+	char	*command;
+	char	*bomb_output;
+}				dispopts;
 
 /* strings_utils.c file */
 int				chrstr(char c, char *str);
@@ -29,27 +37,27 @@ char			*ft_strjoin(char *dest, char *src);
 void			free_str_tab(char **str_tab);
 
 /* display_utils.c file */
-void			put_separation(int line);
+void			put_separation(int line, int width);
 void			put_loading(char *name, char *confirm, int line_pos, int progress, int length);
 
 /* loading_menus.c file */
 int				play_startup(void);
-void			play_connect(char *port_name, portopts *conn_options);
+void			play_connect(portopts **conn_options);
 
 /* select_menus.c file */
 int				menu_baudrate_select(void);
 char			*menu_port_select(void);
 
-/* main_menu.c file */
-int				exec_command(portopts *conn_options, char *command, int *view);
-int				menu_defusing(portopts *conn_options);
-char			*print_output(int fd, char *last_out, int view);
-char			*print_prompt(portopts *conn_options, char *curr_cmd, char *last_cmd, int *view);
+/* defusing_menu.c file */
+int				exec_command(portopts **conn_options, char *command, dispopts **disp_options);
+int				menu_defusing(portopts **conn_options, dispopts **disp_options);
+char			*print_output(int fd, char *last_out, dispopts **disp_options);
+char			*print_prompt(portopts **conn_options, char *curr_cmd, char *last_cmd, dispopts **disp_options);
 
 /* check_cmds.c file */
-int				check_view_cmds(char *command, int *view);
-int				check_help_cmds(char *command, int *view);
-int				check_conn_cmds(portopts *conn_options, char *command, int *view);
+int				check_view_cmds(char *command, dispopts **disp_options);
+int				check_help_cmds(char *command, dispopts **disp_options);
+int				check_conn_cmds(portopts **conn_options, char *command, dispopts **disp_options);
 
 /* setup_functions.c */
 int				get_keypress(void);

@@ -1,18 +1,21 @@
 #include "../Includes/defuser_wizard.h"
 
-void	put_separation(int line)
+void	put_separation(int line, int width)
 {
+	int		sep_len;
 	char	*sep;
 
-	sep = "_________________________________________________________________________________________________________________________";
-	if (line < 0)
-	{
-		printw("\n%.*s", COLS, sep);
-		return ;
-	}
+	sep = "__________________________________________________";
+	sep_len = 50;
 	if (line > LINES)
 		line = LINES;
-	mvprintw(line, 0, "%.*s", COLS, sep);
+	if (line >= 0)
+		move(line, 0);
+	while (width > 0)
+	{
+		printw("%.*s", width, sep);
+		width -= sep_len;
+	}
 }
 
 void	put_loading(char *name, char *confirm, int line_pos, int progress, int length)

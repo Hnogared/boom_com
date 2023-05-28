@@ -45,7 +45,7 @@ int	play_startup(void)
 	
 	timeout(100);
 	
-	put_separation(15);
+	put_separation(15, COLS);
 
 	mvprintw(18, 0, "CONFIGURING PORTS...");
 	i = 1;
@@ -55,7 +55,7 @@ int	play_startup(void)
 		getch();
 	}
 	
-	put_separation(LINES - 6);
+	put_separation(LINES - 6, COLS);
 	
 	mvprintw(LINES - 4, 0, "System operational.\n\n");
 	curs_set(1);
@@ -72,7 +72,7 @@ int	play_startup(void)
 	return (0);
 }
 
-void	play_connect(char *port_name, portopts *conn_options)
+void	play_connect(portopts **conn_options)
 {
 	int		i;
 	int		delay;
@@ -82,7 +82,7 @@ void	play_connect(char *port_name, portopts *conn_options)
 	curs_set(0);
 	mvprintw(0, 0, "[BOMB DEFUSER] Establishing connection...\n\n");
 	printw("Please DO NOT at any time shut down the defuser during this process.");
-	put_separation(-1);
+	put_separation(-1, COLS);
 	while (i <= 60)
 	{
 		put_loading("OPENING PORT...", "\t(OK)", 5, i * 3, 60);
@@ -90,22 +90,22 @@ void	play_connect(char *port_name, portopts *conn_options)
 			put_loading("DECODING ENCRYPTION...", "\t(OK)", LINES / 2, (i - 20) * 3, 60);
 		if (i > 40 && i <= 60)
 			put_loading("ANALYSING FIRMWARE...", "\t(OK)", LINES - 7, (i - 40) * 3, 60);
-		put_separation(LINES - 4);
+		put_separation(LINES - 4, COLS);
 		put_loading("PROGRESS", NULL, LINES - 2, i, 60);
 
 		// Open serial port
 		if (i == 55)
-			conn_options->fd = open(port_name, O_RDWR | O_NOCTTY);
-		if (conn_options->fd == -1 && i >= 55)
+			(*conn_options)->fd = open((*conn_options)->port, O_RDWR | O_NOCTTY);
+		if (!((*conn_options)->fd > -1) && i >= 55)
 		{
 			curs_set(1);
 			endwin();
-			perror("open");
-			printf("%s\n", port_name);
-			return ;
+			printf("%s\n", strerror(errno));
+			printf("%s\n", (*conn_options)->port);
+			exit_helper(-1, NULL);
 		}
 		else if (i == 55)
-			*conn_options->toptions = set_termios_opt(conn_options->fd, cfgetispeed(conn_options->toptions));
+			*(*conn_options)->toptions = set_termios_opt((*conn_options)->fd, cfgetispeed((*conn_options)->toptions));
 		
 		delay = 100;
 		if (i < 30 || i > 45)

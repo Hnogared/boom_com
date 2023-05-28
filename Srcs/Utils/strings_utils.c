@@ -70,9 +70,9 @@ void	free_str_tab(char **str_tab)
 	i = 0;
 	while (str_tab[i])
 	{
-		if (str_tab[i])
-			free(str_tab[i]);
+		free(str_tab[i]);
 		i++;
 	}
 	free(str_tab);
+	str_tab = NULL;
 }

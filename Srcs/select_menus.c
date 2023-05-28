@@ -9,20 +9,20 @@ char	*menu_port_select(void)
 
 	ch = 0;
 	files_tab = get_files_tab("/dev");
+	port = NULL;
 	while (1)
 	{
 		clear();
 		refresh();
 		
-		mvprintw(0, 0, "[PORT SELECTION MENU]______________________________________________________________________\n");
+		put_separation(0, COLS);
+		mvprintw(0, 0, "[PORT SELECTION MENU]");
+		move(2, 0);
 		if (files_tab)
 		{
-			i = 0;
-			while (files_tab[i])
-			{
+			i = -1;
+			while (files_tab[++i])
 				printw(" [%02d]   %s\n", i + 1, files_tab[i]);
-				i++;
-			}
 			printw("\n [R]	Refresh\n");
 			printw(" [ESC]  Cancel\n");
 			if (ch)
@@ -33,7 +33,7 @@ char	*menu_port_select(void)
 		else
 			break ;
 		ch = get_keypress();
-		if (ch >= '1' && ch <= i + '0' && files_tab[ch - '0' - 1])
+		if (ch >= '1' && ch <= '0' + i)
 		{
 			port = files_tab[ch - '0' - 1];
 			free(files_tab);
@@ -63,8 +63,10 @@ int	menu_baudrate_select(void)
 	{
 		clear();
 		refresh();
-		
-		mvprintw(0, 0, "[BAUD RATE SELECTION MENU]_________________________________________________________________\n");
+
+		put_separation(0, COLS);
+		mvprintw(0, 0, "[BAUD RATE SELECTION MENU]");
+		move(2, 0);
 		printw("This is where you select the connection speed between *CONFEDERATION BOMB DEFUSER v4.6*\nand the bomb.\n");
 		printw("The data/commands sent to the bomb have to be synchronized to its speed for it to be able\nto interpret them correctly.\n");
 		printw("Please be aware that an incorrect synchronisation speed may send corrupted data/commands tothe bomb and trigger its defense mechanisms.\n\n");
@@ -81,7 +83,7 @@ int	menu_baudrate_select(void)
 		if (ch >= '1' && ch <= '3')
 			return (ch - '0');
 		if (ch == 27)
-			return (0);
+			break ;
 	}
 	return(0);
 }

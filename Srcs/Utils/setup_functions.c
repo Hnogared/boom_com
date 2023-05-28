@@ -5,17 +5,11 @@ int	get_keypress(void)
 	int	ch;
 	
 	halfdelay(1);
-	while (1)
-	{
+	ch = ERR;
+	while (ch == ERR)
 		ch = getch();
-		if (ch != ERR)
-		{
-			nocbreak();
-			return (ch);
-		}
-	}
 	nocbreak();
-	return (0);
+	return (ch);
 }
 
 int	get_baudrate(struct termios *toptions)
@@ -39,16 +33,14 @@ char	**get_files_tab(char *directory)
 	d = opendir(directory);
 	if (d) {
 		i = 0;
-		files_tab = (char **) calloc(10, sizeof(char *));
-		while ((dir = readdir(d)) != NULL) {
-			if (!left_strcmp(dir->d_name, "tty")
-				&& !(dir->d_name[3] >= '0' && dir->d_name[3] <= '9')
-				&& dir->d_name[3])
-			{
-				files_tab[i] = dir->d_name;
-				i++;
-			}   
+		files_tab = (char **) malloc((BUFF_SIZE + 1) * sizeof(char *));
+		while ((dir = readdir(d)) != NULL && i < BUFF_SIZE)
+		{
+			if (!left_strcmp(dir->d_name, "tty") && dir->d_name[3]
+				&& !(dir->d_name[3] >= '0' && dir->d_name[3] <= '9'))
+				files_tab[i++] = dir->d_name;
 		}
+		files_tab[i] = NULL;
 		closedir(d);
 	}
 	return (files_tab);

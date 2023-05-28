@@ -2,20 +2,20 @@
 
 char	g_prompt = '$';
 
-int	exec_command(portopts *conn_options, char *command, int *view)
+int	exec_command(portopts **conn_options, char *command, dispopts **disp_options)
 {
 	if (!left_strcmp("exit\n", command))
-		exit_helper(conn_options->fd, command);
+		exit_helper((*conn_options)->fd, command);
 	if (!left_strcmp("man\n", command))
 	{
 		system("less defuser_man.txt");
 		return (1);
 	}
-	if (check_help_cmds(command, view))
+	if (check_help_cmds(command, disp_options))
 		return (0);
-	if (check_view_cmds(command, view) || check_conn_cmds(conn_options, command, view))
+	if (check_view_cmds(command, disp_options) || check_conn_cmds(conn_options, command, disp_options))
 		return (1);
-	if (*view)
+	if ((*disp_options)->view)
 	{
 		printw("ERROR >> Unknown command : %s\n", command);
 		printw("Type 'help' for a list of all defusing assistant commands or get the manual (cmd 'man').");
@@ -23,7 +23,7 @@ int	exec_command(portopts *conn_options, char *command, int *view)
 	return (0);
 }
 
-char	*print_output(int fd, char *last_out, int view)
+char	*print_output(int fd, char *last_out, dispopts **disp_options)
 {
 	char	buf[255];
 	char	*buf2;
@@ -39,7 +39,7 @@ char	*print_output(int fd, char *last_out, int view)
 		buf2 = ft_strjoin(buf2, buf);
 		free(temp);
 	}
-	if (view == 1)
+	if ((*disp_options)->view == 1)
 		return (last_out);
 	if (buf2 && buf2[strlen(buf2) - 3] == '$')
 	{
@@ -51,7 +51,7 @@ char	*print_output(int fd, char *last_out, int view)
 	return (last_out);
 }
 
-char	*print_prompt(portopts *conn_options, char *curr_cmd, char *last_cmd, int *view)
+char	*print_prompt(portopts **conn_options, char *curr_cmd, char *last_cmd, dispopts **disp_options)
 {
 	int		ch;
 	char	*cmd;
@@ -62,79 +62,84 @@ char	*print_prompt(portopts *conn_options, char *curr_cmd, char *last_cmd, int *
 		cmd = (char *) calloc(255, sizeof(char));
 	if (last_cmd)
 	{
-		if (exec_command(conn_options, last_cmd, view))
+		if (exec_command(conn_options, last_cmd, disp_options))
 			return (NULL);
 	}
-	if (conn_options->fd < 0)
+	if ((*conn_options)->fd < 0)
 	{
-		mvprintw(LINES - 5, 0, "___________________________________________________________________________________________");
+		put_separation(LINES - 5, COLS);
 		printw("/!\\ Currently not connected to any device. /!\\\n");
 		printw("Type 'help_connect' or read the manual (cmd 'man') for how to connect to a bomb.");
 	}
 	// Print command prompt
-	put_separation(LINES - 2);
-	printw("Command: %-0300s", cmd);
+	put_separation(LINES - 2, COLS);
+	printw("Command: %-300s", cmd);
 	move(LINES - 1, 9 + strlen(cmd));
 	
 	halfdelay(1);
-	ch = getch();
+	ch = get_keypress();
 	nocbreak();
 	
 	if (ch == '\n' && cmd[0] == '@')
 	{
-		if (write(conn_options->fd, cmd + 1, strlen(cmd + 1)) == -1)
+		if (write((*conn_options)->fd, cmd + 1, strlen(cmd + 1)) == -1)
 		{
 			endwin();
 			perror("write");
 			exit(1);
 		}
 		memset(cmd, 0, strlen(cmd));
-		if (*view == 1)
-			*view = 2;
+		if ((*disp_options)->view == 1)
+			(*disp_options)->view = 2;
 	}
 	else if (ch == '\n' && strlen(cmd) < 253)
 	{
 		cmd[strlen(cmd)] = ch;
-		if (*view == 0)
-			*view = 2;
+		if ((*disp_options)->view == 0)
+			(*disp_options)->view = 2;
 	}
 	else if (ch == 127 && strlen(cmd) > 0)
 		cmd[strlen(cmd) - 1] = '\0';
 	else if (ch == '\t')
-		*view = (*view + 1) % 3;
+		(*disp_options)->view = ((*disp_options)->view + 1) % 3;
 	else if (((ch != ERR && ch > ' ' && ch != 127) || (ch == ' ' && strlen(cmd)))
 		&& strlen(cmd) < 253)
 		cmd[strlen(cmd)] = ch;
 	return (cmd);
 }
 
-int	menu_defusing(portopts *conn_options)
+int	menu_defusing(portopts **conn_options, dispopts **disp_options)
 {
-	int		view;
 	char	*cmd = NULL;
 	char	*temp_cmd;
 	char	*last_cmd = NULL;
 	char	*out = NULL;
 	char	*temp_out = NULL;
 
-	view = 1;
 	while (1) {
 		clear();
 		refresh();
 		
 		// Print the output of the bomb
-		if (view == 0)
-			mvprintw(0, 0, "[1 BOMB INTERPRETOR][2 ...]_________________________________(PORT %-15.15s @ %06d)", g_port, get_baudrate(conn_options->toptions));
-		if (view == 2)
-			mvprintw(0, 0, "[1 BOMB INTERPRETOR]________________________________________(PORT %-15.15s @ %06d)", g_port, get_baudrate(conn_options->toptions));
-		if (out)
+		put_separation(0, COLS);
+		if ((*disp_options)->view == 0)
+			mvprintw(0, 0, "[1 BOMB INTERPRETOR][2 ...]");
+		if ((*disp_options)->view == 1)
+			mvprintw(0, 0, "[1 ...][2 DEFUSER GUI]");
+		if ((*disp_options)->view == 2)
+			mvprintw(0, 0, "[1 BOMB INTERPRETOR]");
+		if ((*conn_options)->port)
+			mvprintw(0, COLS - 31, "(PORT %-15.15s @ %06d)\n", (*conn_options)->port, get_baudrate((*conn_options)->toptions));
+		else
+			mvprintw(0, COLS - 9, "(No port)\n");
+		if (out && g_prompt == '$')
 		{
 			temp_out = crop(out);
 			if (strstr(out, "SUPERUSER"))
 				g_prompt = '#';
 		}
-		out = print_output(conn_options->fd, temp_out, view);
-		if ((view == 0 || view == 2) && conn_options->fd >= 0)
+		out = print_output((*conn_options)->fd, temp_out, disp_options);
+		if (((*disp_options)->view == 0 || (*disp_options)->view == 2) && (*conn_options)->fd >= 0)
 		{
 			printw("\nUSER ~ %c ", g_prompt);
 			if (cmd && cmd[0] == '@')
@@ -143,12 +148,14 @@ int	menu_defusing(portopts *conn_options)
 		}
 		
 		// Print the debugger console and the output of the rpi
-		if (view == 1)
-			mvprintw(0, 0, "[1 ...][2 DEFUSER GUI]______________________________________(PORT %-15.15s @ %06d)\n", g_port, get_baudrate(conn_options->toptions));
-		if (view == 2)
-			printw("______________________[2 DEFUSER GUI]______________________________________________________\n");
+		if ((*disp_options)->view == 2)
+		{
+			printw("______________________[2 DEFUSER GUI]");
+			put_separation(-1, COLS - 37);
+			printw("\n");
+		}
 		temp_cmd = cmd;
-		cmd = print_prompt(conn_options, cmd, last_cmd, &view);
+		cmd = print_prompt(conn_options, cmd, last_cmd, disp_options);
 		if (temp_cmd)
 			free(temp_cmd);
 		if (!cmd || (cmd && cmd[strlen(cmd) - 1] == '\n'))
