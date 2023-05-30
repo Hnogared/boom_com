@@ -64,6 +64,7 @@ int	play_startup(void)
 	nocbreak();
 	if (get_keypress() != ' ')
 	{
+		mvprintw(LINES - 2, 0, "%-70s", "");
 		mvprintw(LINES - 2, 0, "Disagree to the terms of service and exit ? (y/N) ");
 		ch = get_keypress();
 		if (ch == 'y' || ch == 'Y')
@@ -72,17 +73,19 @@ int	play_startup(void)
 	return (0);
 }
 
-void	play_connect(portopts **conn_options)
+void	play_connect(portopts **conn_options, dispopts **disp_options)
 {
 	int		i;
 	int		delay;
-	
-	i = 0;
+	char	*error_type;
+
 	clear();
 	curs_set(0);
 	mvprintw(0, 0, "[BOMB DEFUSER] Establishing connection...\n\n");
 	printw("Please DO NOT at any time shut down the defuser during this process.\n");
 	put_separation(-1, COLS);
+	error_type = "CONNECTION ERROR >> ";
+	i = 0;
 	while (i <= 60)
 	{
 		put_loading("OPENING PORT...", "\t(OK)", 5, i * 3, 60);
@@ -96,13 +99,14 @@ void	play_connect(portopts **conn_options)
 		// Open serial port
 		if (i == 55)
 			(*conn_options)->fd = open((*conn_options)->port, O_RDWR | O_NOCTTY);
-		if (!((*conn_options)->fd > -1) && i >= 55)
+		if (i >= 55 && (*conn_options)->fd < 0)
 		{
 			curs_set(1);
-			endwin();
-			printf("%s\n", strerror(errno));
-			printf("%s\n", (*conn_options)->port);
-			exit_helper(-1, NULL);
+			strncpy((*disp_options)->cmd_output, error_type, BIG_BUFFER);
+			strncpy((*disp_options)->cmd_output + strlen(error_type), strerror(errno), BIG_BUFFER);
+			(*disp_options)->cmd_output[BIG_BUFFER - 1] = 0;
+			(*conn_options)->port[0] = 0;
+			return ;
 		}
 		else if (i == 55)
 			*(*conn_options)->toptions = set_termios_opt((*conn_options)->fd, cfgetispeed((*conn_options)->toptions));

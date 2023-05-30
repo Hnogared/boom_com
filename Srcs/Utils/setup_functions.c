@@ -33,8 +33,8 @@ char	**get_files_tab(char *directory)
 	d = opendir(directory);
 	if (d) {
 		i = 0;
-		files_tab = (char **) malloc((BUFF_SIZE + 1) * sizeof(char *));
-		while ((dir = readdir(d)) != NULL && i < BUFF_SIZE)
+		files_tab = (char **) malloc((FILES_TAB_SIZE + 1) * sizeof(char *));
+		while ((dir = readdir(d)) != NULL && i < FILES_TAB_SIZE)
 		{
 			if (!left_strcmp(dir->d_name, "tty") && dir->d_name[3]
 				&& !(dir->d_name[3] >= '0' && dir->d_name[3] <= '9'))
@@ -80,12 +80,24 @@ struct termios	set_termios_opt(int fd, int baudrate)
 	return (toptions);
 }
 
-void	exit_helper(int fd, char *command)
+void	free_termios(struct termios *toptions)
 {
-	if (fd > -1)
-		close(fd);
-	if (command)
-		free(command);
+	if (!toptions)
+		return ;
+	free(toptions->c_cc);
+	free(toptions);
+}
+
+void	exit_helper(portopts *conn_options, dispopts *disp_options)
+{
+	if (conn_options->fd > -1)
+		close(conn_options->fd);
+	if (conn_options->toptions)
+		free_termios(conn_options->toptions);
+	if (conn_options)
+		free(conn_options);
+	if (disp_options)
+		free(disp_options);
 	clear();
 	curs_set(0);
 	mvprintw(0, 0, "Exiting bomb defusing helper, goodbye...");

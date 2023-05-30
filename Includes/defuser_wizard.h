@@ -12,14 +12,15 @@
 # include <dirent.h>
 # include <errno.h>
 
-# define BUFF_SIZE	9
-# define READ_SIZE	4096
+# define FILES_TAB_SIZE	9
+# define LITTLE_BUFFER	255
+# define BIG_BUFFER		4096
 
 typedef struct	portopts
 {
 	int				fd;
 	int				baudrate;
-	char			*port;
+	char			port[LITTLE_BUFFER];
 	struct termios	*toptions;
 }				portopts;
 
@@ -28,8 +29,8 @@ typedef struct	dispopts
 	int		view;
 	int		cmd_len;
 	char	prompt_char;
-	char	*cmd;
-	char	*cmd_output;
+	char	cmd[LITTLE_BUFFER];
+	char	cmd_output[BIG_BUFFER];
 	char	*bomb_output;
 	WINDOW	*win;
 }				dispopts;
@@ -47,7 +48,7 @@ void			put_loading(char *name, char *confirm, int line_pos, int progress, int le
 
 /* loading_menus.c file */
 int				play_startup(void);
-void			play_connect(portopts **conn_options);
+void			play_connect(portopts **conn_options, dispopts **disp_options);
 
 /* select_menus.c file */
 int				menu_baudrate_select(void);
@@ -60,8 +61,8 @@ char			*print_output(portopts *conn_options, char *last_out, dispopts **disp_opt
 void			print_prompt(portopts **conn_options, dispopts **disp_options);
 
 /* check_cmds.c file */
-int				check_view_cmds(char *command, dispopts **disp_options);
-int				check_help_cmds(char *command, dispopts **disp_options);
+int				check_view_cmds(dispopts **disp_options);
+int				check_help_cmds(dispopts **disp_options);
 int				check_conn_cmds(portopts **conn_options, dispopts **disp_options);
 
 /* setup_functions.c */
@@ -69,6 +70,6 @@ int				get_keypress(void);
 int				get_baudrate(struct termios *toptions);
 char			**get_files_tab(char *directory);
 struct termios	set_termios_opt(int fd, int baudrate);
-void			exit_helper(int fd, char *command);
+void			exit_helper(portopts *conn_options, dispopts *disp_options);
 
 #endif

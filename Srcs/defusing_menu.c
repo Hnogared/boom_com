@@ -3,27 +3,29 @@
 int	exec_command(portopts **conn_options, dispopts **disp_options)
 {
 	if (!left_strcmp("exit\n", (*disp_options)->cmd))
-		exit_helper((*conn_options)->fd, NULL);
+		exit_helper(*conn_options, *disp_options);
 	if (!left_strcmp("man\n", (*disp_options)->cmd))
 	{
 		system("less defuser_man.txt");
 		return (1);
 	}
-	if (check_help_cmds((*disp_options)->cmd, disp_options))
+	if (check_help_cmds(disp_options))
 		return (0);
-	if (check_view_cmds((*disp_options)->cmd, disp_options) || check_conn_cmds(conn_options, disp_options))
+	if (check_view_cmds(disp_options) || check_conn_cmds(conn_options, disp_options))
 		return (1);
 	if ((*disp_options)->view)
 	{
-		printw("ERROR >> Unknown command : %s\n", (*disp_options)->cmd);
-		printw("Type 'help' for a list of all defusing assistant commands or get the manual (cmd 'man').");
+		mvprintw(0, 0, "YOOOOOO %s\n", (*disp_options)->cmd);
+		strncpy((*disp_options)->cmd_output, "ERROR >> Unknown command\n"
+			"Type 'help' for a list of all defusing assistant commands or get the manual (cmd 'man').", BIG_BUFFER);
+		(*disp_options)->cmd_output[BIG_BUFFER - 1] = 0;
 	}
 	return (0);
 }
 
 char	*print_output(portopts *conn_options, char *last_out, dispopts **disp_options)
 {
-	char	buf[READ_SIZE + 1];
+	char	buf[BIG_BUFFER + 1];
 	char	*buf2;
 	char	*temp;
 
@@ -31,7 +33,7 @@ char	*print_output(portopts *conn_options, char *last_out, dispopts **disp_optio
 		return (NULL);
 	memset(buf, 0, sizeof(buf));
 	buf2 = NULL;
-	if (read(conn_options->fd, buf, READ_SIZE) > 0)
+	if (read(conn_options->fd, buf, BIG_BUFFER) > 0)
 	{
 		temp = buf2;
 		buf2 = ft_strjoin(buf2, buf);
@@ -68,9 +70,10 @@ void	update_command(dispopts **disp_options, portopts **conn_options)
 		if ((*disp_options)->view == 1)
 			(*disp_options)->view = 2;
 	}
-	else if (ch == '\n' && (*disp_options)->cmd_len < 253)
+	else if (ch == '\n' && (*disp_options)->cmd_len < LITTLE_BUFFER - 2)
 	{
 		(*disp_options)->cmd[(*disp_options)->cmd_len] = ch;
+		(*disp_options)->cmd[(*disp_options)->cmd_len + 1] = 0;
 		exec_command(conn_options, disp_options);
 		memset((*disp_options)->cmd, 0, (*disp_options)->cmd_len);
 		(*disp_options)->cmd_len = 0;
@@ -85,9 +88,10 @@ void	update_command(dispopts **disp_options, portopts **conn_options)
 	else if (ch == '\t')
 		(*disp_options)->view = ((*disp_options)->view + 1) % 3;
 	else if (((ch != ERR && ch > ' ' && ch != 127) || (ch == ' ' && (*disp_options)->cmd_len))
-		&& (*disp_options)->cmd_len < 253)
+		&& (*disp_options)->cmd_len < LITTLE_BUFFER - 2)
 	{
 		(*disp_options)->cmd[(*disp_options)->cmd_len] = ch;
+		(*disp_options)->cmd[(*disp_options)->cmd_len + 1] = 0;
 		(*disp_options)->cmd_len++;
 	}
 }
@@ -125,8 +129,8 @@ int	menu_defusing(portopts **conn_options, dispopts **disp_options)
 			mvprintw(0, 0, "[1 ...][2 DEFUSER GUI]");
 		if ((*disp_options)->view == 2)
 			mvprintw(0, 0, "[1 BOMB INTERPRETOR]");
-		if ((*conn_options)->port)
-			mvprintw(0, COLS - 31, "(PORT %-15.15s @ %06d)\n", (*conn_options)->port, get_baudrate((*conn_options)->toptions));
+		if ((*conn_options)->port[0])
+			mvprintw(0, COLS - 35, "(PORT %-19.19s @ %06d)\n", (*conn_options)->port, get_baudrate((*conn_options)->toptions));
 		else
 			mvprintw(0, COLS - 9, "(No port)\n");
 		if (out && (*disp_options)->prompt_char == '$')
