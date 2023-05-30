@@ -15,7 +15,7 @@ int	init_disp_opts(dispopts **disp_options)
 	(*disp_options)->view = 1;
 	(*disp_options)->cmd_len = 0;
 	(*disp_options)->prompt_char = '$';
-	(*disp_options)->cmd[0] = 0;
+	(*disp_options)->cmd = (char *) calloc(255, sizeof(char));
 	(*disp_options)->win = win;
 	return (0);
 }

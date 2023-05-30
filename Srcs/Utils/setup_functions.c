@@ -4,7 +4,7 @@ int	get_keypress(void)
 {
 	int	ch;
 	
-	timeout(100);
+	halfdelay(1);
 	ch = ERR;
 	while (ch == ERR)
 		ch = getch();

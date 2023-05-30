@@ -20,12 +20,12 @@ int	check_view_cmds(char *command, dispopts **disp_options)
 	return (0);
 }
 
-int	check_conn_cmds(portopts **conn_options, char *command, dispopts **disp_options)
+int	check_conn_cmds(portopts **conn_options, dispopts **disp_options)
 {
 	int		baudrate;
 	char	*temp;
 
-	if (!left_strcmp("set-port\n", command))
+	if (!left_strcmp("set-port\n", (*disp_options)->cmd))
 	{
 		temp = menu_port_select();
 		if (temp)
@@ -34,7 +34,7 @@ int	check_conn_cmds(portopts **conn_options, char *command, dispopts **disp_opti
 			play_connect(conn_options);
 		return (1);
 	}
-	else if (!left_strcmp("set-baudrate\n", command))
+	else if (!left_strcmp("set-baudrate\n", (*disp_options)->cmd))
 	{
 		if (!(*conn_options)->port && (*disp_options)->view)
 		{
@@ -60,7 +60,7 @@ int	check_help_cmds(char *command, dispopts **disp_options)
 	{
 		printw("List of the available important commands :\n\n");
 		printw("/!\\ WARNING /!\\\n");
-		printw("Don't forget that these commands are to be used only for the defuser, the ones for the bombwon't be the same.\n");
+		printw("Don't forget that these commands are to be used only for the defuser, the ones for the bomb won't be the same.\n");
 		printw("To send a command to the bomb, it must be preceded by a '@' character.\n");
 		printw("For more information, type 'help_cmd' or refer to the manual (cmd 'man').\n\n");
 		printw("# help\t\tShow this menu.\n");

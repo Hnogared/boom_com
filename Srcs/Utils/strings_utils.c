@@ -54,12 +54,13 @@ char	*ft_strjoin(char *dest, char *src)
 	res = (char *) malloc((i + j + 1) * sizeof(char));
 	if (!res)
 		return (NULL);
-	i = 0;
-	while (dest && *dest)
-		res[i++] = *dest++;
-	while (src && *src)
-		res[i++] = *src++;
-	res[i] = 0;
+	i = -1;
+	while (dest && dest[++i])
+		res[i] = dest[i];
+	j = -1;
+	while (src && src[++j])
+		res[i + j] = src[j];
+	res[i + j] = 0;
 	return (res);
 }
 

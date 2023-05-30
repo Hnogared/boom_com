@@ -11,7 +11,7 @@ int	exec_command(portopts **conn_options, dispopts **disp_options)
 	}
 	if (check_help_cmds((*disp_options)->cmd, disp_options))
 		return (0);
-	if (check_view_cmds((*disp_options)->cmd, disp_options) || check_conn_cmds(conn_options, (*disp_options)->cmd, disp_options))
+	if (check_view_cmds((*disp_options)->cmd, disp_options) || check_conn_cmds(conn_options, disp_options))
 		return (1);
 	if ((*disp_options)->view)
 	{
@@ -27,7 +27,7 @@ char	*print_output(int fd, char *last_out, dispopts **disp_options)
 	char	*buf2;
 	char	*temp;
 
-	if (!fd)
+	if (fd < 0)
 		return (NULL);
 	memset(buf, 0, sizeof(buf));
 	buf2 = NULL;
@@ -73,6 +73,9 @@ void	update_command(dispopts **disp_options, portopts **conn_options)
 	else if (ch == '\n' && (*disp_options)->cmd_len < 253)
 	{
 		(*disp_options)->cmd[(*disp_options)->cmd_len] = ch;
+		exec_command(conn_options, disp_options);
+		memset((*disp_options)->cmd, 0, (*disp_options)->cmd_len);
+		(*disp_options)->cmd_len = 0;
 		if ((*disp_options)->view == 0)
 			(*disp_options)->view = 2;
 	}
@@ -93,11 +96,6 @@ void	update_command(dispopts **disp_options, portopts **conn_options)
 
 void	print_prompt(portopts **conn_options, dispopts **disp_options)
 {
-	if ((*disp_options)->cmd[(*disp_options)->cmd_len] == '\n')
-	{
-		if (exec_command(conn_options, disp_options))
-			return ;
-	}
 	if ((*conn_options)->fd < 0)
 	{
 		put_separation(LINES - 5, COLS);
@@ -154,6 +152,10 @@ int	menu_defusing(portopts **conn_options, dispopts **disp_options)
 			printw("______________________[2 DEFUSER GUI]");
 			put_separation(-1, COLS - 37);
 			printw("\n");
+		}
+		if ((*disp_options)->cmd_output && (*disp_options)->view > 0)
+		{
+			printw("%s\n", (*disp_options)->cmd_output);
 		}
 		print_prompt(conn_options, disp_options);
 	}

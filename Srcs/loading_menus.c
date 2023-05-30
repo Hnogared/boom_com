@@ -81,7 +81,7 @@ void	play_connect(portopts **conn_options)
 	clear();
 	curs_set(0);
 	mvprintw(0, 0, "[BOMB DEFUSER] Establishing connection...\n\n");
-	printw("Please DO NOT at any time shut down the defuser during this process.");
+	printw("Please DO NOT at any time shut down the defuser during this process.\n");
 	put_separation(-1, COLS);
 	while (i <= 60)
 	{
