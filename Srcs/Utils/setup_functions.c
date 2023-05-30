@@ -85,8 +85,6 @@ void	exit_helper(portopts *conn_options, dispopts *disp_options)
 {
 	if (conn_options->fd > -1)
 		close(conn_options->fd);
-	if (conn_options->toptions)
-		free(conn_options->toptions);
 	if (conn_options)
 		free(conn_options);
 	if (disp_options)

@@ -23,32 +23,29 @@ int	exec_command(portopts **conn_options, dispopts **disp_options)
 	return (0);
 }
 
-char	*print_output(portopts *conn_options, char *last_out, dispopts **disp_options)
+void	print_output(portopts *conn_options, dispopts **disp_options)
 {
-	char	buf[BIG_BUFFER + 1];
-	char	*buf2;
-	char	*temp;
 
 	if (conn_options->fd < 0)
-		return (NULL);
-	memset(buf, 0, sizeof(buf));
-	buf2 = NULL;
-	if (read(conn_options->fd, buf, BIG_BUFFER) > 0)
+		return ;
+	bzero((*disp_options)->bomb_output, BIG_BUFFER);
+	if (read(conn_options->fd, (*disp_options)->bomb_output , BIG_BUFFER - 1) < 0)
 	{
-		temp = buf2;
-		buf2 = ft_strjoin(buf2, buf);
-		free(temp);
+		strncpy((*disp_options)->cmd_output, "ERROR >> Unable to read the device's output", BIG_BUFFER);
+		return ;
 	}
 	if ((*disp_options)->view == 1)
-		return (last_out);
-	if (buf2 && buf2[strlen(buf2) - 3] == '$')
+		return ;
+	mvprintw(2, 0, "%s\n", crop((*disp_options)->bomb_output));
+	if ((*disp_options)->prompt_char == '$' && strstr((*disp_options)->bomb_output, "SUPERUSER"))
+		(*disp_options)->prompt_char = '#';
+	if ((*disp_options)->view != 1 && conn_options->fd >= 0)
 	{
-		mvprintw(2, 0, "%s\n", crop(buf2));
-		return (buf2);
+		printw("\nUSER ~ %c ", (*disp_options)->prompt_char);
+		if ((*disp_options)->cmd && (*disp_options)->cmd[0] == '@')
+			printw((*disp_options)->cmd + 1);
+		printw("\n");
 	}
-	if (last_out)
-		mvprintw(2, 0, "%s\n", last_out);
-	return (last_out);
 }
 
 void	update_command(dispopts **disp_options, portopts **conn_options)
@@ -114,10 +111,8 @@ void	print_prompt(portopts **conn_options, dispopts **disp_options)
 
 int	menu_defusing(portopts **conn_options, dispopts **disp_options)
 {
-	char	*out = NULL;
-	char	*temp_out = NULL;
-
-	while (1) {
+	while (1)
+	{
 		clear();
 		refresh();
 		
@@ -133,20 +128,7 @@ int	menu_defusing(portopts **conn_options, dispopts **disp_options)
 			mvprintw(0, COLS - 35, "(PORT %-19.19s @ %06d)\n", (*conn_options)->port, get_baudrate((*conn_options)->toptions));
 		else
 			mvprintw(0, COLS - 9, "(No port)\n");
-		if (out && (*disp_options)->prompt_char == '$')
-		{
-			temp_out = crop(out);
-			if (strstr(out, "SUPERUSER"))
-				(*disp_options)->prompt_char = '#';
-		}
-		out = print_output(*conn_options, temp_out, disp_options);
-		if (((*disp_options)->view == 0 || (*disp_options)->view == 2) && (*conn_options)->fd >= 0)
-		{
-			printw("\nUSER ~ %c ", (*disp_options)->prompt_char);
-			if ((*disp_options)->cmd && (*disp_options)->cmd[0] == '@')
-				printw((*disp_options)->cmd + 1);
-			printw("\n");
-		}
+		print_output(*conn_options, disp_options);
 		
 		// Print the debugger console and the output of the rpi
 		if ((*disp_options)->view == 2)
@@ -155,10 +137,7 @@ int	menu_defusing(portopts **conn_options, dispopts **disp_options)
 			put_separation(-1, COLS - 37);
 			printw("\n");
 		}
-		if ((*disp_options)->cmd_output && (*disp_options)->view > 0)
-		{
-			printw("%s\n", (*disp_options)->cmd_output);
-		}
+		printw("%s\n", (*disp_options)->cmd_output);
 		print_prompt(conn_options, disp_options);
 	}
 	return (0);

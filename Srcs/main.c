@@ -16,6 +16,7 @@ int	init_disp_opts(dispopts **disp_options)
 	(*disp_options)->prompt_char = '$';
 	(*disp_options)->cmd[0] = 0;
 	(*disp_options)->cmd_output[0] = 0;
+	(*disp_options)->bomb_output[0] = 0;
 	(*disp_options)->win = win;
 	return (0);
 }

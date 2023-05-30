@@ -3,21 +3,14 @@
 int	check_view_cmds(dispopts **disp_options)
 {
 	if (!left_strcmp("set-view bomb\n", (*disp_options)->cmd))
-	{
 		(*disp_options)->view = 0;
-		return (1);
-	}
 	else if (!left_strcmp("set-view defuser\n", (*disp_options)->cmd))
-	{
 		(*disp_options)->view = 1;
-		return (1);
-	}
 	else if (!left_strcmp("set-view split\n", (*disp_options)->cmd))
-	{
 		(*disp_options)->view = 2;
-		return (1);
-	}
-	return (0);
+	else
+		return (0);
+	return (1);
 }
 
 int	check_conn_cmds(portopts **conn_options, dispopts **disp_options)	

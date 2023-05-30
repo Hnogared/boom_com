@@ -31,7 +31,7 @@ typedef struct	dispopts
 	char	prompt_char;
 	char	cmd[LITTLE_BUFFER];
 	char	cmd_output[BIG_BUFFER];
-	char	*bomb_output;
+	char	bomb_output[BIG_BUFFER];
 	WINDOW	*win;
 }				dispopts;
 
@@ -57,7 +57,7 @@ char			*menu_port_select(void);
 /* defusing_menu.c file */
 int				exec_command(portopts **conn_options, dispopts **disp_options);
 int				menu_defusing(portopts **conn_options, dispopts **disp_options);
-char			*print_output(portopts *conn_options, char *last_out, dispopts **disp_options);
+void			print_output(portopts *conn_options, dispopts **disp_options);
 void			print_prompt(portopts **conn_options, dispopts **disp_options);
 
 /* check_cmds.c file */
