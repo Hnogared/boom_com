@@ -5,7 +5,7 @@ int	get_keypress(void)
 	int	ch;
 	
 	halfdelay(1);
-	ch = ERR;
+	ch = getch();
 	while (ch == ERR)
 		ch = getch();
 	nocbreak();

@@ -21,17 +21,17 @@ int	exec_command(portopts **conn_options, dispopts **disp_options)
 	return (0);
 }
 
-char	*print_output(int fd, char *last_out, dispopts **disp_options)
+char	*print_output(portopts *conn_options, char *last_out, dispopts **disp_options)
 {
-	char	buf[255];
+	char	buf[READ_SIZE + 1];
 	char	*buf2;
 	char	*temp;
 
-	if (fd < 0)
+	if (conn_options->fd < 0)
 		return (NULL);
 	memset(buf, 0, sizeof(buf));
 	buf2 = NULL;
-	if (read(fd, buf, sizeof(buf)) > 0)
+	if (read(conn_options->fd, buf, READ_SIZE) > 0)
 	{
 		temp = buf2;
 		buf2 = ft_strjoin(buf2, buf);
@@ -54,7 +54,7 @@ void	update_command(dispopts **disp_options, portopts **conn_options)
 	int		ch;
 
 	halfdelay(1);
-	ch = getch();
+	ch = get_keypress();
 	nocbreak();
 	
 	if (ch == '\n' && (*disp_options)->cmd[0] == '@')
@@ -137,7 +137,7 @@ int	menu_defusing(portopts **conn_options, dispopts **disp_options)
 			if (strstr(out, "SUPERUSER"))
 				(*disp_options)->prompt_char = '#';
 		}
-		out = print_output((*conn_options)->fd, temp_out, disp_options);
+		out = print_output(*conn_options, temp_out, disp_options);
 		if (((*disp_options)->view == 0 || (*disp_options)->view == 2) && (*conn_options)->fd >= 0)
 		{
 			printw("\nUSER ~ %c ", (*disp_options)->prompt_char);

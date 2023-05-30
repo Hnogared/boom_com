@@ -1,4 +1,4 @@
-1#ifndef DEFUSER_WIZARD_H
+#ifndef DEFUSER_WIZARD_H
 # define DEFUSER_WIZARD_H
 
 # include <stdio.h>
@@ -13,7 +13,7 @@
 # include <errno.h>
 
 # define BUFF_SIZE	9
-# define READ_SIZE	5000
+# define READ_SIZE	4096
 
 typedef struct	portopts
 {
