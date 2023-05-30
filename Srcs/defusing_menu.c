@@ -53,9 +53,7 @@ void	update_command(dispopts **disp_options, portopts **conn_options)
 {
 	int		ch;
 
-	halfdelay(1);
 	ch = get_keypress();
-	nocbreak();
 	
 	if (ch == '\n' && (*disp_options)->cmd[0] == '@')
 	{

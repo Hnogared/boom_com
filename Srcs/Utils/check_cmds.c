@@ -38,7 +38,7 @@ int	check_conn_cmds(portopts **conn_options, dispopts **disp_options)
 	{
 		if (!(*conn_options)->port && (*disp_options)->view)
 		{
-			printw("ERROR >> Please select a port before setting up the baud rate.");
+			(*disp_options)->cmd_output = "ERROR >> Please select a port before setting up the baud rate.";
 			return (0);
 		}
 		baudrate = menu_baudrate_select();
@@ -58,18 +58,15 @@ int	check_help_cmds(char *command, dispopts **disp_options)
 {
 	if (!left_strcmp("help\n", command) && (*disp_options)->view)
 	{
-		printw("List of the available important commands :\n\n");
-		printw("/!\\ WARNING /!\\\n");
-		printw("Don't forget that these commands are to be used only for the defuser, the ones for the bomb won't be the same.\n");
-		printw("To send a command to the bomb, it must be preceded by a '@' character.\n");
-		printw("For more information, type 'help_cmd' or refer to the manual (cmd 'man').\n\n");
-		printw("# help\t\tShow this menu.\n");
-		printw("# man\t\tOpen the manual.\n");
-		printw("# exit\t\tClose *CONFEDERATION BOMB DEFUSER v4.6*.\n");
-		printw("# help cmd\tQuick guide on how to send commands through the defuser.\n");
-		printw("# help nav\tDisplay the commands for navigating through the defuser.\n");
-		printw("# help connect\tQuick guide on how to connect to a bomb.\n");
-		printw("# help hacks\tQuick guide on hacking attacks on electronics/informatics.\n");
+		(*disp_options)->cmd_output = "List of the available important commands :\n\n\
+For more information, type 'help_cmd' or refer to the manual (cmd 'man').\n\n\
+# help\t\tShow this menu.\n\
+# man\t\tOpen the manual.\n\
+# exit\t\tClose *CONFEDERATION BOMB DEFUSER v4.6*.\n\
+# help cmd\tQuick guide on how to send commands through the defuser.\n\
+# help nav\tDisplay the commands for navigating through the defuser.\n\
+# help connect\tQuick guide on how to connect to a bomb.\n\
+# help hacks\tQuick guide on hacking attacks on electronics/informatics.\n";
 		return (1);
 	}
 	else if (!left_strcmp("help cmd\n", command) && (*disp_options)->view)
