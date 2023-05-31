@@ -33,13 +33,16 @@ void	init_colors(void)
 	if (can_change_color())
     {
 		init_color(COLOR_BG, 75, 75, 150);
-		init_color(COLOR_RED, 600, 0, 0);
+		init_color(COLOR_RED, 700, 0, 0);
+		init_color(COLOR_BLACK, 0, 0, 0);
+		init_color(COLOR_GREEN, 0, 1000, 200);
 		bg = COLOR_BG;
 	}
 
 	init_pair(1, COLOR_RED, bg);
 	init_pair(2, bg, COLOR_WHITE);
 	init_pair(3, COLOR_RED, COLOR_WHITE);
+	init_pair(4, COLOR_GREEN, COLOR_BLACK);
 
 	if (!can_change_color())
 		return ;

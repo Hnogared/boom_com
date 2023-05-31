@@ -7,19 +7,16 @@ int	exec_command(portopts **conn_options, dispopts **disp_options)
 	if (!left_strcmp("man\n", (*disp_options)->cmd))
 	{
 		system("less defuser_man.txt");
-		return (1);
-	}
-	if ()
 		return (0);
-	if (check_view_cmds(disp_options) 
-	check_conn_cmds(conn_options, disp_options))
-		return (1);
-	if ((*disp_options)->view)
-	{
-		strncpy((*disp_options)->cmd_output, "ERROR >> Unknown command\n"
-			"Type 'help' for a list of all defusing assistant commands or get the manual (cmd 'man').", BIG_BUFFER);
-		(*disp_options)->cmd_output[BIG_BUFFER - 1] = 0;
 	}
+	if (check_view_cmds(disp_options) || check_conn_cmds(conn_options, disp_options)
+			|| check_help_cmds(disp_options))
+		return (0);
+	strncpy((*disp_options)->cmd_output, "!> ERROR >> Unknown command : ", BIG_BUFFER);
+	strncpy((*disp_options)->cmd_output + 30, (*disp_options)->cmd, BIG_BUFFER);
+	strncpy((*disp_options)->cmd_output + 30 + (*disp_options)->cmd_len,
+		"\n   Type 'help' for a list of all defusing assistant commands or get the manual (cmd 'man').", BIG_BUFFER);
+	(*disp_options)->cmd_output[BIG_BUFFER - 1] = 0;
 	return (0);
 }
 
@@ -31,7 +28,7 @@ void	print_output(portopts *conn_options, dispopts **disp_options)
 	bzero((*disp_options)->bomb_output, BIG_BUFFER);
 	if (read(conn_options->fd, (*disp_options)->bomb_output , BIG_BUFFER - 1) < 0)
 	{
-		strncpy((*disp_options)->cmd_output, "ERROR >> Unable to read the device's output", BIG_BUFFER);
+		strncpy((*disp_options)->cmd_output, "!> ERROR >> Unable to read the device's output", BIG_BUFFER);
 		return ;
 	}
 	if ((*disp_options)->view == 1)
@@ -58,21 +55,21 @@ void	update_command(dispopts **disp_options, portopts **conn_options)
 	{
 		if (write((*conn_options)->fd, (*disp_options)->cmd + 1, (*disp_options)->cmd_len - 1) == -1)
 		{
-			endwin();
-			perror("write");
-			exit(1);
+			strncpy((*disp_options)->cmd_output, "!> WRITING ERROR >> ", BIG_BUFFER);
+			strncpy((*disp_options)->cmd_output + 20, strerror(errno), BIG_BUFFER);
+			(*disp_options)->cmd_output[BIG_BUFFER - 1] = 0;
 		}
-		memset((*disp_options)->cmd, 0, (*disp_options)->cmd_len);
+		bzero((*disp_options)->cmd, (*disp_options)->cmd_len + 1);
 		(*disp_options)->cmd_len = 0;
 		if ((*disp_options)->view == 1)
 			(*disp_options)->view = 2;
 	}
-	else if (ch == '\n' && (*disp_options)->cmd_len < LITTLE_BUFFER - 2)
+	else if (ch == '\n' && (*disp_options)->cmd_len && (*disp_options)->cmd_len < LITTLE_BUFFER - 2)
 	{
 		(*disp_options)->cmd[(*disp_options)->cmd_len] = ch;
 		(*disp_options)->cmd[(*disp_options)->cmd_len + 1] = 0;
 		exec_command(conn_options, disp_options);
-		memset((*disp_options)->cmd, 0, (*disp_options)->cmd_len);
+		bzero((*disp_options)->cmd, (*disp_options)->cmd_len + 1);
 		(*disp_options)->cmd_len = 0;
 		if ((*disp_options)->view == 0)
 			(*disp_options)->view = 2;
@@ -85,7 +82,7 @@ void	update_command(dispopts **disp_options, portopts **conn_options)
 	else if (ch == '\t')
 		(*disp_options)->view = ((*disp_options)->view + 1) % 3;
 	else if (((ch != ERR && ch > ' ' && ch != 127) || (ch == ' ' && (*disp_options)->cmd_len))
-		&& (*disp_options)->cmd_len < LITTLE_BUFFER - 2)
+		&& (*disp_options)->cmd_len < LITTLE_BUFFER - 3)
 	{
 		(*disp_options)->cmd[(*disp_options)->cmd_len] = ch;
 		(*disp_options)->cmd[(*disp_options)->cmd_len + 1] = 0;
@@ -98,15 +95,24 @@ void	print_prompt(portopts **conn_options, dispopts **disp_options)
 	if ((*conn_options)->fd < 0)
 	{
 		put_separation(LINES - 5, COLS);
+		attron(A_BOLD);
 		attron(COLOR_PAIR(3));
-		printw("/!\\ Currently not connected to any device. /!\\\n");
-		printw("Type 'help_connect' or read the manual (cmd 'man') for how to connect to a bomb.");
+		put_centered("/!\\ Currently not connected to any device. /!\\", -1, COLS);
+		printw("%*s", COLS, "");
+		put_centered("'help_connect' or 'man' for how to connect to a bomb.", LINES - 3, COLS);
+		attroff(A_BOLD);
 		attroff(COLOR_PAIR(3));
 	}
+	else
+		put_separation(LINES - 3, COLS);
+
 	// Print command prompt
-	put_separation(LINES - 2, COLS);
-	printw("Command: %-300s", (*disp_options)->cmd);
-	move(LINES - 1, 9 + (*disp_options)->cmd_len);
+	attron(COLOR_PAIR(4));
+	mvprintw(LINES - 2, 0, "%*s", COLS, "");
+	printw("%*s", COLS, "");
+	mvprintw(LINES - 1, 0, "(Command) $~ %s", (*disp_options)->cmd);
+	move(LINES - 1, 13 + (*disp_options)->cmd_len);
+	attroff(COLOR_PAIR(4));
 	
 	update_command(disp_options, conn_options);
 }
@@ -119,8 +125,9 @@ int	menu_defusing(portopts **conn_options, dispopts **disp_options)
 		refresh();
 		
 		// Print the output of the bomb
+		attron(A_BOLD);
 		attron(COLOR_PAIR(2));
-		put_separation(0, COLS);
+		mvprintw(0, 0, "%*s", COLS, "");
 		if ((*disp_options)->view == 0)
 			mvprintw(0, 0, "[1 BOMB INTERPRETOR][2 ...]");
 		if ((*disp_options)->view == 1)
@@ -133,17 +140,27 @@ int	menu_defusing(portopts **conn_options, dispopts **disp_options)
 			mvprintw(0, COLS - 9, "(No port)\n");
 		print_output(*conn_options, disp_options);
 		attroff(COLOR_PAIR(2));
+		attroff(A_BOLD);
 
 		// Print the debugger console and the output of the rpi
 		if ((*disp_options)->view == 2)
 		{
+			attron(A_BOLD);
 			attron(COLOR_PAIR(2));
-			printw("______________________[2 DEFUSER GUI]");
-			put_separation(-1, COLS - 37);
+			printw("                      [2 DEFUSER GUI]");
+			printw("%*s", COLS - 37, "");
 			attroff(COLOR_PAIR(2));
+			attroff(A_BOLD);
 			printw("\n");
 		}
-		printw("%s\n", (*disp_options)->cmd_output);
+		if ((*disp_options)->view != 0)
+		{
+			if ((*disp_options)->cmd_output[0] == '!')
+				attron(COLOR_PAIR(1));
+			printw("%s\n", (*disp_options)->cmd_output);
+			if ((*disp_options)->cmd_output[0] == '!')
+				attroff(COLOR_PAIR(1));
+		}
 		print_prompt(conn_options, disp_options);
 	}
 	return (0);

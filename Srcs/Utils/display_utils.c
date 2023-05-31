@@ -1,5 +1,19 @@
 #include "../Includes/defuser_wizard.h"
 
+void	put_centered(char *str, int line, int width)
+{
+	int	padding;
+
+	if (line > LINES)
+		line = LINES;
+	if (line >= 0)
+		move(line, 0);
+	padding = width / 2 - strlen(str) / 2;
+	if (padding < 0)
+		padding = 0;
+	printw("%*s%s%*s", padding, "", str, padding, "");
+}
+
 void	put_separation(int line, int width)
 {
 	int		sep_len;

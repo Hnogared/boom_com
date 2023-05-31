@@ -16,7 +16,7 @@
 #  define FILES_TAB_SIZE	9
 # endif
 # ifndef LITTLE_BUFFER
-#  define LITTLE_BUFFER		255
+#  define LITTLE_BUFFER		80
 # endif
 # ifndef BIG_BUFFER
 #  define BIG_BUFFER		4096
@@ -65,6 +65,7 @@ char			*ft_strjoin(char *dest, char *src);
 void			free_str_tab(char **str_tab);
 
 /* display_utils.c file */
+void			put_centered(char *str, int line, int width);
 void			put_separation(int line, int width);
 void			put_loading(char *name, char *confirm, int line_pos, int progress, int length);
 

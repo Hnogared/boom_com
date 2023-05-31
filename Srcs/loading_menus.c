@@ -84,7 +84,7 @@ void	play_connect(portopts **conn_options, dispopts **disp_options)
 	mvprintw(0, 0, "[BOMB DEFUSER] Establishing connection...\n\n");
 	printw("Please DO NOT at any time shut down the defuser during this process.\n");
 	put_separation(-1, COLS);
-	error_type = "CONNECTION ERROR >> ";
+	error_type = "!> CONNECTION ERROR >> ";
 	i = 0;
 	while (i <= 60)
 	{
