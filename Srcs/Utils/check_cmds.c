@@ -36,7 +36,7 @@ int	check_conn_cmds(portopts **conn_options, dispopts **disp_options)
 		if (!(*conn_options)->port && (*disp_options)->view)
 		{
 			strncpy((*disp_options)->cmd_output, "ERROR >> Please select a port before setting up the baud rate.", BIG_BUFFER);
-			return (0);
+			return (1);
 		}
 		baudrate = menu_baudrate_select();
 		if (baudrate)

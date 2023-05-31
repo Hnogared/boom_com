@@ -12,9 +12,31 @@
 # include <dirent.h>
 # include <errno.h>
 
-# define FILES_TAB_SIZE	9
-# define LITTLE_BUFFER	255
-# define BIG_BUFFER		4096
+# ifndef FILES_TAB_SIZE
+#  define FILES_TAB_SIZE	9
+# endif
+# ifndef LITTLE_BUFFER
+#  define LITTLE_BUFFER		255
+# endif
+# ifndef BIG_BUFFER
+#  define BIG_BUFFER		4096
+# endif
+
+	/*
+	 *	COLOR_BLACK   0
+     *  COLOR_RED     1
+     *  COLOR_GREEN   2
+     *  COLOR_YELLOW  3
+     *  COLOR_BLUE    4
+     *  COLOR_MAGENTA 5
+     *  COLOR_CYAN    6
+     *	COLOR_WHITE   7
+	 */
+# ifndef COLOR_BG
+#  define COLOR_BG		0
+#  undef COLOR_BLACK
+#  define COLOR_BLACK	8
+# endif
 
 typedef struct	portopts
 {

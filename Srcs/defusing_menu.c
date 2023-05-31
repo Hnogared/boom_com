@@ -15,7 +15,6 @@ int	exec_command(portopts **conn_options, dispopts **disp_options)
 		return (1);
 	if ((*disp_options)->view)
 	{
-		mvprintw(0, 0, "YOOOOOO %s\n", (*disp_options)->cmd);
 		strncpy((*disp_options)->cmd_output, "ERROR >> Unknown command\n"
 			"Type 'help' for a list of all defusing assistant commands or get the manual (cmd 'man').", BIG_BUFFER);
 		(*disp_options)->cmd_output[BIG_BUFFER - 1] = 0;
@@ -98,8 +97,10 @@ void	print_prompt(portopts **conn_options, dispopts **disp_options)
 	if ((*conn_options)->fd < 0)
 	{
 		put_separation(LINES - 5, COLS);
+		attron(COLOR_PAIR(3));
 		printw("/!\\ Currently not connected to any device. /!\\\n");
 		printw("Type 'help_connect' or read the manual (cmd 'man') for how to connect to a bomb.");
+		attroff(COLOR_PAIR(3));
 	}
 	// Print command prompt
 	put_separation(LINES - 2, COLS);
@@ -117,6 +118,7 @@ int	menu_defusing(portopts **conn_options, dispopts **disp_options)
 		refresh();
 		
 		// Print the output of the bomb
+		attron(COLOR_PAIR(2));
 		put_separation(0, COLS);
 		if ((*disp_options)->view == 0)
 			mvprintw(0, 0, "[1 BOMB INTERPRETOR][2 ...]");
@@ -129,12 +131,15 @@ int	menu_defusing(portopts **conn_options, dispopts **disp_options)
 		else
 			mvprintw(0, COLS - 9, "(No port)\n");
 		print_output(*conn_options, disp_options);
-		
+		attroff(COLOR_PAIR(2));
+
 		// Print the debugger console and the output of the rpi
 		if ((*disp_options)->view == 2)
 		{
+			attron(COLOR_PAIR(2));
 			printw("______________________[2 DEFUSER GUI]");
 			put_separation(-1, COLS - 37);
+			attroff(COLOR_PAIR(2));
 			printw("\n");
 		}
 		printw("%s\n", (*disp_options)->cmd_output);
