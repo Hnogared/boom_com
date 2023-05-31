@@ -9,9 +9,10 @@ int	exec_command(portopts **conn_options, dispopts **disp_options)
 		system("less defuser_man.txt");
 		return (1);
 	}
-	if (check_help_cmds(disp_options))
+	if ()
 		return (0);
-	if (check_view_cmds(disp_options) || check_conn_cmds(conn_options, disp_options))
+	if (check_view_cmds(disp_options) 
+	check_conn_cmds(conn_options, disp_options))
 		return (1);
 	if ((*disp_options)->view)
 	{

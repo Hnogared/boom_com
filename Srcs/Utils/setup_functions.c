@@ -67,7 +67,7 @@ struct termios	set_termios_opt(int fd, int baudrate)
 	toptions.c_cflag |= CS8;
 	toptions.c_cflag &= ~CRTSCTS;
 	toptions.c_cflag |= CREAD | CLOCAL;
-	toptions.c_iflag &= ~(IXON | IXOFF | IXANY | IUTF8);
+	toptions.c_iflag &= ~(IXON | IXOFF | IXANY);
 	toptions.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
 	toptions.c_oflag &= ~OPOST;
 	toptions.c_cc[VMIN] = 0;
