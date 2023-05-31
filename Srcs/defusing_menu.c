@@ -50,10 +50,11 @@ void	update_command(dispopts **disp_options, portopts **conn_options)
 	int		ch;
 
 	ch = get_keypress();
-	
 	if (ch == '\n' && (*disp_options)->cmd[0] == '@')
 	{
-		if (write((*conn_options)->fd, (*disp_options)->cmd + 1, (*disp_options)->cmd_len - 1) == -1)
+		if ((*conn_options)->fd < 0)
+			strncpy((*disp_options)->cmd_output, "!> WRITING ERROR >> No connection established.", BIG_BUFFER);
+		else if (write((*conn_options)->fd, (*disp_options)->cmd + 1, (*disp_options)->cmd_len - 1) == -1)
 		{
 			strncpy((*disp_options)->cmd_output, "!> WRITING ERROR >> ", BIG_BUFFER);
 			strncpy((*disp_options)->cmd_output + 20, strerror(errno), BIG_BUFFER);

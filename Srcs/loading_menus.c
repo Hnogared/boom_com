@@ -55,36 +55,59 @@ int	play_startup(void)
 		getch();
 	}
 	
-	put_separation(LINES - 6, COLS);
-	
-	mvprintw(LINES - 4, 0, "System operational.\n\n");
-	curs_set(1);
-	printw("I read and agree to the terms of service (press space to confirm) ");
-	
-	nocbreak();
+	put_separation(LINES - 4, COLS);
+	attron(COLOR_PAIR(4));
+	printw("%-*s", COLS, "System operational.");
+	printw("%-*s", COLS, "");
+	printw("%-*s", COLS, "I read and agree to the terms of service (press space to confirm) ");
+	printw("%-*s", COLS, "");
 	if (get_keypress() != ' ')
 	{
-		mvprintw(LINES - 2, 0, "%-70s", "");
-		mvprintw(LINES - 2, 0, "Disagree to the terms of service and exit ? (y/N) ");
+		curs_set(1);
+		mvprintw(LINES - 1, 0, "%-*s", COLS, "");
+		printw("%-*s", COLS, "");
+		mvprintw(LINES - 1, 0, "Disagree to the terms of service and exit ? (y/N) ");
 		ch = get_keypress();
+		attroff(COLOR_PAIR(4));
 		if (ch == 'y' || ch == 'Y')
 			return (1);
 	}
 	return (0);
 }
 
+int	open_port(portopts **conn_options, dispopts **disp_options)
+{
+	char	*error_type;
+
+	error_type = "!> CONNECTION ERROR >> ";
+	(*conn_options)->fd = open((*conn_options)->port, O_RDWR | O_NOCTTY);
+	if ((*conn_options)->fd < 0)
+	{
+		curs_set(1);
+		strncpy((*disp_options)->cmd_output, error_type, BIG_BUFFER);
+		strncpy((*disp_options)->cmd_output + strlen(error_type), strerror(errno), BIG_BUFFER);
+		(*disp_options)->cmd_output[BIG_BUFFER - 1] = 0;
+		(*conn_options)->port[0] = 0;
+	}
+	else
+		*(*conn_options)->toptions = set_termios_opt((*conn_options)->fd, cfgetispeed((*conn_options)->toptions));
+	return ((*conn_options)->fd);
+}
+
 void	play_connect(portopts **conn_options, dispopts **disp_options)
 {
 	int		i;
 	int		delay;
-	char	*error_type;
 
 	clear();
 	curs_set(0);
-	mvprintw(0, 0, "[BOMB DEFUSER] Establishing connection...\n\n");
-	printw("Please DO NOT at any time shut down the defuser during this process.\n");
+	attron(A_BOLD);
+	attron(COLOR_PAIR(2));
+	mvprintw(0, 0, "%-*s", COLS, "[BOMB DEFUSER] Establishing connection...");
+	attroff(A_BOLD);
+	attroff(COLOR_PAIR(2));
+	mvprintw(2, 0, "Please DO NOT at any time shut down the defuser during this process.\n");
 	put_separation(-1, COLS);
-	error_type = "!> CONNECTION ERROR >> ";
 	i = 0;
 	while (i <= 60)
 	{
@@ -95,26 +118,11 @@ void	play_connect(portopts **conn_options, dispopts **disp_options)
 			put_loading("ANALYSING FIRMWARE...", "\t(OK)", LINES - 7, (i - 40) * 3, 60);
 		put_separation(LINES - 4, COLS);
 		put_loading("PROGRESS", NULL, LINES - 2, i, 60);
-
-		// Open serial port
-		if (i == 55)
-			(*conn_options)->fd = open((*conn_options)->port, O_RDWR | O_NOCTTY);
-		if (i >= 55 && (*conn_options)->fd < 0)
-		{
-			curs_set(1);
-			strncpy((*disp_options)->cmd_output, error_type, BIG_BUFFER);
-			strncpy((*disp_options)->cmd_output + strlen(error_type), strerror(errno), BIG_BUFFER);
-			(*disp_options)->cmd_output[BIG_BUFFER - 1] = 0;
-			(*conn_options)->port[0] = 0;
+		if (i == 55 && open_port(conn_options, disp_options) < 0)
 			return ;
-		}
-		else if (i == 55)
-			*(*conn_options)->toptions = set_termios_opt((*conn_options)->fd, cfgetispeed((*conn_options)->toptions));
-		
 		delay = 100;
 		if (i < 30 || i > 45)
 			delay = 75;
-
 		cbreak();
 		timeout(delay);
 		getch();
