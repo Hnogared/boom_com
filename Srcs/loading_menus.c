@@ -72,6 +72,7 @@ int	play_startup(void)
 		if (ch == 'y' || ch == 'Y')
 			return (1);
 	}
+	curs_set(1);
 	return (0);
 }
 

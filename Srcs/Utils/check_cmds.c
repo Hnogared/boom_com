@@ -64,7 +64,7 @@ int	check_help_cmds(dispopts **disp_options)
 			"   # help nav      Display the commands for navigating through the defuser.\n"
 			"   # help connect  Quick guide on how to connect to a bomb.\n"
 			"   # help hacks    Quick guide on hacking attacks on electronics/informatics.\n\n"
-			"   For more information, type 'help_cmd' or refer to the manual (cmd 'man').\n", BIG_BUFFER);
+			"   For more information, type 'help cmd' or refer to the manual (cmd 'man').\n", BIG_BUFFER);
 		(*disp_options)->cmd_output[BIG_BUFFER - 1] = 0;
 	}
 	else if (!left_strcmp("help cmd\n", (*disp_options)->cmd) && (*disp_options)->view)
@@ -85,7 +85,7 @@ int	check_help_cmds(dispopts **disp_options)
 			"   List of commands to navigate through the GUI of the defuser :\n\n"
 			"   # exit              Close *CONFEDERATION BOMB DEFUSER v4.6*.\n"
 			"   # set-view bomb     Switch to bomb view only.\n"
-			"   # set-view difuser  Switch to defuser view only.\n"
+			"   # set-view defuser  Switch to defuser view only.\n"
 			"   # set-view split    Split the screen horizontally between the bomb and defuser views.\n", BIG_BUFFER);
 		(*disp_options)->cmd_output[BIG_BUFFER - 1] = 0;
 	}
@@ -93,8 +93,8 @@ int	check_help_cmds(dispopts **disp_options)
 	{
 		strncpy((*disp_options)->cmd_output, "$> Quick guide on how to setup a connection between your defuser and a bomb.\n\n"
 			"   1. Connect one of the defuser's USB ports to the device to disarm.\n"
-			"   2. Run 'set_port' and select an output USB port.\n"
-			"   3. Following the port, use 'set_baudrate' to select a baud rate.\n"
+			"   2. Run 'set-port' and select an output USB port.\n"
+			"   3. Following the port, use 'set-baudrate' to select a baud rate.\n"
 			"   4. You should then get a connection confirmation in the 'BOMB INTERPRETOR' tab.\n"
 			"   Depending on the bomb type, you might get an audio/visual confirmation from it as well.\n\n"
 			"   ISSUES:\n"
@@ -109,13 +109,13 @@ int	check_help_cmds(dispopts **disp_options)
 	}
 	else if (!left_strcmp("help hacks\n", (*disp_options)->cmd) && (*disp_options)->view)
 	{
-		strncpy((*disp_options)->cmd_output, "Quick guide on hacking attacks on electronics/informatics usign the defuser.\n\n"
-			"1. Look for vulnerabilities : outdated software, open ports.\n"
-			"2. Select one of the tools we provide to exploit a potential vulnerability.\n\n"
-			"Available hacking programs:\n"
-			"# firewall-ext [ID]  Program to overload a component's firewall.\n"
-			"# bytestuffer [ID]   Make a given component's memory overflow.\n"
-			"More information on hacking into electronic/informatic systems in the manual (cmd 'man').\n", BIG_BUFFER);
+		strncpy((*disp_options)->cmd_output, "$> Quick guide on hacking attacks on electronics/informatics usign the defuser.\n\n"
+			"   1. Look for vulnerabilities : outdated software, open ports.\n"
+			"   2. Select one of the tools we provide to exploit a potential vulnerability.\n\n"
+			"   Available hacking programs:\n"
+			"   # firewall-ext [ID]  Program to overload a component's firewall.\n"
+			"   # bytestuffer [ID]   Make a given component's memory overflow.\n"
+			"   More information on hacking into electronic/informatic systems in the manual (cmd 'man').\n", BIG_BUFFER);
 		(*disp_options)->cmd_output[BIG_BUFFER - 1] = 0;
 	}
 	else

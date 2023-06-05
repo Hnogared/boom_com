@@ -14,9 +14,9 @@ char	*menu_port_select(void)
 	{
 		clear();
 		refresh();
-		
-		put_separation(0, COLS);
-		mvprintw(0, 0, "[PORT SELECTION MENU]");
+		attron(COLOR_PAIR(2));
+		mvprintw(0, 0, "%-*s", COLS, "[PORT SELECTION MENU]");
+		attroff(COLOR_PAIR(2));
 		move(2, 0);
 		if (files_tab)
 		{
@@ -64,13 +64,14 @@ int	menu_baudrate_select(void)
 		clear();
 		refresh();
 
-		put_separation(0, COLS);
-		mvprintw(0, 0, "[BAUD RATE SELECTION MENU]");
+		attron(COLOR_PAIR(2));
+		mvprintw(0, 0, "%-*s", COLS, "[BAUD RATE SELECTION MENU]");
+		attroff(COLOR_PAIR(2));
 		move(2, 0);
-		printw("This is where you select the connection speed between *CONFEDERATION BOMB DEFUSER v4.6*\nand the bomb.\n");
-		printw("The data/commands sent to the bomb have to be synchronized to its speed for it to be able\nto interpret them correctly.\n");
+		printw("This is where you select the connection speed between *CONFEDERATION BOMB DEFUSER v4.6* and the bomb.\n");
+		printw("The data/commands sent to the bomb have to be synchronized to its speed for it to be able to interpret them correctly.\n");
 		printw("Please be aware that an incorrect synchronisation speed may send corrupted data/commands tothe bomb and trigger its defense mechanisms.\n\n");
-		printw("For more informations on the topic of synchronizing communication speeds with a lethal bombplease read the fucking manual.\n\n");
+		printw("For more informations on the topic of synchronizing communication speeds with a lethal bomb please RTFM.\n\n");
 		printw(" [01]   9600\n");
 		printw(" [02]   42000\n");
 		printw(" [03]   115200\n");

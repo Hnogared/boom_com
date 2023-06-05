@@ -72,5 +72,5 @@ int	main(void)
 	menu_defusing(&conn_options, &disp_options);
 
 	exit_helper(conn_options, disp_options);
-	return 0;
+	return (0);
 }

@@ -100,7 +100,7 @@ void	print_prompt(portopts **conn_options, dispopts **disp_options)
 		attron(COLOR_PAIR(3));
 		put_centered("/!\\ Currently not connected to any device. /!\\", -1, COLS);
 		printw("%*s", COLS, "");
-		put_centered("'help_connect' or 'man' for how to connect to a bomb.", LINES - 3, COLS);
+		put_centered("'help connect' or 'man' for how to connect to a bomb.", LINES - 3, COLS);
 		attroff(A_BOLD);
 		attroff(COLOR_PAIR(3));
 	}

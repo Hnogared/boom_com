@@ -80,7 +80,6 @@ struct termios	set_termios_opt(int fd, int baudrate)
 	return (toptions);
 }
 
-
 void	exit_helper(portopts *conn_options, dispopts *disp_options)
 {
 	if (conn_options->fd > -1)
@@ -91,7 +90,9 @@ void	exit_helper(portopts *conn_options, dispopts *disp_options)
 		free(disp_options);
 	clear();
 	curs_set(0);
+	attron(COLOR_PAIR(1));
 	mvprintw(0, 0, "Exiting bomb defusing helper, goodbye...");
+	attroff(COLOR_PAIR(1));
 	timeout(750);
 	getch();
 	endwin();
