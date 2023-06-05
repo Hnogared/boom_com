@@ -12,15 +12,9 @@
 # include <dirent.h>
 # include <errno.h>
 
-# ifndef FILES_TAB_SIZE
-#  define FILES_TAB_SIZE	9
-# endif
-# ifndef LITTLE_BUFFER
-#  define LITTLE_BUFFER		80
-# endif
-# ifndef BIG_BUFFER
-#  define BIG_BUFFER		4096
-# endif
+# define FILES_TAB_SIZE	9
+# define LITTLE_BUFFER	80
+# define BIG_BUFFER		4096
 
 	/*
 	 *	COLOR_BLACK   0
