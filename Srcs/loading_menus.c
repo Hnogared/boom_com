@@ -81,7 +81,7 @@ int	open_port(portopts **conn_options, dispopts **disp_options)
 	char	*error_type;
 
 	(*conn_options)->fd = open((*conn_options)->port, O_RDWR | O_NOCTTY, 0644);
-	if ((*conn_options)->fd < 0)
+	if ((*conn_options)->fd < 0 || !(*conn_options)->toptions)
 	{
 		curs_set(1);
 		error_type = "!> CONNECTION ERROR >> ";
@@ -91,12 +91,7 @@ int	open_port(portopts **conn_options, dispopts **disp_options)
 		(*conn_options)->port[0] = 0;
 	}
 	else
-	{
-		if ((*conn_options)->toptions)
-			*(*conn_options)->toptions = set_termios_opt((*conn_options)->fd, cfgetispeed((*conn_options)->toptions));
-		else
-			return (-1);
-	}
+		*(*conn_options)->toptions = set_termios_opt((*conn_options)->fd, cfgetispeed((*conn_options)->toptions));
 	return ((*conn_options)->fd);
 }
 
