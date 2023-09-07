@@ -9,8 +9,9 @@ int	exec_command(portopts **conn_options, dispopts **disp_options)
 		system("less defuser_man.txt");
 		return (0);
 	}
-	if (check_view_cmds(disp_options) || check_conn_cmds(conn_options, disp_options) ||
-		check_help_cmds(disp_options))
+//	if (check_view_cmds(disp_options) || check_conn_cmds(conn_options, disp_options) ||
+//		check_help_cmds(disp_options))
+	if (check_view_cmds(disp_options) || check_help_cmds(disp_options))
 		return (0);
 	strncpy((*disp_options)->cmd_output, "!> ERROR >> Unknown command : ", BIG_BUFFER);
 	strncpy((*disp_options)->cmd_output + 30, (*disp_options)->cmd, BIG_BUFFER);
