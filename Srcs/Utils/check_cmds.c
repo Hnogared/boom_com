@@ -45,7 +45,7 @@ int	check_conn_cmds(portopts **conn_options, dispopts **disp_options)
 			if ((*conn_options)->fd <= -1)
 				play_connect(conn_options, disp_options);
 			else
-				*(*conn_options)->toptions = set_termios_opt((*conn_options)->fd, (*conn_options)->baudrate);
+				set_termios_opt((*conn_options)->fd, (*conn_options)->baudrate);
 		}
 		return (1);
 	}

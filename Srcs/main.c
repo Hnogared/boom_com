@@ -78,7 +78,7 @@ int	main(void)
 		exit_helper(conn_options, disp_options);
 	attroff(COLOR_PAIR(1));
 
-	init_termios(&conn_options);
+//	init_termios(&conn_options);
 	menu_defusing(&conn_options, &disp_options);
 
 	exit_helper(conn_options, disp_options);
