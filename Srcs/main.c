@@ -48,6 +48,15 @@ void	init_colors(void)
 		return ;
 }
 
+int	init_termios(portopts **conn_options)
+{
+	(*conn_options)->fd = open("/dev/ttyUSB0", O_RDWR | O_NOCTTY);
+	memmove((*conn_options)->port, "/dev/ttyUSB0", 13);
+	(*conn_options)->baudrate = 115200;
+	set_termios_opt((*conn_options)->fd, 3);
+	return (0);
+}
+
 int	main(void)
 {
     portopts	*conn_options;
@@ -69,6 +78,7 @@ int	main(void)
 		exit_helper(conn_options, disp_options);
 	attroff(COLOR_PAIR(1));
 
+	init_termios(&conn_options);
 	menu_defusing(&conn_options, &disp_options);
 
 	exit_helper(conn_options, disp_options);

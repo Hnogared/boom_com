@@ -80,7 +80,7 @@ int	open_port(portopts **conn_options, dispopts **disp_options)
 {
 	char	*error_type;
 
-	(*conn_options)->fd = open((*conn_options)->port, O_RDWR | O_NOCTTY, 0644);
+	(*conn_options)->fd = open((*conn_options)->port, O_RDWR | O_NOCTTY);
 	if ((*conn_options)->fd < 0 || !(*conn_options)->toptions)
 	{
 		curs_set(1);

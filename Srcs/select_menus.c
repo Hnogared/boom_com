@@ -37,7 +37,7 @@ char	*menu_port_select(void)
 		{
 			port = files_tab[ch - '0' - 1];
 			free(files_tab);
-			return(port);
+			return (port);
 		}
 		if (ch == 'r' || ch == 'R')
 		{
