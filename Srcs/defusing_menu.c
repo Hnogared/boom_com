@@ -40,7 +40,7 @@ void	print_output(portopts *conn_options, dispopts **disp_options)
 	{
 		printw("\nUSER ~ %c ", (*disp_options)->prompt_char);
 		if ((*disp_options)->cmd && (*disp_options)->cmd[0] == '@')
-			printw((*disp_options)->cmd + 1);
+			printw("%s", (*disp_options)->cmd + 1);
 		printw("\n");
 	}
 }

@@ -80,18 +80,21 @@ int	open_port(portopts **conn_options, dispopts **disp_options)
 {
 	char	*error_type;
 
-	error_type = "!> CONNECTION ERROR >> ";
-	(*conn_options)->fd = open((*conn_options)->port, O_RDWR | O_NOCTTY);
+	(*conn_options)->fd = open((*conn_options)->port, O_RDWR | O_NOCTTY, 0644);
 	if ((*conn_options)->fd < 0)
 	{
 		curs_set(1);
+		error_type = "!> CONNECTION ERROR >> ";
 		strncpy((*disp_options)->cmd_output, error_type, BIG_BUFFER);
 		strncpy((*disp_options)->cmd_output + strlen(error_type), strerror(errno), BIG_BUFFER);
 		(*disp_options)->cmd_output[BIG_BUFFER - 1] = 0;
 		(*conn_options)->port[0] = 0;
 	}
 	else
-		*(*conn_options)->toptions = set_termios_opt((*conn_options)->fd, cfgetispeed((*conn_options)->toptions));
+	{
+		if ((*conn_options)->toptions)
+			*(*conn_options)->toptions = set_termios_opt((*conn_options)->fd, cfgetispeed((*conn_options)->toptions));
+	}
 	return ((*conn_options)->fd);
 }
 
