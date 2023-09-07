@@ -94,6 +94,8 @@ int	open_port(portopts **conn_options, dispopts **disp_options)
 	{
 		if ((*conn_options)->toptions)
 			*(*conn_options)->toptions = set_termios_opt((*conn_options)->fd, cfgetispeed((*conn_options)->toptions));
+		else
+			return (-1);
 	}
 	return ((*conn_options)->fd);
 }
