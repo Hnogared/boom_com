@@ -23,15 +23,22 @@ int	exec_command(portopts **conn_options, dispopts **disp_options)
 
 void	print_output(portopts *conn_options, dispopts **disp_options)
 {
+	int		size;
+	char	temp[BIG_BUFFER];
 
 	if (conn_options->fd < 0)
 		return ;
-	bzero((*disp_options)->bomb_output, BIG_BUFFER);
-	if (read(conn_options->fd, (*disp_options)->bomb_output , BIG_BUFFER - 1) < 0)
+	size = read(conn_options->fd, temp, BIG_BUFFER - 1);
+	if (size < 0)
 	{
-		strncpy((*disp_options)->cmd_output, "!> ERROR >> Unable to read the device's output", BIG_BUFFER);
+		strncpy((*disp_options)->cmd_output, "!> READING_ERROR >> ", BIG_BUFFER);
+		strncpy((*disp_options)->cmd_output + 20, strerror(errno), BIG_BUFFER);
+		(*disp_options)->cmd_output[BIG_BUFFER - 1] = 0;
 		return ;
 	}
+	temp[size] = 0;
+	if (strchr(temp, '$'))
+		memmove((*disp_options)->bomb_output, temp, size + 1);
 	if ((*disp_options)->view == 1)
 		return ;
 	mvprintw(2, 0, "%s\n", crop((*disp_options)->bomb_output));
