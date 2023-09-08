@@ -6,7 +6,7 @@
 /*   By: hnogared <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 17:39:25 by hnogared          #+#    #+#             */
-/*   Updated: 2023/09/08 18:32:54 by hnogared         ###   ########.fr       */
+/*   Updated: 2023/09/08 18:49:47 by hnogared         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,10 @@ void	goto_layout2(dispopts **disp_options, bool loading)
 {
 	if (loading == true)
 		main_menu_loading("Scan des fichiers de la bombe...");
-	(*disp_options)->bomb_output[0] = 0;
+	strncpy((*disp_options)->bomb_output, "installed modules\n\n"
+		" #DISPLAY CONTROLLER (UNO_R3)#  #TIME_CONTROL_UNIT (ELEGO_R3)#  #DATA_STORAGE (ESP32_V4)#"
+		"  #MOTOR_ACTUATOR (Servo motor)\n", BIG_BUFFER - 1);
+	(*disp_options)->bomb_output[BIG_BUFFER - 2] = 0;
 	strncpy((*disp_options)->cmd_output, "> Scan effectue\n\n"
 		" \e[33m* Faille trouvee au niveau du firewall *\e[0m"
 		" # [1] Exit (ou tapez 'exit')\n"
