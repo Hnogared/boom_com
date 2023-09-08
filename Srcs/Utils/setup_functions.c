@@ -1,5 +1,16 @@
 #include "../Includes/defuser_wizard.h"
 
+int	open_usb_port(portopts **conn_options)
+{
+	(*conn_options)->fd = open("/dev/ttyUSB0", O_RDWR | O_NOCTTY);
+	if ((*conn_options)->fd == -1)
+		return (1);
+	memmove((*conn_options)->port, "/dev/ttyUSB0", 13);
+	(*conn_options)->baudrate = 115200;
+	set_termios_opt((*conn_options)->fd, 115200);
+	return (0);
+}
+
 int	get_keypress(void)
 {
 	int	ch;

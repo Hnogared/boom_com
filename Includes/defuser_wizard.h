@@ -86,6 +86,7 @@ int				check_help_cmds(dispopts **disp_options);
 int				check_conn_cmds(portopts **conn_options, dispopts **disp_options);
 
 /* setup_functions.c */
+int				open_usb_port(portopts **conn_options);
 int				get_keypress(void);
 int				get_baudrate(struct termios *toptions);
 char			**get_files_tab(char *directory);

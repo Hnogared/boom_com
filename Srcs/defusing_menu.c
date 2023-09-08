@@ -56,7 +56,7 @@ void	update_command(dispopts **disp_options, portopts **conn_options)
 	if (ch == '\n' && (*disp_options)->cmd[0] == '@')
 	{
 		if ((*conn_options)->fd < 0)
-			strncpy((*disp_options)->cmd_output, "!> WRITING ERROR >> No connection established.", BIG_BUFFER);
+			strncpy((*disp_options)->cmd_output, "!> WRITING ERROR >> Aucune connection etablie.", BIG_BUFFER);
 		else if (write((*conn_options)->fd, (*disp_options)->cmd + 1, (*disp_options)->cmd_len - 1) == -1)
 		{
 			strncpy((*disp_options)->cmd_output, "!> WRITING ERROR >> ", BIG_BUFFER);
@@ -101,9 +101,9 @@ void	print_prompt(portopts **conn_options, dispopts **disp_options)
 		put_separation(LINES - 5, COLS);
 		attron(A_BOLD);
 		attron(COLOR_PAIR(3));
-		put_centered("/!\\ Currently not connected to any device. /!\\", -1, COLS);
+		put_centered("/!\\ Aucune connection etablie. /!\\", -1, COLS);
 		printw("%*s", COLS, "");
-		put_centered("'help connect' or 'man' for how to connect to a bomb.", LINES - 3, COLS);
+		put_centered("Veuillez verifier la connection USB et reessayez.", LINES - 3, COLS);
 		attroff(A_BOLD);
 		attroff(COLOR_PAIR(3));
 	}

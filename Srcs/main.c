@@ -49,18 +49,6 @@ void	init_colors(void)
 		return ;
 }
 
-int	init_termios(portopts **conn_options)
-{
-	(*conn_options)->fd = open("/dev/ttyUSB0", O_RDWR | O_NOCTTY);
-	if ((*conn_options)->fd != -1)
-	{
-		memmove((*conn_options)->port, "/dev/ttyUSB0", 13);
-		(*conn_options)->baudrate = 115200;
-		set_termios_opt((*conn_options)->fd, 115200);
-	}
-	return (0);
-}
-
 int	main(void)
 {
     portopts	*conn_options;
@@ -82,11 +70,10 @@ int	main(void)
 		exit_helper(conn_options, disp_options);
 	attroff(COLOR_PAIR(1));
 
-	init_termios(&conn_options);
-	strncpy(disp_options->cmd_output, "Welcome to the bomb defuser UI.\n"
-		"Please type one of the options below :\n\n"
-		" # [1] Exit (or type 'exit')\n"
-		" # [2] Decrypt and access the bomb's system.\n", BIG_BUFFER - 2);
+	strncpy(disp_options->cmd_output, "Bienvenue sur l'interface de desamorcage.\n"
+		"Veuillez taper une de ces options :\n\n"
+		" # [1] Exit (ou tapez 'exit')\n"
+		" # [2] Infiltrer la bombe.\n", BIG_BUFFER - 2);
 	disp_options->cmd_output[BIG_BUFFER - 1] = 0;
 	menu_defusing(&conn_options, &disp_options);
 
