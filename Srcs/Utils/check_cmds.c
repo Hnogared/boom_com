@@ -28,7 +28,7 @@ int	check_choice(portopts **conn_options, dispopts **disp_options)
 	if (((*disp_options)->cmd)[0] == '3' && ((*disp_options)->cmd)[1] == '\n')
 	{
 		if ((*disp_options)->layout == 1)
-			goto_layout2(conn_options, disp_options, true);
+			goto_layout2(disp_options, true);
 		return (1);
 	}
 	return (0);
