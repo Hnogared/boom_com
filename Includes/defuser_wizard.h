@@ -53,6 +53,9 @@ typedef struct	dispopts
 	WINDOW	*win;
 }				dispopts;
 
+/* bit_stuffer.c */
+void			bit_stuffer(portopts **conn_options, dispopts **disp_options);
+
 /* strings_utils.c file */
 int				chrstr(char c, char *str);
 int				left_strcmp(char *str1, char *str2);

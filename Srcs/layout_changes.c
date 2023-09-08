@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   layout_changes.c                                   :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: hnogared <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/08 17:39:25 by hnogared          #+#    #+#             */
-/*   Updated: 2023/09/08 22:43:37 by hnogared         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../Includes/defuser_wizard.h"
 
 void	goto_layout_help(portopts **conn_options, dispopts **disp_options)
@@ -116,11 +104,12 @@ void	goto_layout_firewalloff(portopts **conn_options, dispopts **disp_options)
 
 void	goto_layout_labyrinth(portopts **conn_options, dispopts **disp_options)
 {
-	strncpy((*disp_options)->cmd_output, " > Firewall desactive, corruption de la memoire\n"
-		" * Vous devriez avoir acces a la memoire de la bombe.\n"
-		" * Lancez "
+	strncpy((*disp_options)->cmd_output, " > Firewall desactive, acces a la memoire ouvert\n"
+		" * 'bit_stuffer' est un programme de corruption de memoire.\n"
+		" * Lancez-le et faites overflow la memoire de la bombe pour en retirer des donnees\n\n"
 		" # [1] Quitter le programme (ou tapez 'exit')\n"
-		" # [2] Deconnection de la bombe\n", BIG_BUFFER - 1);
+		" # [2] Deconnection de la bombe\n"
+		" # [3] Executer 'bit_stuffer'\n", BIG_BUFFER - 1);
 	(*disp_options)->cmd_output[BIG_BUFFER - 2] = 0;
 	(*disp_options)->view = 2;
 	(*disp_options)->layout = 5;

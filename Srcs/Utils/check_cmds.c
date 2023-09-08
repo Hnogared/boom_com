@@ -31,6 +31,8 @@ int	check_choice(portopts **conn_options, dispopts **disp_options)
 	{
 		if ((*disp_options)->layout == 2)
 			goto_layout_3(conn_options, disp_options, true);
+		if ((*disp_options)->layout == 5)
+			bit_stuffer(conn_options, disp_options);
 		return (1);
 	}
 	return (0);

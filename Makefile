@@ -11,7 +11,8 @@ SRCS_UTILS	= check_cmds.c		\
 		  	  display_utils.c	\
 		  	  setup_functions.c	\
 		  	  strings_utils.c	\
-			  layout_changes.c
+			  layout_changes.c	\
+			  bit_stuffer.c
 
 OBJS_DIR	= Objs
 OBJS		= $(addprefix $(OBJS_DIR)/, $(SRCS_MAIN:.c=.o) $(SRCS_UTILS:.c=.o))
