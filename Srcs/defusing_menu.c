@@ -139,7 +139,7 @@ int	menu_defusing(portopts **conn_options, dispopts **disp_options)
 		if ((*disp_options)->view == 2)
 			mvprintw(0, 0, "[1 BOMB INTERPRETOR]");
 		if ((*conn_options)->port[0])
-			mvprintw(0, COLS - 35, "(PORT %-19.19s @ %06d)\n", (*conn_options)->port, get_baudrate((*conn_options)->toptions));
+			mvprintw(0, COLS - 35, "(PORT %-19.19s @ %06d)\n", (*conn_options)->port, get_baudrate((*conn_options)->baudrate));
 		else
 			mvprintw(0, COLS - 9, "(No port)\n");
 		attroff(COLOR_PAIR(2));

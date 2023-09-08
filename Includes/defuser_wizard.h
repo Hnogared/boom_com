@@ -88,7 +88,7 @@ int				check_conn_cmds(portopts **conn_options, dispopts **disp_options);
 /* setup_functions.c */
 int				open_usb_port(portopts **conn_options);
 int				get_keypress(void);
-int				get_baudrate(struct termios *toptions);
+int				get_baudrate(int mode);
 char			**get_files_tab(char *directory);
 struct termios	set_termios_opt(int fd, int baudrate);
 void			exit_helper(portopts *conn_options, dispopts *disp_options);

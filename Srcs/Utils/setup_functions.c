@@ -6,8 +6,8 @@ int	open_usb_port(portopts **conn_options)
 	if ((*conn_options)->fd == -1)
 		return (1);
 	memmove((*conn_options)->port, "/dev/ttyUSB0", 13);
-	(*conn_options)->baudrate = 115200;
-	set_termios_opt((*conn_options)->fd, 115200);
+	(*conn_options)->baudrate = 3;
+	set_termios_opt((*conn_options)->fd, 3);
 	return (0);
 }
 
@@ -23,14 +23,14 @@ int	get_keypress(void)
 	return (ch);
 }
 
-int	get_baudrate(struct termios *toptions)
+int	get_baudrate(int mode)
 {
-	if (toptions && cfgetispeed(toptions) == B115200)
-		return (115200);
-	if (toptions && cfgetispeed(toptions) == B38400)
-		return (42000);
-	if (toptions && cfgetispeed(toptions) == B9600)
+	if (mode == 0 || mode == 1)
 		return (9600);
+	if (mode == 2)
+		return (42000);
+	if (mode == 3)
+		return (115200);
 	return (0);
 }
 
