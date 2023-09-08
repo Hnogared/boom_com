@@ -20,7 +20,7 @@ int	check_choice(portopts **conn_options, dispopts **disp_options)
 	if (((*disp_options)->cmd)[0] == '2' && ((*disp_options)->cmd)[1] == '\n')
 	{
 		if ((*disp_options)->layout == -2 || (*disp_options)->layout == 1)
-			goto_layout_2(conn_options, disp_options, false);
+			goto_layout_2(conn_options, disp_options, (*disp_options)->layout == 1);
 		else if ((*disp_options)->layout == -3)
 			goto_layout_3(conn_options, disp_options, false);
 		else

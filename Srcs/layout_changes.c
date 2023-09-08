@@ -6,7 +6,7 @@
 /*   By: hnogared <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 17:39:25 by hnogared          #+#    #+#             */
-/*   Updated: 2023/09/08 22:16:09 by hnogared         ###   ########.fr       */
+/*   Updated: 2023/09/08 22:43:37 by hnogared         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	goto_layout_2(portopts **conn_options, dispopts **disp_options, bool loadin
 	strncpy((*disp_options)->bomb_output,
 		"Acces autorise, JOE@DEFUSER42 connecte via port USB *Bienvenue ^^*\n", BIG_BUFFER - 1);
 	(*disp_options)->bomb_output[BIG_BUFFER - 2] = 0;
-	strncpy((*disp_options)->cmd_output, "> Connecte a la bombe\n\n"
+	strncpy((*disp_options)->cmd_output, " > Connecte a la bombe\n\n"
 		" # [1] Quitter le programme (ou tapez 'exit')\n"
 		" # [2] Deconnection de la bombe\n"
 		" # [3] Scan du systeme\n", BIG_BUFFER - 1);
@@ -79,7 +79,7 @@ void	goto_layout_3(portopts **conn_options, dispopts **disp_options, bool loadin
 		" * DATA_STORAGE (ESP32_V4)\t- [ID:PK84u9] - Firewall breach\n"
 		" * MOTOR_ACTUATOR (Servo motor)\t- [ID:RM3oRF] - ACCESS RESTRICTED\n", BIG_BUFFER - 1);
 	(*disp_options)->bomb_output[BIG_BUFFER - 2] = 0;
-	strncpy((*disp_options)->cmd_output, "> Scan effectue\n"
+	strncpy((*disp_options)->cmd_output, " > Scan effectue\n"
 		" * Vulnerabilite detectee au niveau du firewall.\n"
 		" * Une attaque afin de le desactiver peut etre lancee avec la commande : "
 		"'@firewall-ext <MODULE_ID>'\n"
@@ -95,7 +95,7 @@ void	goto_layout_3(portopts **conn_options, dispopts **disp_options, bool loadin
 
 void	goto_layout_firewalloff(portopts **conn_options, dispopts **disp_options)
 {
-	strncpy((*disp_options)->cmd_output, "> Attaque reussie\n"
+	strncpy((*disp_options)->cmd_output, " > Attaque reussie\n"
 		" * Le firewall a ete partiellement desactive\n"
 		" * Le pave de huit boutons vous permettra d'entrer la sequence de desactivation totale.\n"
 		" * Une roue lumineuse devrait vous guider dans cette etape (voir fig. 1).\n\n"
@@ -105,7 +105,7 @@ void	goto_layout_firewalloff(portopts **conn_options, dispopts **disp_options)
 		"      []        []\n"
 		"        []    []\n"
 		"          [][]\n"
-		"         fig. 1\n\n"
+		"      fig. 1\n\n"
 		" # [1] Quitter le programme (ou tapez 'exit')\n"
 		" # [2] Deconnection de la bombe\n", BIG_BUFFER - 1);
 	(*disp_options)->cmd_output[BIG_BUFFER - 2] = 0;
@@ -116,7 +116,9 @@ void	goto_layout_firewalloff(portopts **conn_options, dispopts **disp_options)
 
 void	goto_layout_labyrinth(portopts **conn_options, dispopts **disp_options)
 {
-	strncpy((*disp_options)->cmd_output, "> \n"
+	strncpy((*disp_options)->cmd_output, " > Firewall desactive, corruption de la memoire\n"
+		" * Vous devriez avoir acces a la memoire de la bombe.\n"
+		" * Lancez "
 		" # [1] Quitter le programme (ou tapez 'exit')\n"
 		" # [2] Deconnection de la bombe\n", BIG_BUFFER - 1);
 	(*disp_options)->cmd_output[BIG_BUFFER - 2] = 0;
