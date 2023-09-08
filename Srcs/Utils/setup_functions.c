@@ -2,10 +2,16 @@
 
 int	open_usb_port(portopts **conn_options)
 {
-	(*conn_options)->fd = open("/dev/ttyUSB0", O_RDWR | O_NOCTTY);
+	char	**usb_paths;
+
+	usb_paths = (char *[]){"/dev/ttyUSB0", "/dev/ttyUSB1", "/dev/ttyUSB2",
+		"/dev/ttyUSB3", "/dev/ttyUSB4", "NULL"};
+	(*conn_options)->fd = -1;
+	while (*usb_paths && (*conn_options)->fd == -1)
+		(*conn_options)->fd = open(*(usb_paths++), O_RDWR | O_NOCTTY);
 	if ((*conn_options)->fd == -1)
 		return (1);
-	memmove((*conn_options)->port, "/dev/ttyUSB0", 13);
+	memmove((*conn_options)->port, *usb_paths, 13);
 	(*conn_options)->baudrate = 3;
 	set_termios_opt((*conn_options)->fd, 3);
 	return (0);
