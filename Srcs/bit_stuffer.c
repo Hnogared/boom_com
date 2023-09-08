@@ -33,7 +33,8 @@ void	bit_stuffer(portopts **conn_options, dispopts **disp_options)
 			write((*conn_options)->fd, "moveS", 5);
 		if (c == 'd')
 			write((*conn_options)->fd, "moveD", 5);
-		printw("%c", c);
+	//	printw("%c", c);
+		mvprintw(LINES - 5, 0, strerror(errno));
 	}
 	put_separation(LINES - 2, COLS);
 	curs_set(1);
