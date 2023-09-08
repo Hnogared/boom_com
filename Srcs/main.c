@@ -71,10 +71,11 @@ int	main(void)
 
 	goto_layout_1(&conn_options, &disp_options);
 
+	menu_defusing(&conn_options, &disp_options);
 	while (1)
 	{
-		menu_defusing(&conn_options, &disp_options);
 		update_command(&conn_options, &disp_options);
+		menu_defusing(&conn_options, &disp_options);
 	}
 	exit_helper(conn_options, disp_options);
 	return (0);
