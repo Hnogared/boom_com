@@ -58,13 +58,7 @@ int	check_help_cmds(dispopts **disp_options)
 	{
 		strncpy((*disp_options)->cmd_output, "$> List of the available important commands :\n\n"
 			"   # help          Show this menu.\n"
-			"   # man           Open the manual.\n"
-			"   # exit          Close *CONFEDERATION BOMB DEFUSER v4.6*.\n"
-			"   # help cmd      Quick guide on how to send commands through the defuser.\n"
-			"   # help nav      Display the commands for navigating through the defuser.\n"
-			"   # help connect  Quick guide on how to connect to a bomb.\n"
-			"   # help hacks    Quick guide on hacking attacks on electronics/informatics.\n\n"
-			"   For more information, type 'help cmd' or refer to the manual (cmd 'man').\n", BIG_BUFFER);
+			"   # exit          Close *CONFEDERATION BOMB DEFUSER v4.6*.\n", BIG_BUFFER);
 		(*disp_options)->cmd_output[BIG_BUFFER - 1] = 0;
 	}
 	else if (!left_strcmp("help cmd\n", (*disp_options)->cmd) && (*disp_options)->view)

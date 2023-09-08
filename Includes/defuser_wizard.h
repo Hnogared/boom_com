@@ -43,6 +43,7 @@ typedef struct	portopts
 typedef struct	dispopts
 {
 	int		view;
+	int		stage;
 	int		cmd_len;
 	char	prompt_char;
 	char	cmd[LITTLE_BUFFER];
