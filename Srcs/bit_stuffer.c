@@ -2,6 +2,7 @@
 
 void	bit_stuffer(portopts **conn_options, dispopts **disp_options)
 {
+	int		state;
 	char	c;
 
 	clear();
@@ -20,22 +21,23 @@ void	bit_stuffer(portopts **conn_options, dispopts **disp_options)
 	printw(" Last inputs\n");
 	attroff(A_BOLD);
 	attroff(COLOR_PAIR(2));
-	while (true)
+	state = 1;
+	while (state)
 	{
 		c = get_keypress();
 		if (c == '\e')
 			break ;
-		if (c == 'z')
-			write((*conn_options)->fd, "moveZ", 5);
-		if (c == 'q')
-			write((*conn_options)->fd, "moveQ", 5);
-		if (c == 's')
-			write((*conn_options)->fd, "moveS", 5);
-		if (c == 'd')
-			write((*conn_options)->fd, "moveD", 5);
-	//	printw("%c", c);
-		mvprintw(LINES - 5, 0, strerror(errno));
+		if (c == 'z' && write((*conn_options)->fd, "moveZ", 5) == -1)
+			state = 0;
+		if (c == 'q' && write((*conn_options)->fd, "moveQ", 5) == -1)
+			state = 0;
+		if (c == 's' && write((*conn_options)->fd, "moveS", 5) == -1)
+			state = 0;
+		if (c == 'd' && write((*conn_options)->fd, "moveD", 5) == -1)
+			state = 0;
+		printw("%c", c);
 	}
+
 	put_separation(LINES - 2, COLS);
 	curs_set(1);
 	goto_layout_labyrinth(conn_options, disp_options);
