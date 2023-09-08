@@ -27,6 +27,11 @@ static void	display_ui(void)
 	curs_set(1);
 }
 
+//static int	check_answer(portopts **conn_options, dispopts **disp_options)
+//{
+	
+//}
+
 void	bit_stuffer(portopts **conn_options, dispopts **disp_options)
 {
 	int		state;
@@ -49,12 +54,18 @@ void	bit_stuffer(portopts **conn_options, dispopts **disp_options)
 		if (c == 'd' && write((*conn_options)->fd, "moveD", 5) == -1)
 			state = 0;
 		printw("%c", c * (c == 'z' || c == 'q' || c == 's' || c == 'd'));
+//		check_answer
 	}
 	if (!state)
 	{
 		strncpy((*disp_options)->bomb_output, "!> WRITING ERROR >> ", BIG_BUFFER);
 		strncpy((*disp_options)->bomb_output + 20, strerror(errno), BIG_BUFFER);
 		(*disp_options)->bomb_output[BIG_BUFFER - 1] = 0;
+		goto_layout_labyrinth(conn_options, disp_options);
+		return ;
 	}
-	goto_layout_labyrinth(conn_options, disp_options);
+//	if ((*disp_options)->layout == 5 && strstr((*disp_options)->bomb_output, "end_lab"))
+//		goto_layout_bytes(&conn_options, disp_options);
+//	else
+		goto_layout_labyrinth(conn_options, disp_options);
 }
