@@ -4,6 +4,7 @@ static void	display_ui(void)
 {
 	int		i;
 	
+	curs_set(0);
 	attron(A_BOLD);
 	attron(COLOR_PAIR(2));
 	mvprintw(0, 0, "%-*s", COLS, "bit_stuffer v. 1.2");
@@ -23,6 +24,7 @@ static void	display_ui(void)
 		printw("%-*s", COLS, "");
 	put_separation(i, COLS);
 	move(7, 0);
+	curs_set(1);
 }
 
 void	bit_stuffer(portopts **conn_options, dispopts **disp_options)
@@ -31,7 +33,6 @@ void	bit_stuffer(portopts **conn_options, dispopts **disp_options)
 	char	c;
 
 	clear();
-	curs_set(0);
 	display_ui();
 	state = 1;
 	while (state)
@@ -55,6 +56,5 @@ void	bit_stuffer(portopts **conn_options, dispopts **disp_options)
 		strncpy((*disp_options)->bomb_output + 20, strerror(errno), BIG_BUFFER);
 		(*disp_options)->bomb_output[BIG_BUFFER - 1] = 0;
 	}
-	curs_set(1);
 	goto_layout_labyrinth(conn_options, disp_options);
 }
