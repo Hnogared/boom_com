@@ -22,13 +22,14 @@ int	check_choice(portopts **conn_options, dispopts **disp_options)
 		if ((*disp_options)->stage == 0)
 		{
 			strncpy((*disp_options)->bomb_output,
-				"░@¿ ~acces? granted, JOE@DEFUSER42 connected via USB port\n", BIG_BUFFER - 1);
+				"JOE@BOMB ~> acces granted, JOE@DEFUSER42 connected via USB port\n", BIG_BUFFER - 1);
 			(*disp_options)->bomb_output[BIG_BUFFER - 2] = 0;
-			strncpy((*disp_options)->bomb_output, "> Successfully connected to bomb\n\n"
+			strncpy((*disp_options)->cmd_output, "> Successfully connected to bomb\n\n"
 				" # [1] Exit (or type 'exit')\n"
 				" # [2] Scan device\n", BIG_BUFFER - 1);
 			(*disp_options)->cmd_output[BIG_BUFFER - 2] = 0;
 			(*disp_options)->stage++;
+			(*disp_options)->view = 2;
 		}
 		return (1);
 	}

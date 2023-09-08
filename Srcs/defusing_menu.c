@@ -142,9 +142,9 @@ int	menu_defusing(portopts **conn_options, dispopts **disp_options)
 			mvprintw(0, COLS - 35, "(PORT %-19.19s @ %06d)\n", (*conn_options)->port, get_baudrate((*conn_options)->toptions));
 		else
 			mvprintw(0, COLS - 9, "(No port)\n");
-		print_output(*conn_options, disp_options);
 		attroff(COLOR_PAIR(2));
 		attroff(A_BOLD);
+		print_output(*conn_options, disp_options);
 
 		// Print the debugger console and the output of the rpi
 		if ((*disp_options)->view == 2)
