@@ -17,7 +17,6 @@ int	init_disp_opts(dispopts **disp_options)
 	(*disp_options)->cmd[0] = 0;
 	(*disp_options)->cmd_output[0] = 0;
 	(*disp_options)->bomb_output[0] = 0;
-	(*disp_options)->stage = 0;
 	(*disp_options)->win = win;
 	return (0);
 }
@@ -70,11 +69,8 @@ int	main(void)
 		exit_helper(conn_options, disp_options);
 	attroff(COLOR_PAIR(1));
 
-	strncpy(disp_options->cmd_output, "Bienvenue sur l'interface de desamorcage.\n"
-		"Veuillez taper une de ces options :\n\n"
-		" # [1] Exit (ou tapez 'exit')\n"
-		" # [2] Infiltrer la bombe.\n", BIG_BUFFER - 2);
-	disp_options->cmd_output[BIG_BUFFER - 1] = 0;
+	goto_layout0(&conn_options, &disp_options);
+
 	menu_defusing(&conn_options, &disp_options);
 
 	exit_helper(conn_options, disp_options);

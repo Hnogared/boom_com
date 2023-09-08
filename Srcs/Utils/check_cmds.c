@@ -19,27 +19,11 @@ int	check_choice(portopts **conn_options, dispopts **disp_options)
 		exit_helper(*conn_options, *disp_options);
 	if (((*disp_options)->cmd)[0] == '2' && ((*disp_options)->cmd)[1] == '\n')
 	{
-		if ((*disp_options)->stage == 0)
+		if ((*disp_options)->layout == 0)
 		{
-			main_menu_loading("Intrusion en cours...");
-			if (open_usb_port(conn_options))
-			{
-				strncpy((*disp_options)->bomb_output, "!> CONNECTION_ERROR >> ", BIG_BUFFER);
-				strncpy((*disp_options)->bomb_output + 20, strerror(errno), BIG_BUFFER);
-				(*disp_options)->bomb_output[BIG_BUFFER - 1] = 0;
-				return (1);
-			}
-			strncpy((*disp_options)->bomb_output,
-				"JOE@BOMB ~> acces autorise, JOE@DEFUSER42 connecte via port USB *Bienvenue ^^*\n", BIG_BUFFER - 1);
-			(*disp_options)->bomb_output[BIG_BUFFER - 2] = 0;
-			strncpy((*disp_options)->cmd_output, "> Connecte a la bombe\n\n"
-				" # [1] Exit (ou tapez 'exit')\n"
-				" # [2] Scan du systeme\n", BIG_BUFFER - 1);
-			(*disp_options)->cmd_output[BIG_BUFFER - 2] = 0;
-			(*disp_options)->stage++;
-			(*disp_options)->view = 2;
+			goto_layout1(conn_options, disp_options);
+			return (1);
 		}
-		return (1);
 	}
 	return (0);
 }

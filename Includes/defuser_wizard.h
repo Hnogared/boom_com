@@ -42,8 +42,8 @@ typedef struct	portopts
 
 typedef struct	dispopts
 {
+	int		layout;
 	int		view;
-	int		stage;
 	int		cmd_len;
 	char	prompt_char;
 	char	cmd[LITTLE_BUFFER];
@@ -92,5 +92,9 @@ int				get_baudrate(int mode);
 char			**get_files_tab(char *directory);
 struct termios	set_termios_opt(int fd, int baudrate);
 void			exit_helper(portopts *conn_options, dispopts *disp_options);
+
+/* layout_changes.c */
+void			goto_layout0(portopts **conn_options, dispopts **disp_options);
+void			goto_layout1(portopts **conn_options, dispopts **disp_options);
 
 #endif
