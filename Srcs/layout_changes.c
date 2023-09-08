@@ -6,7 +6,7 @@
 /*   By: hnogared <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 17:39:25 by hnogared          #+#    #+#             */
-/*   Updated: 2023/09/08 19:37:37 by hnogared         ###   ########.fr       */
+/*   Updated: 2023/09/08 20:02:03 by hnogared         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,15 +64,35 @@ void	goto_layout2(dispopts **disp_options, bool loading)
 		" * DATA_STORAGE (ESP32_V4)\t- [ID:PK84u9] - Firewall breach\n"
 		" * MOTOR_ACTUATOR (Servo motor)\t- [ID:RM3oRF] - ACCESS RESTRICTED\n", BIG_BUFFER - 1);
 	(*disp_options)->bomb_output[BIG_BUFFER - 2] = 0;
-	strncpy((*disp_options)->cmd_output, "> Scan effectue\n\n"
-		" * Vulnerabilite detectee au niveau du firewall du module 'DATA_STORAGE (ESP32_V4)'\n"
+	strncpy((*disp_options)->cmd_output, "> Scan effectue\n"
+		" * Vulnerabilite detectee au niveau du firewall du module 'DATA_STORAGE (ESP32_V4)'.\n"
 		" * Une attaque afin de le desactiver peut etre lancee avec la commande : "
 		"'@firewall-ext <MODULE_ID>'\n"
 		" * /!\\ lors de l'utilisation de commandes commencant par '@', elles seront directement"
-		" envoyees a la bombe sans etre corrigees auparavant par l'interpreteur.\n\n"
+		" envoyees a la bombe sans etre corrigees auparavant par le desamorceur.\n\n"
 		" # [1] Exit (ou tapez 'exit')\n"
 		" # [2] Deconnection de la bombe\n", BIG_BUFFER - 1);
 	(*disp_options)->cmd_output[BIG_BUFFER - 2] = 0;
 	(*disp_options)->view = 2;
 	(*disp_options)->layout = 2;
+}
+
+void	goto_layout_firewalloff(dispopts **disp_options)
+{
+	strncpy((*disp_options)->cmd_output, "> Attaque reussie\n"
+		" * Afin d'entierement desactiver le firewall, il vous faudra maintenant entrer"
+		" manuellement la sequence de desactivation en vous aidant d'un pave de huit boutons.\n"
+		" * Le modele de firewall scanne devrait presenter une roue lumineuse sur la bombe afin"
+		" de guider les utilisateurs dans cette etape.\n");
+		"          [][]\n"
+		"        []    []\n"
+		"      []        []\n"
+		"      []        []\n"
+		"        []    []\n"
+		"          [][]\n\n"
+		" # [1] Exit (ou tapez 'exit')\n"
+		" # [2] Deconnection de la bombe\n", BIG_BUFFER - 1);
+	(*disp_options)->cmd_output[BIG_BUFFER - 2] = 0;
+	(*disp_options)->view = 2;
+	(*disp_options)->layout = 3;
 }
