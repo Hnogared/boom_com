@@ -9,15 +9,9 @@ int	exec_command(portopts **conn_options, dispopts **disp_options)
 		system("less defuser_man.txt");
 		return (0);
 	}
-//	if (check_view_cmds(disp_options) || check_conn_cmds(conn_options, disp_options) ||
-//		check_help_cmds(disp_options))
-	if (check_view_cmds(disp_options) || check_help_cmds(disp_options))
-		return (0);
-	strncpy((*disp_options)->cmd_output, "!> ERROR >> Unknown command : ", BIG_BUFFER);
-	strncpy((*disp_options)->cmd_output + 30, (*disp_options)->cmd, BIG_BUFFER);
-	strncpy((*disp_options)->cmd_output + 30 + (*disp_options)->cmd_len,
-		"\n   Type 'help' for a list of all defusing assistant commands or get the manual (cmd 'man').", BIG_BUFFER);
-	(*disp_options)->cmd_output[BIG_BUFFER - 1] = 0;
+	check_view_cmds(disp_options);
+	check_help_cmds(disp_options);
+	check_choice(conn_options, disp_options);
 	return (0);
 }
 
@@ -26,19 +20,20 @@ void	print_output(portopts *conn_options, dispopts **disp_options)
 	int		size;
 	char	temp[BIG_BUFFER];
 
-	if (conn_options->fd < 0)
-		return ;
-	size = read(conn_options->fd, temp, BIG_BUFFER - 1);
-	if (size < 0)
+	if (conn_options->fd != -1)
 	{
-		strncpy((*disp_options)->cmd_output, "!> READING_ERROR >> ", BIG_BUFFER);
-		strncpy((*disp_options)->cmd_output + 20, strerror(errno), BIG_BUFFER);
-		(*disp_options)->cmd_output[BIG_BUFFER - 1] = 0;
-		return ;
+		size = read(conn_options->fd, temp, BIG_BUFFER - 1);
+		if (size < 0)
+		{
+			strncpy((*disp_options)->cmd_output, "!> READING_ERROR >> ", BIG_BUFFER);
+			strncpy((*disp_options)->cmd_output + 20, strerror(errno), BIG_BUFFER);
+			(*disp_options)->cmd_output[BIG_BUFFER - 1] = 0;
+			return ;
+		}
+		temp[size] = 0;
+		if (strchr(temp, '$'))
+			memmove((*disp_options)->bomb_output, temp, size + 1);
 	}
-	temp[size] = 0;
-	if (strchr(temp, '$'))
-		memmove((*disp_options)->bomb_output, temp, size + 1);
 	if ((*disp_options)->view == 1)
 		return ;
 	mvprintw(2, 0, "%s\n", crop((*disp_options)->bomb_output));

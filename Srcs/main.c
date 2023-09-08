@@ -17,6 +17,7 @@ int	init_disp_opts(dispopts **disp_options)
 	(*disp_options)->cmd[0] = 0;
 	(*disp_options)->cmd_output[0] = 0;
 	(*disp_options)->bomb_output[0] = 0;
+	(*disp_options)->stage = 0;
 	(*disp_options)->win = win;
 	return (0);
 }
@@ -51,9 +52,12 @@ void	init_colors(void)
 int	init_termios(portopts **conn_options)
 {
 	(*conn_options)->fd = open("/dev/ttyUSB0", O_RDWR | O_NOCTTY);
-	memmove((*conn_options)->port, "/dev/ttyUSB0", 13);
-	(*conn_options)->baudrate = 115200;
-	set_termios_opt((*conn_options)->fd, 115200);
+	if ((*conn_options)->fd != -1)
+	{
+		memmove((*conn_options)->port, "/dev/ttyUSB0", 13);
+		(*conn_options)->baudrate = 115200;
+		set_termios_opt((*conn_options)->fd, 115200);
+	}
 	return (0);
 }
 
@@ -81,9 +85,8 @@ int	main(void)
 	init_termios(&conn_options);
 	strncpy(disp_options->cmd_output, "Welcome to the bomb defuser UI.\n"
 		"Please type one of the options below :\n\n"
-		" # [1] Decrypt and access the bomb's system.\n"
-		" # [2] Help (or type 'help')\n"
-		" # [3] Exit (or type 'exit')\n", BIG_BUFFER - 2);
+		" # [1] Exit (or type 'exit')\n"
+		" # [2] Decrypt and access the bomb's system.\n", BIG_BUFFER - 2);
 	disp_options->cmd_output[BIG_BUFFER - 1] = 0;
 	menu_defusing(&conn_options, &disp_options);
 

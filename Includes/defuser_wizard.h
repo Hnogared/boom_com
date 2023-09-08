@@ -80,6 +80,7 @@ void			print_prompt(portopts **conn_options, dispopts **disp_options);
 
 /* check_cmds.c file */
 int				check_view_cmds(dispopts **disp_options);
+int				check_choice(portopts **conn_options, dispopts **disp_options);
 int				check_help_cmds(dispopts **disp_options);
 int				check_conn_cmds(portopts **conn_options, dispopts **disp_options);
 

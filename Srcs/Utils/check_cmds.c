@@ -13,6 +13,28 @@ int	check_view_cmds(dispopts **disp_options)
 	return (1);
 }
 
+int	check_choice(portopts **conn_options, dispopts **disp_options)
+{
+	if (((*disp_options)->cmd)[0] == '1' && ((*disp_options)->cmd)[1] == '\n')
+		exit_helper(*conn_options, *disp_options);
+	if (((*disp_options)->cmd)[0] == '2' && ((*disp_options)->cmd)[1] == '\n')
+	{
+		if ((*disp_options)->stage == 0)
+		{
+			strncpy((*disp_options)->bomb_output,
+				"░@¿ ~acces? granted, JOE@DEFUSER42 connected via USB port\n", BIG_BUFFER - 1);
+			(*disp_options)->bomb_output[BIG_BUFFER - 2] = 0;
+			strncpy((*disp_options)->bomb_output, "> Successfully connected to bomb\n\n"
+				" # [1] Exit (or type 'exit')\n"
+				" # [2] Scan device\n", BIG_BUFFER - 1);
+			(*disp_options)->cmd_output[BIG_BUFFER - 2] = 0;
+			(*disp_options)->stage++;
+		}
+		return (1);
+	}
+	return (0);
+}
+
 int	check_conn_cmds(portopts **conn_options, dispopts **disp_options)	
 {
 	int		baudrate;
