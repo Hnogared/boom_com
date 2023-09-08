@@ -25,9 +25,9 @@ void	print_output(portopts *conn_options, dispopts **disp_options)
 		size = read(conn_options->fd, temp, BIG_BUFFER - 1);
 		if (size < 0)
 		{
-			strncpy((*disp_options)->cmd_output, "!> READING_ERROR >> ", BIG_BUFFER);
-			strncpy((*disp_options)->cmd_output + 20, strerror(errno), BIG_BUFFER);
-			(*disp_options)->cmd_output[BIG_BUFFER - 1] = 0;
+			strncpy((*disp_options)->bomb_output, "!> READING_ERROR >> ", BIG_BUFFER);
+			strncpy((*disp_options)->bomb_output + 20, strerror(errno), BIG_BUFFER);
+			(*disp_options)->bomb_output[BIG_BUFFER - 1] = 0;
 			return ;
 		}
 		temp[size] = 0;
@@ -56,12 +56,12 @@ void	update_command(dispopts **disp_options, portopts **conn_options)
 	if (ch == '\n' && (*disp_options)->cmd[0] == '@')
 	{
 		if ((*conn_options)->fd < 0)
-			strncpy((*disp_options)->cmd_output, "!> WRITING ERROR >> Aucune connection etablie.", BIG_BUFFER);
+			strncpy((*disp_options)->bomb_output, "!> WRITING ERROR >> Aucune connection etablie.", BIG_BUFFER);
 		else if (write((*conn_options)->fd, (*disp_options)->cmd + 1, (*disp_options)->cmd_len - 1) == -1)
 		{
-			strncpy((*disp_options)->cmd_output, "!> WRITING ERROR >> ", BIG_BUFFER);
-			strncpy((*disp_options)->cmd_output + 20, strerror(errno), BIG_BUFFER);
-			(*disp_options)->cmd_output[BIG_BUFFER - 1] = 0;
+			strncpy((*disp_options)->bomb_output, "!> WRITING ERROR >> ", BIG_BUFFER);
+			strncpy((*disp_options)->bomb_output + 20, strerror(errno), BIG_BUFFER);
+			(*disp_options)->bomb_output[BIG_BUFFER - 1] = 0;
 		}
 		bzero((*disp_options)->cmd, (*disp_options)->cmd_len + 1);
 		(*disp_options)->cmd_len = 0;
@@ -144,7 +144,11 @@ int	menu_defusing(portopts **conn_options, dispopts **disp_options)
 			mvprintw(0, COLS - 9, "(No port)\n");
 		attroff(COLOR_PAIR(2));
 		attroff(A_BOLD);
+		if ((*disp_options)->bomb_output[0] == '!')
+			attron(COLOR_PAIR(1));
 		print_output(*conn_options, disp_options);
+		if ((*disp_options)->bomb_output[0] == '!')
+			attroff(COLOR_PAIR(1));
 
 		// Print the debugger console and the output of the rpi
 		if ((*disp_options)->view == 2)
