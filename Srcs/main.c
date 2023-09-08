@@ -69,7 +69,7 @@ int	main(void)
 		exit_helper(conn_options, disp_options);
 	attroff(COLOR_PAIR(1));
 
-	goto_layout0(&conn_options, &disp_options);
+	goto_layout_1(&conn_options, &disp_options);
 
 	menu_defusing(&conn_options, &disp_options);
 

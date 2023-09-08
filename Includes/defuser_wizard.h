@@ -95,9 +95,10 @@ struct termios	set_termios_opt(int fd, int baudrate);
 void			exit_helper(portopts *conn_options, dispopts *disp_options);
 
 /* layout_changes.c */
-void			goto_layout0(portopts **conn_options, dispopts **disp_options);
-void			goto_layout1(portopts **conn_options, dispopts **disp_options, bool loading);
-void			goto_layout2(dispopts **disp_options, bool loading);
+void			goto_layout_help(dispopts **disp_options);
+void			goto_layout_1(portopts **conn_options, dispopts **disp_options);
+void			goto_layout_2(portopts **conn_options, dispopts **disp_options, bool loading);
+void			goto_layout_3(dispopts **disp_options, bool loading);
 void			goto_layout_firewalloff(dispopts **disp_options);
 
 #endif

@@ -19,16 +19,18 @@ int	check_choice(portopts **conn_options, dispopts **disp_options)
 		exit_helper(*conn_options, *disp_options);
 	if (((*disp_options)->cmd)[0] == '2' && ((*disp_options)->cmd)[1] == '\n')
 	{
-		if ((*disp_options)->layout == 0)
-			goto_layout1(conn_options, disp_options, true);
+		if ((*disp_options)->layout == -2 || (*disp_options)->layout == 1)
+			goto_layout_2(conn_options, disp_options, false);
+		else if ((*disp_options)->layout == -3)
+			goto_layout_3(disp_options, false);
 		else
-			goto_layout0(conn_options, disp_options);
+			goto_layout_1(conn_options, disp_options);
 		return (1);
 	}
 	if (((*disp_options)->cmd)[0] == '3' && ((*disp_options)->cmd)[1] == '\n')
 	{
-		if ((*disp_options)->layout == 1)
-			goto_layout2(disp_options, true);
+		if ((*disp_options)->layout == 2)
+			goto_layout_3(disp_options, true);
 		return (1);
 	}
 	return (0);
@@ -76,12 +78,7 @@ int	check_conn_cmds(portopts **conn_options, dispopts **disp_options)
 int	check_help_cmds(dispopts **disp_options)
 {
 	if (!left_strcmp("help\n", (*disp_options)->cmd) && (*disp_options)->view)
-	{
-		strncpy((*disp_options)->cmd_output, "$> List of the available important commands :\n\n"
-			"   # help          Show this menu.\n"
-			"   # exit          Close *CONFEDERATION BOMB DEFUSER v4.6*.\n", BIG_BUFFER);
-		(*disp_options)->cmd_output[BIG_BUFFER - 1] = 0;
-	}
+		goto_layout_help(disp_options);
 	else if (!left_strcmp("help cmd\n", (*disp_options)->cmd) && (*disp_options)->view)
 	{
 		strncpy((*disp_options)->cmd_output, "$> The *CONFEDERATION BOMB DEFUSER v4.6* is an interface for using disarming tools on terrorist devices.\n\n"
