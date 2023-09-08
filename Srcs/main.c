@@ -79,6 +79,12 @@ int	main(void)
 	attroff(COLOR_PAIR(1));
 
 	init_termios(&conn_options);
+	strncpy(disp_options->cmd_output, "Welcome to the bomb defuser UI.\n"
+		"Please type one of the options below :\n\n"
+		" # [1] Decrypt and access the bomb's system.\n"
+		" # [2] Help (or type 'help')\n"
+		" # [3] Exit (or type 'exit')\n", BIG_BUFFER - 2);
+	disp_options->cmd_output[BIG_BUFFER - 1] = 0;
 	menu_defusing(&conn_options, &disp_options);
 
 	exit_helper(conn_options, disp_options);
