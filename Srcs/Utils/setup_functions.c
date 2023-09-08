@@ -5,7 +5,7 @@ int	open_usb_port(portopts **conn_options)
 	char	**usb_paths;
 
 	usb_paths = (char *[]){"/dev/ttyUSB0", "/dev/ttyUSB1", "/dev/ttyUSB2",
-		"/dev/ttyUSB3", "/dev/ttyUSB4", "NULL"};
+		"/dev/ttyUSB3", "/dev/ttyUSB4", NULL};
 	(*conn_options)->fd = -1;
 	while (*usb_paths && (*conn_options)->fd == -1)
 		(*conn_options)->fd = open(*(usb_paths++), O_RDWR | O_NOCTTY);
