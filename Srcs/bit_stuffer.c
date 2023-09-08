@@ -27,36 +27,47 @@ static void	display_ui(void)
 	curs_set(1);
 }
 
-//static int	check_answer(portopts **conn_options, dispopts **disp_options)
-//{
-	
-//}
+static int	check_answer(portopts **conn_options)
+{
+	int		size;
+	char	temp[BIG_BUFFER];
+
+	size = read((*conn_options)->fd, temp, BIG_BUFFER - 1);
+	if (size < -1)
+		return (-1);
+	if (strstr(temp, "end_lab"))
+		return (1);
+	return (0);
+}
 
 void	bit_stuffer(portopts **conn_options, dispopts **disp_options)
 {
 	int		state;
 	char	c;
 
+	if (write((*conn_options)->fd, "start_lab", 9) == -1)
+	{
+		strncpy((*disp_options)->bomb_output, "!> WRITING ERROR >> ", BIG_BUFFER);
+		strncpy((*disp_options)->bomb_output + 20, strerror(errno), BIG_BUFFER);
+		(*disp_options)->bomb_output[BIG_BUFFER - 1] = 0;
+		return ;
+	}
 	clear();
 	display_ui();
-	state = 1;
-	while (state)
+	state = 0;
+	while (state == 0)
 	{
 		c = get_keypress();
 		if (c == '\e')
 			break ;
-		if (c == 'z' && write((*conn_options)->fd, "moveZ", 5) == -1)
-			state = 0;
-		if (c == 'q' && write((*conn_options)->fd, "moveQ", 5) == -1)
-			state = 0;
-		if (c == 's' && write((*conn_options)->fd, "moveS", 5) == -1)
-			state = 0;
-		if (c == 'd' && write((*conn_options)->fd, "moveD", 5) == -1)
-			state = 0;
+		state = -1 * ((c == 'z' && write((*conn_options)->fd, "moveZ", 5) == -1)
+			|| (c == 'q' && write((*conn_options)->fd, "moveQ", 5) == -1)
+			|| (c == 's' && write((*conn_options)->fd, "moveS", 5) == -1)
+			|| (c == 'd' && write((*conn_options)->fd, "moveD", 5) == -1));
 		printw("%c", c * (c == 'z' || c == 'q' || c == 's' || c == 'd'));
-//		check_answer
+		state += check_answer(conn_options);
 	}
-	if (!state)
+	if (state < 0)
 	{
 		strncpy((*disp_options)->bomb_output, "!> WRITING ERROR >> ", BIG_BUFFER);
 		strncpy((*disp_options)->bomb_output + 20, strerror(errno), BIG_BUFFER);
@@ -64,8 +75,8 @@ void	bit_stuffer(portopts **conn_options, dispopts **disp_options)
 		goto_layout_labyrinth(conn_options, disp_options);
 		return ;
 	}
-//	if ((*disp_options)->layout == 5 && strstr((*disp_options)->bomb_output, "end_lab"))
-//		goto_layout_bytes(&conn_options, disp_options);
-//	else
+	if (state)
+		goto_layout_bytes(conn_options, disp_options);
+	else
 		goto_layout_labyrinth(conn_options, disp_options);
 }

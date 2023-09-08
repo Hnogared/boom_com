@@ -40,16 +40,7 @@ void	print_output(portopts *conn_options, dispopts **disp_options)
 	if ((*disp_options)->layout == 3 && strstr((*disp_options)->bomb_output, "RECONFIGURATION"))
 		goto_layout_firewalloff(&conn_options, disp_options);
 	if ((*disp_options)->layout == 4 && strstr((*disp_options)->bomb_output, "firewall corrupted"))
-	{
 		goto_layout_labyrinth(&conn_options, disp_options);
-		if (write(conn_options->fd, "start_lab", 9) == -1)
-		{
-			strncpy((*disp_options)->bomb_output, "!> WRITING ERROR >> ", BIG_BUFFER);
-			strncpy((*disp_options)->bomb_output + 20, strerror(errno), BIG_BUFFER);
-			(*disp_options)->bomb_output[BIG_BUFFER - 1] = 0;
-			return ;
-		}
-	}
 	if ((*disp_options)->layout == 5 && strstr((*disp_options)->bomb_output, "end_lab"))
 		goto_layout_bytes(&conn_options, disp_options);
 	if ((*disp_options)->prompt_char == '$' && strstr((*disp_options)->bomb_output, "SUPERUSER"))
