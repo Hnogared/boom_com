@@ -37,7 +37,7 @@ void	print_output(portopts *conn_options, dispopts **disp_options)
 	if ((*disp_options)->view == 1)
 		return ;
 	mvprintw(2, 0, "%s\n", crop((*disp_options)->bomb_output));
-	if ((*disp_options)->layout == 2 && strstr((*disp_options)->bomb_output, "RECONFIGURATION"))
+	if ((*disp_options)->layout == 3 && strstr((*disp_options)->bomb_output, "RECONFIGURATION"))
 		goto_layout_firewalloff(disp_options);
 	if ((*disp_options)->prompt_char == '$' && strstr((*disp_options)->bomb_output, "SUPERUSER"))
 		(*disp_options)->prompt_char = '#';

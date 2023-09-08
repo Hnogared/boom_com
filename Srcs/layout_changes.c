@@ -6,7 +6,7 @@
 /*   By: hnogared <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 17:39:25 by hnogared          #+#    #+#             */
-/*   Updated: 2023/09/08 21:19:26 by hnogared         ###   ########.fr       */
+/*   Updated: 2023/09/08 21:31:35 by hnogared         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void	goto_layout_help(dispopts **disp_options)
 {
 	strncpy((*disp_options)->cmd_output, " * Bienvenue sur l'aide au desamorcage.\n"
+		" * "
 		" # [1] Quitter le programme (ou tapez 'exit')\n"
 		" # [2] Retour\n", BIG_BUFFER - 1);
 	(*disp_options)->cmd_output[BIG_BUFFER - 2] = 0;
