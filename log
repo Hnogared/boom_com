@@ -1,0 +1,44 @@
+==2457== Memcheck, a memory error detector
+==2457== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==2457== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==2457== Command: ./defuser_wizard
+==2457== Parent PID: 401
+==2457== 
+==2457== Invalid write of size 1
+==2457==    at 0x484F310: __strncpy_sse2_unaligned (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2457==    by 0x10D2EE: goto_layout_help (in /home/hnogared/42Projects/git/boom_com/defuser_wizard)
+==2457==    by 0x10C6AE: check_help_cmds (in /home/hnogared/42Projects/git/boom_com/defuser_wizard)
+==2457==    by 0x10B67B: exec_command (in /home/hnogared/42Projects/git/boom_com/defuser_wizard)
+==2457==    by 0x10BBB3: update_command (in /home/hnogared/42Projects/git/boom_com/defuser_wizard)
+==2457==    by 0x10A9BC: main (in /home/hnogared/42Projects/git/boom_com/defuser_wizard)
+==2457==  Address 0xa706c65c5 is not stack'd, malloc'd or (recently) free'd
+==2457== 
+==2457== 
+==2457== Process terminating with default action of signal 11 (SIGSEGV)
+==2457==  Access not within mapped region at address 0xA706C65C5
+==2457==    at 0x484F310: __strncpy_sse2_unaligned (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2457==    by 0x10D2EE: goto_layout_help (in /home/hnogared/42Projects/git/boom_com/defuser_wizard)
+==2457==    by 0x10C6AE: check_help_cmds (in /home/hnogared/42Projects/git/boom_com/defuser_wizard)
+==2457==    by 0x10B67B: exec_command (in /home/hnogared/42Projects/git/boom_com/defuser_wizard)
+==2457==    by 0x10BBB3: update_command (in /home/hnogared/42Projects/git/boom_com/defuser_wizard)
+==2457==    by 0x10A9BC: main (in /home/hnogared/42Projects/git/boom_com/defuser_wizard)
+==2457==  If you believe this happened as a result of a stack
+==2457==  overflow in your program's main thread (unlikely but
+==2457==  possible), you can try to increase the size of the
+==2457==  main thread stack using the --main-stacksize= flag.
+==2457==  The main thread stack size used in this run was 8388608.
+==2457== 
+==2457== HEAP SUMMARY:
+==2457==     in use at exit: 111,532 bytes in 203 blocks
+==2457==   total heap usage: 215 allocs, 12 frees, 120,580 bytes allocated
+==2457== 
+==2457== LEAK SUMMARY:
+==2457==    definitely lost: 0 bytes in 0 blocks
+==2457==    indirectly lost: 0 bytes in 0 blocks
+==2457==      possibly lost: 913 bytes in 12 blocks
+==2457==    still reachable: 110,619 bytes in 191 blocks
+==2457==         suppressed: 0 bytes in 0 blocks
+==2457== Rerun with --leak-check=full to see details of leaked memory
+==2457== 
+==2457== For lists of detected and suppressed errors, rerun with: -s
+==2457== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)

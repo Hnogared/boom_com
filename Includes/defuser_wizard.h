@@ -76,7 +76,7 @@ char			*menu_port_select(void);
 
 /* defusing_menu.c file */
 int				exec_command(portopts **conn_options, dispopts **disp_options);
-void			update_command(dispopts **disp_options, portopts **conn_options);
+void			update_command(portopts **conn_options, dispopts **disp_options);
 void			menu_defusing(portopts **conn_options, dispopts **disp_options);
 void			print_output(portopts *conn_options, dispopts **disp_options);
 void			print_prompt(portopts **conn_options, dispopts **disp_options);
@@ -84,7 +84,7 @@ void			print_prompt(portopts **conn_options, dispopts **disp_options);
 /* check_cmds.c file */
 int				check_view_cmds(dispopts **disp_options);
 int				check_choice(portopts **conn_options, dispopts **disp_options);
-int				check_help_cmds(dispopts **disp_options);
+int				check_help_cmds(portopts **conn_options, dispopts **disp_options);
 int				check_conn_cmds(portopts **conn_options, dispopts **disp_options);
 
 /* setup_functions.c */
@@ -96,10 +96,11 @@ struct termios	set_termios_opt(int fd, int baudrate);
 void			exit_helper(portopts *conn_options, dispopts *disp_options);
 
 /* layout_changes.c */
-void			goto_layout_help(dispopts **disp_options);
+void			goto_layout_help(portopts **conn_options, dispopts **disp_options);
 void			goto_layout_1(portopts **conn_options, dispopts **disp_options);
 void			goto_layout_2(portopts **conn_options, dispopts **disp_options, bool loading);
-void			goto_layout_3(dispopts **disp_options, bool loading);
-void			goto_layout_firewalloff(dispopts **disp_options);
+void			goto_layout_3(portopts **conn_options, dispopts **disp_options, bool loading);
+void			goto_layout_firewalloff(portopts **conn_options, dispopts **disp_options);
+void			goto_layout_labyrinth(portopts **conn_options, dispopts **disp_options);
 
 #endif

@@ -6,13 +6,13 @@
 /*   By: hnogared <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 17:39:25 by hnogared          #+#    #+#             */
-/*   Updated: 2023/09/08 22:04:44 by hnogared         ###   ########.fr       */
+/*   Updated: 2023/09/08 22:16:09 by hnogared         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../Includes/defuser_wizard.h"
 
-void	goto_layout_help(dispopts **disp_options)
+void	goto_layout_help(portopts **conn_options, dispopts **disp_options)
 {
 	strncpy((*disp_options)->cmd_output, " * Bienvenue sur l'aide au desamorcage.\n"
 		" * "
@@ -20,6 +20,7 @@ void	goto_layout_help(dispopts **disp_options)
 		" # [2] Retour\n", BIG_BUFFER - 1);
 	(*disp_options)->cmd_output[BIG_BUFFER - 2] = 0;
 	(*disp_options)->layout *= -1;
+	menu_defusing(conn_options, disp_options);
 }
 
 void	goto_layout_1(portopts **conn_options, dispopts **disp_options)
@@ -41,6 +42,7 @@ void	goto_layout_1(portopts **conn_options, dispopts **disp_options)
 	(*disp_options)->cmd_output[BIG_BUFFER - 2] = 0;
 	(*disp_options)->view = 1;
 	(*disp_options)->layout = 1;
+	menu_defusing(conn_options, disp_options);
 }
 
 void	goto_layout_2(portopts **conn_options, dispopts **disp_options, bool loading)
@@ -64,9 +66,10 @@ void	goto_layout_2(portopts **conn_options, dispopts **disp_options, bool loadin
 		" # [3] Scan du systeme\n", BIG_BUFFER - 1);
 	(*disp_options)->cmd_output[BIG_BUFFER - 2] = 0;
 	(*disp_options)->layout = 2;
+	menu_defusing(conn_options, disp_options);
 }
 
-void	goto_layout_3(dispopts **disp_options, bool loading)
+void	goto_layout_3(portopts **conn_options, dispopts **disp_options, bool loading)
 {
 	if (loading == true)
 		main_menu_loading("Scan des fichiers de la bombe...");
@@ -87,9 +90,10 @@ void	goto_layout_3(dispopts **disp_options, bool loading)
 	(*disp_options)->cmd_output[BIG_BUFFER - 2] = 0;
 	(*disp_options)->view = 2;
 	(*disp_options)->layout = 3;
+	menu_defusing(conn_options, disp_options);
 }
 
-void	goto_layout_firewalloff(dispopts **disp_options)
+void	goto_layout_firewalloff(portopts **conn_options, dispopts **disp_options)
 {
 	strncpy((*disp_options)->cmd_output, "> Attaque reussie\n"
 		" * Le firewall a ete partiellement desactive\n"
@@ -100,15 +104,17 @@ void	goto_layout_firewalloff(dispopts **disp_options)
 		"      []        []\n"
 		"      []        []\n"
 		"        []    []\n"
-		" fig. 1   [][]\n\n"
+		"          [][]\n"
+		"         fig. 1\n\n"
 		" # [1] Quitter le programme (ou tapez 'exit')\n"
 		" # [2] Deconnection de la bombe\n", BIG_BUFFER - 1);
 	(*disp_options)->cmd_output[BIG_BUFFER - 2] = 0;
 	(*disp_options)->view = 2;
 	(*disp_options)->layout = 4;
+	menu_defusing(conn_options, disp_options);
 }
 
-void	goto_layout_labyrinth(dispopts **disp_options)
+void	goto_layout_labyrinth(portopts **conn_options, dispopts **disp_options)
 {
 	strncpy((*disp_options)->cmd_output, "> \n"
 		" # [1] Quitter le programme (ou tapez 'exit')\n"
@@ -116,4 +122,5 @@ void	goto_layout_labyrinth(dispopts **disp_options)
 	(*disp_options)->cmd_output[BIG_BUFFER - 2] = 0;
 	(*disp_options)->view = 2;
 	(*disp_options)->layout = 5;
+	menu_defusing(conn_options, disp_options);
 }

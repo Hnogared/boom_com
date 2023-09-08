@@ -74,7 +74,7 @@ int	main(void)
 	while (1)
 	{
 		menu_defusing(&conn_options, &disp_options);
-		update_command(&disp_options, &conn_options);
+		update_command(&conn_options, &disp_options);
 	}
 	exit_helper(conn_options, disp_options);
 	return (0);

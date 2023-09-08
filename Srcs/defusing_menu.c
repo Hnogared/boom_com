@@ -10,7 +10,7 @@ int	exec_command(portopts **conn_options, dispopts **disp_options)
 		return (0);
 	}
 	check_view_cmds(disp_options);
-	check_help_cmds(disp_options);
+	check_help_cmds(conn_options, disp_options);
 	check_choice(conn_options, disp_options);
 	return (0);
 }
@@ -38,15 +38,9 @@ void	print_output(portopts *conn_options, dispopts **disp_options)
 		return ;
 	mvprintw(2, 0, "%s\n", crop((*disp_options)->bomb_output));
 	if ((*disp_options)->layout == 3 && strstr((*disp_options)->bomb_output, "RECONFIGURATION"))
-	{
-		goto_layout_firewalloff(disp_options);
-		menu_defusing(&conn_options, disp_options);
-	}
+		goto_layout_firewalloff(&conn_options, disp_options);
 	if ((*disp_options)->layout == 3 && strstr((*disp_options)->bomb_output, "firewall corrupted"))
-	{
-		goto_layout_firewalloff(disp_options);
-		menu_defusing(&conn_options, disp_options);
-	}
+		goto_layout_labyrinth(&conn_options, disp_options);
 	if ((*disp_options)->prompt_char == '$' && strstr((*disp_options)->bomb_output, "SUPERUSER"))
 		(*disp_options)->prompt_char = '#';
 	if ((*disp_options)->view != 1 && conn_options->fd >= 0)
@@ -58,7 +52,7 @@ void	print_output(portopts *conn_options, dispopts **disp_options)
 	}
 }
 
-void	update_command(dispopts **disp_options, portopts **conn_options)
+void	update_command(portopts **conn_options, dispopts **disp_options)
 {
 	int		ch;
 
