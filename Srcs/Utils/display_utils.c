@@ -43,7 +43,8 @@ void	put_loading(char *name, char *confirm, int line_pos, int progress, int leng
 		line_pos = 0;
 	if (line_pos > LINES)
 		line_pos = LINES - 2;
-	loading_bar = "############################################################";
+	loading_bar = "############################################################"
+		"############################################################";
 	move(line_pos, 0);
 	if (name)
 		printw("%s", name);

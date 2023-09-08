@@ -67,6 +67,7 @@ void			put_loading(char *name, char *confirm, int line_pos, int progress, int le
 /* loading_menus.c file */
 int				play_startup(void);
 void			play_connect(portopts **conn_options, dispopts **disp_options);
+void			play_accessing_device(void);
 
 /* select_menus.c file */
 int				menu_baudrate_select(void);

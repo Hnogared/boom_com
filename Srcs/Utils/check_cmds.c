@@ -30,6 +30,7 @@ int	check_choice(portopts **conn_options, dispopts **disp_options)
 			(*disp_options)->cmd_output[BIG_BUFFER - 2] = 0;
 			(*disp_options)->stage++;
 			(*disp_options)->view = 2;
+			play_accessing_device();
 		}
 		return (1);
 	}
