@@ -1,5 +1,30 @@
 #include "../Includes/defuser_wizard.h"
 
+static void	display_ui(void)
+{
+	int		i;
+	
+	attron(A_BOLD);
+	attron(COLOR_PAIR(2));
+	mvprintw(0, 0, "%-*s", COLS, "bit_stuffer v. 1.2");
+	attroff(A_BOLD);
+	attroff(COLOR_PAIR(2));
+	mvprintw(2, 0, " Program to corrupt memory data.\n");
+	printw(" Use your keys [Z | Q | S | D] to move arround the memory and destroy it.\n");
+	printw(" Press the [ESC] key once you are finished.\n");
+	attron(A_BOLD);
+	attron(COLOR_PAIR(2));
+	mvprintw(6, 0, "%-*s", COLS, "Last inputs");
+	attroff(A_BOLD);
+	attroff(COLOR_PAIR(2));
+	attron(COLOR_PAIR(4));
+	i = 6;
+	while (++i < LINES - 5)
+		printw("%-*s", COLS, "");
+	put_separation(i, COLS);
+	move(7, 0);
+}
+
 void	bit_stuffer(portopts **conn_options, dispopts **disp_options)
 {
 	int		state;
@@ -7,20 +32,7 @@ void	bit_stuffer(portopts **conn_options, dispopts **disp_options)
 
 	clear();
 	curs_set(0);
-	attron(A_BOLD);
-	attron(COLOR_PAIR(2));
-	mvprintw(0, 0, "%-*s", COLS, "bit_stuffer v. 1.2");
-	attroff(A_BOLD);
-	attroff(COLOR_PAIR(2));
-	mvprintw(2, 0, " Program to corrupt memory data.\n");
-	printw(" Use your keys [Z | Q | S | D] to move arround the memory and destroy it\n");
-	printw(" Press the [ESC] key once you are finished\n");
-	put_separation(5, COLS);
-	attron(A_BOLD);
-	attron(COLOR_PAIR(2));
-	printw(" Last inputs\n");
-	attroff(A_BOLD);
-	attroff(COLOR_PAIR(2));
+	display_ui();
 	state = 1;
 	while (state)
 	{
@@ -35,7 +47,7 @@ void	bit_stuffer(portopts **conn_options, dispopts **disp_options)
 			state = 0;
 		if (c == 'd' && write((*conn_options)->fd, "moveD", 5) == -1)
 			state = 0;
-		printw("%c", c);
+		printw("%c", c * (c == 'z' || c == 'q' || c == 's' || c == 'd'));
 	}
 	if (!state)
 	{
@@ -43,7 +55,6 @@ void	bit_stuffer(portopts **conn_options, dispopts **disp_options)
 		strncpy((*disp_options)->bomb_output + 20, strerror(errno), BIG_BUFFER);
 		(*disp_options)->bomb_output[BIG_BUFFER - 1] = 0;
 	}
-	put_separation(LINES - 2, COLS);
 	curs_set(1);
 	goto_layout_labyrinth(conn_options, disp_options);
 }
