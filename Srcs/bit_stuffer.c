@@ -37,7 +37,12 @@ void	bit_stuffer(portopts **conn_options, dispopts **disp_options)
 			state = 0;
 		printw("%c", c);
 	}
-
+	if (!state)
+	{
+		strncpy((*disp_options)->bomb_output, "!> WRITING ERROR >> ", BIG_BUFFER);
+		strncpy((*disp_options)->bomb_output + 20, strerror(errno), BIG_BUFFER);
+		(*disp_options)->bomb_output[BIG_BUFFER - 1] = 0;
+	}
 	put_separation(LINES - 2, COLS);
 	curs_set(1);
 	goto_layout_labyrinth(conn_options, disp_options);
