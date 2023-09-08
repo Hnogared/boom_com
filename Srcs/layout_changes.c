@@ -6,7 +6,7 @@
 /*   By: hnogared <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 17:39:25 by hnogared          #+#    #+#             */
-/*   Updated: 2023/09/08 20:02:03 by hnogared         ###   ########.fr       */
+/*   Updated: 2023/09/08 20:22:49 by hnogared         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	goto_layout_firewalloff(dispopts **disp_options)
 		" * Afin d'entierement desactiver le firewall, il vous faudra maintenant entrer"
 		" manuellement la sequence de desactivation en vous aidant d'un pave de huit boutons.\n"
 		" * Le modele de firewall scanne devrait presenter une roue lumineuse sur la bombe afin"
-		" de guider les utilisateurs dans cette etape.\n");
+		" de guider les utilisateurs dans cette etape.\n"
 		"          [][]\n"
 		"        []    []\n"
 		"      []        []\n"
