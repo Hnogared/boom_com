@@ -38,7 +38,15 @@ void	print_output(portopts *conn_options, dispopts **disp_options)
 		return ;
 	mvprintw(2, 0, "%s\n", crop((*disp_options)->bomb_output));
 	if ((*disp_options)->layout == 3 && strstr((*disp_options)->bomb_output, "RECONFIGURATION"))
+	{
 		goto_layout_firewalloff(disp_options);
+		menu_defusing(&conn_options, disp_options);
+	}
+	if ((*disp_options)->layout == 3 && strstr((*disp_options)->bomb_output, "firewall corrupted"))
+	{
+		goto_layout_firewalloff(disp_options);
+		menu_defusing(&conn_options, disp_options);
+	}
 	if ((*disp_options)->prompt_char == '$' && strstr((*disp_options)->bomb_output, "SUPERUSER"))
 		(*disp_options)->prompt_char = '#';
 	if ((*disp_options)->view != 1 && conn_options->fd >= 0)
@@ -119,59 +127,52 @@ void	print_prompt(portopts **conn_options, dispopts **disp_options)
 	mvprintw(LINES - 1, 0, "(Command) $~ %s", (*disp_options)->cmd);
 	move(LINES - 1, 13 + (*disp_options)->cmd_len);
 	attroff(COLOR_PAIR(4));
-	
-	update_command(disp_options, conn_options);
 }
 
-int	menu_defusing(portopts **conn_options, dispopts **disp_options)
+void	menu_defusing(portopts **conn_options, dispopts **disp_options)
 {
-	while (1)
+	clear();
+	refresh();
+	
+	// Print the output of the bomb
+	attron(A_BOLD);
+	attron(COLOR_PAIR(2));
+	mvprintw(0, 0, "%*s", COLS, "");
+	if ((*disp_options)->view == 0)
+		mvprintw(0, 0, "[1 BOMB INTERPRETOR][2 ...]");
+	if ((*disp_options)->view == 1)
+		mvprintw(0, 0, "[1 ...][2 DEFUSER GUI]");
+	if ((*disp_options)->view == 2)
+		mvprintw(0, 0, "[1 BOMB INTERPRETOR]");
+	if ((*conn_options)->port[0])
+		mvprintw(0, COLS - 35, "(PORT %-19.19s @ %06d)\n", (*conn_options)->port, get_baudrate((*conn_options)->baudrate));
+	else
+		mvprintw(0, COLS - 9, "(No port)\n");
+	attroff(COLOR_PAIR(2));
+	attroff(A_BOLD);
+	if ((*disp_options)->bomb_output[0] == '!')
+		attron(COLOR_PAIR(1));
+	print_output(*conn_options, disp_options);
+	if ((*disp_options)->bomb_output[0] == '!')
+		attroff(COLOR_PAIR(1));
+	// Print the debugger console and the output of the rpi
+	if ((*disp_options)->view == 2)
 	{
-		clear();
-		refresh();
-		
-		// Print the output of the bomb
 		attron(A_BOLD);
 		attron(COLOR_PAIR(2));
-		mvprintw(0, 0, "%*s", COLS, "");
-		if ((*disp_options)->view == 0)
-			mvprintw(0, 0, "[1 BOMB INTERPRETOR][2 ...]");
-		if ((*disp_options)->view == 1)
-			mvprintw(0, 0, "[1 ...][2 DEFUSER GUI]");
-		if ((*disp_options)->view == 2)
-			mvprintw(0, 0, "[1 BOMB INTERPRETOR]");
-		if ((*conn_options)->port[0])
-			mvprintw(0, COLS - 35, "(PORT %-19.19s @ %06d)\n", (*conn_options)->port, get_baudrate((*conn_options)->baudrate));
-		else
-			mvprintw(0, COLS - 9, "(No port)\n");
+		printw("                      [2 DEFUSER GUI]");
+		printw("%*s", COLS - 37, "");
 		attroff(COLOR_PAIR(2));
 		attroff(A_BOLD);
-		if ((*disp_options)->bomb_output[0] == '!')
-			attron(COLOR_PAIR(1));
-		print_output(*conn_options, disp_options);
-		if ((*disp_options)->bomb_output[0] == '!')
-			attroff(COLOR_PAIR(1));
-
-		// Print the debugger console and the output of the rpi
-		if ((*disp_options)->view == 2)
-		{
-			attron(A_BOLD);
-			attron(COLOR_PAIR(2));
-			printw("                      [2 DEFUSER GUI]");
-			printw("%*s", COLS - 37, "");
-			attroff(COLOR_PAIR(2));
-			attroff(A_BOLD);
-			printw("\n");
-		}
-		if ((*disp_options)->view != 0)
-		{
-			if ((*disp_options)->cmd_output[0] == '!')
-				attron(COLOR_PAIR(1));
-			printw("%s\n", (*disp_options)->cmd_output);
-			if ((*disp_options)->cmd_output[0] == '!')
-				attroff(COLOR_PAIR(1));
-		}
-		print_prompt(conn_options, disp_options);
+		printw("\n");
 	}
-	return (0);
+	if ((*disp_options)->view != 0)
+	{
+		if ((*disp_options)->cmd_output[0] == '!')
+			attron(COLOR_PAIR(1));
+		printw("%s\n", (*disp_options)->cmd_output);
+		if ((*disp_options)->cmd_output[0] == '!')
+			attroff(COLOR_PAIR(1));
+	}
+	print_prompt(conn_options, disp_options);
 }

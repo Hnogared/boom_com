@@ -76,7 +76,8 @@ char			*menu_port_select(void);
 
 /* defusing_menu.c file */
 int				exec_command(portopts **conn_options, dispopts **disp_options);
-int				menu_defusing(portopts **conn_options, dispopts **disp_options);
+void			update_command(dispopts **disp_options, portopts **conn_options);
+void			menu_defusing(portopts **conn_options, dispopts **disp_options);
 void			print_output(portopts *conn_options, dispopts **disp_options);
 void			print_prompt(portopts **conn_options, dispopts **disp_options);
 
