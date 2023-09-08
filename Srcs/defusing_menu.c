@@ -50,6 +50,8 @@ void	print_output(portopts *conn_options, dispopts **disp_options)
 			return ;
 		}
 	}
+	if ((*disp_options)->layout == 5 && strstr((*disp_options)->bomb_output, "end_lab"))
+		goto_layout_bytes(&conn_options, disp_options);
 	if ((*disp_options)->prompt_char == '$' && strstr((*disp_options)->bomb_output, "SUPERUSER"))
 		(*disp_options)->prompt_char = '#';
 	if ((*disp_options)->view != 1 && conn_options->fd >= 0)

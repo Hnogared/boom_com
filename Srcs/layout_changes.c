@@ -115,3 +115,14 @@ void	goto_layout_labyrinth(portopts **conn_options, dispopts **disp_options)
 	(*disp_options)->layout = 5;
 	menu_defusing(conn_options, disp_options);
 }
+
+void	goto_layout_bytes(portopts **conn_options, dispopts **disp_options)
+{
+	strncpy((*disp_options)->cmd_output, " > Overflow de la memoire\n"
+		" # [1] Quitter le programme (ou tapez 'exit')\n"
+		" # [2] Deconnection de la bombe\n", BIG_BUFFER - 1);
+	(*disp_options)->cmd_output[BIG_BUFFER - 2] = 0;
+	(*disp_options)->view = 2;
+	(*disp_options)->layout = 6;
+	menu_defusing(conn_options, disp_options);
+}

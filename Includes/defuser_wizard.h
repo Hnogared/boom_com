@@ -105,5 +105,6 @@ void			goto_layout_2(portopts **conn_options, dispopts **disp_options, bool load
 void			goto_layout_3(portopts **conn_options, dispopts **disp_options, bool loading);
 void			goto_layout_firewalloff(portopts **conn_options, dispopts **disp_options);
 void			goto_layout_labyrinth(portopts **conn_options, dispopts **disp_options);
+void			goto_layout_bytes(portopts **conn_options, dispopts **disp_options);
 
 #endif
