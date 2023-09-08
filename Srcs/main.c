@@ -69,9 +69,9 @@ int	main(void)
 		exit_helper(conn_options, disp_options);
 	attroff(COLOR_PAIR(1));
 
-//	goto_layout_1(&conn_options, &disp_options);
-	open_usb_port(&conn_options);
-	goto_layout_labyrinth(&conn_options, &disp_options);
+	goto_layout_1(&conn_options, &disp_options);
+//	open_usb_port(&conn_options);
+//	goto_layout_labyrinth(&conn_options, &disp_options);
 	while (1)
 	{
 		menu_defusing(&conn_options, &disp_options);
