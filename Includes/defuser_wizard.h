@@ -11,6 +11,7 @@
 # include <fcntl.h>
 # include <dirent.h>
 # include <errno.h>
+# include <stdbool.h>
 
 # define FILES_TAB_SIZE	9
 # define LITTLE_BUFFER	80
@@ -95,6 +96,7 @@ void			exit_helper(portopts *conn_options, dispopts *disp_options);
 
 /* layout_changes.c */
 void			goto_layout0(portopts **conn_options, dispopts **disp_options);
-void			goto_layout1(portopts **conn_options, dispopts **disp_options);
+void			goto_layout1(portopts **conn_options, dispopts **disp_options, bool loading);
+void			goto_layout2(dispopts **disp_options, bool loading);
 
 #endif
