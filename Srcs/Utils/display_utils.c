@@ -1,5 +1,25 @@
 #include "../Includes/defuser_wizard.h"
 
+void	main_menu_loading(char *message)
+{
+	int		i;
+	int		delay;
+
+	curs_set(0);
+	i = 0;
+	delay = 30;
+	while (i * 3 <= COLS)
+	{
+		put_loading(message, "\t(OK)", LINES - 7, i * 3, COLS);
+		cbreak();
+		timeout(delay);
+		getch();
+		nocbreak();
+		i++;
+	}
+	curs_set(1);
+}
+
 void	put_centered(char *str, int line, int width)
 {
 	int	padding;

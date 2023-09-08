@@ -132,32 +132,3 @@ void	play_connect(portopts **conn_options, dispopts **disp_options)
 	}
 	curs_set(1);
 }
-
-void	play_accessing_device(void)
-{
-	int		i;
-	int		delay;
-
-	curs_set(0);
-	i = 0;
-	delay = 30;
-	while (i * 3 <= COLS)
-	{
-		put_loading("Hacking into device...", "\t(OK)", LINES - 7, i * 3, COLS);
-//		if (i > 20 && i <= 40)
-//			put_loading("DECODING ENCRYPTION...", "\t(OK)", LINES / 2, (i - 20) * 3, 60);
-//		if (i > 40 && i <= 60)
-//			put_loading("ANALYSING FIRMWARE...", "\t(OK)", LINES - 7, (i - 40) * 3, 60);
-//		put_separation(LINES - 4, COLS);
-//		put_loading("PROGRESS", NULL, LINES - 2, i, 60);
-//		delay = 100;
-//		if (i < 30 || i > 45)
-//			delay = 75;
-		cbreak();
-		timeout(delay);
-		getch();
-		nocbreak();
-		i++;
-	}
-	curs_set(1);
-}

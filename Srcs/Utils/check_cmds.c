@@ -21,12 +21,12 @@ int	check_choice(portopts **conn_options, dispopts **disp_options)
 	{
 		if ((*disp_options)->stage == 0)
 		{
-			play_accessing_device();
+			main_menu_loading("Intrusion en cours...");
 			if (open_usb_port(conn_options))
 			{
-				strncpy((*disp_options)->cmd_output, "!> CONNECTION_ERROR >> ", BIG_BUFFER);
-				strncpy((*disp_options)->cmd_output + 20, strerror(errno), BIG_BUFFER);
-				(*disp_options)->cmd_output[BIG_BUFFER - 1] = 0;
+				strncpy((*disp_options)->bomb_output, "!> CONNECTION_ERROR >> ", BIG_BUFFER);
+				strncpy((*disp_options)->bomb_output + 20, strerror(errno), BIG_BUFFER);
+				(*disp_options)->bomb_output[BIG_BUFFER - 1] = 0;
 				return (1);
 			}
 			strncpy((*disp_options)->bomb_output,
