@@ -20,7 +20,7 @@ int	open_usb_port(portopts **conn_options)
 int	get_keypress(void)
 {
 	int	ch;
-	
+
 	halfdelay(1);
 	ch = getch();
 	while (ch == ERR)
@@ -45,21 +45,23 @@ char	**get_files_tab(char *directory)
 	int				i;
 	char			**files_tab;
 	DIR				*d;
-	struct dirent   *dir;
-	
+	struct dirent	*dir;
+
 	d = opendir(directory);
-	if (d) {
-		i = 0;
-		files_tab = (char **) malloc((FILES_TAB_SIZE + 1) * sizeof(char *));
-		while ((dir = readdir(d)) != NULL && i < FILES_TAB_SIZE)
-		{
-			if (!left_strcmp(dir->d_name, "tty") && dir->d_name[3]
-				&& !(dir->d_name[3] >= '0' && dir->d_name[3] <= '9'))
-				files_tab[i++] = dir->d_name;
-		}
-		files_tab[i] = NULL;
-		closedir(d);
+	if (!d)
+		return (NULL);
+	i = 0;
+	files_tab = (char **) malloc((FILES_TAB_SIZE + 1) * sizeof(char *));
+	dir = readdir(d);
+	while (dir && i < FILES_TAB_SIZE)
+	{
+		if (!left_strcmp(dir->d_name, "tty") && dir->d_name[3]
+			&& !(dir->d_name[3] >= '0' && dir->d_name[3] <= '9'))
+			files_tab[i++] = dir->d_name;
+		dir = readdir(d);
 	}
+	files_tab[i] = NULL;
+	closedir(d);
 	return (files_tab);
 }
 
@@ -67,14 +69,10 @@ struct termios	set_termios_opt(int fd, int baudrate)
 {
 	speed_t			to_set;
 	struct termios	toptions;
- 
-	if (baudrate == 1 || baudrate == 0)
-		to_set = B9600;
-	else if (baudrate == 2)
-		to_set = B38400;
-	else
-		to_set = B115200;
-		
+
+	to_set = B9600 * (baudrate == 0 || baudrate == 1)
+		+ B38400 * (baudrate == 2)
+		+ B115200 * (baudrate < 0 || baudrate > 2);
 	tcgetattr(fd, &toptions);
 	cfsetispeed(&toptions, to_set);
 	cfsetospeed(&toptions, to_set);
@@ -89,11 +87,9 @@ struct termios	set_termios_opt(int fd, int baudrate)
 	toptions.c_oflag &= ~OPOST;
 	toptions.c_cc[VMIN] = 0;
 	toptions.c_cc[VTIME] = 0;
-
 	tcsetattr(fd, TCSANOW, &toptions);
-	usleep(1000*1000);
-	tcflush(fd, TCIFLUSH);	
-
+	usleep(1000 * 1000);
+	tcflush(fd, TCIFLUSH);
 	return (toptions);
 }
 
