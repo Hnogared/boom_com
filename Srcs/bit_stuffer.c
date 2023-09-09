@@ -44,7 +44,7 @@ static int	check_answer(portopts **conn_options, dispopts **disp_options)
 		strncpy((*disp_options)->bomb_output, "�#erbonjou��memerror detected",
 			BIG_BUFFER - 1);
 		(*disp_options)->bomb_output[BIG_BUFFER - 2] = 0;
-		return (2);
+		return (1);
 	}
 	return (0);
 }
@@ -66,6 +66,9 @@ void	bit_stuffer(portopts **conn_options, dispopts **disp_options)
 	state = 0;
 	while (state == 0)
 	{
+		state = check_answer(conn_options, disp_options);
+		if (state != 0)
+			break ;
 		c = get_keypress();
 		if (c == '\e')
 			break ;
@@ -74,7 +77,6 @@ void	bit_stuffer(portopts **conn_options, dispopts **disp_options)
 			|| (c == 's' && write((*conn_options)->fd, "moveS", 5) == -1)
 			|| (c == 'd' && write((*conn_options)->fd, "moveD", 5) == -1));
 		printw("%c", c * (c == 'z' || c == 'q' || c == 's' || c == 'd'));
-		state += check_answer(conn_options, disp_options);
 	}
 	if (state < 0)
 	{
