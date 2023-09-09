@@ -75,6 +75,8 @@ void	bit_stuffer(portopts **conn_options, dispopts **disp_options)
 			|| (c == 's' && write((*conn_options)->fd, "moveS", 5) == -1)
 			|| (c == 'd' && write((*conn_options)->fd, "moveD", 5) == -1));
 		printw("%c", c * (c == 'z' || c == 'q' || c == 's' || c == 'd'));
+		timeout(100);
+		getch();
 		state += check_answer(conn_options, disp_options);
 	}
 	if (state < 0)
