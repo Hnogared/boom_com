@@ -35,10 +35,9 @@ int	play_startup(void)
 		if (i > 60 && i <= 90)
 			put_loading("CHECKING FOR UPDATES...", "\t(UP TO DATE)", 6, (i - 60) * 2, 60);
 		if (i > 90)
-		{
 			put_loading("LOADING INTERFACE...", "\t(OK)", 9, (i - 90) * 2, 60);
-			put_loading("LOADING MANUAL...", "\t(OK)", 12, (i - 90) * 3, 60);
-		}
+		if (i > 100)
+			put_loading("LOADING MANUAL...", "\t(OK)", 12, (i - 100) * 3, 60);
 		getch();
 		i++;
 	}
