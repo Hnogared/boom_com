@@ -33,6 +33,7 @@ int	check_choice(portopts **conn_options, dispopts **disp_options)
 			goto_layout_password(conn_options, disp_options, false);
 		else
 			goto_layout_1(conn_options, disp_options);
+		((*disp_options)->cmd)[0] = 0;
 		return (1);
 	}
 	if (((*disp_options)->cmd)[0] == '3' && ((*disp_options)->cmd)[1] == '\n')
@@ -43,6 +44,7 @@ int	check_choice(portopts **conn_options, dispopts **disp_options)
 			bit_stuffer(conn_options, disp_options);
 		if ((*disp_options)->layout == 6)
 			goto_layout_password(conn_options, disp_options, true);
+		((*disp_options)->cmd)[0] = 0;
 		return (1);
 	}
 	return (0);
