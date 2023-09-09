@@ -1,23 +1,31 @@
 #include "../Includes/defuser_wizard.h"
 
+static void	display_instructions(void)
+{
+	mvprintw(2, 0, " Programme pour corrompre les donnees "
+		"d'une zone de memoire.\n");
+	printw(" Utilisez [Z | Q | S | D] pour vous deplacer "
+		"dans la memoire et la detruire.\n");
+	printw(" Appuyez sur [ESC] pour quitter le programme.\n");
+	attron(COLOR_PAIR(1));
+	printw(" Restez sur le bon segment a l'aide des "
+		"potentiometres de memoire de la bombe.\n");
+	printw(" (un potentiometre est une molette que l'on peut tourner).\n");
+	attroff(COLOR_PAIR(1));
+	attron(A_BOLD);
+}
+
 static void	display_ui(void)
 {
 	int		i;
-	
+
 	curs_set(0);
 	attron(A_BOLD);
 	attron(COLOR_PAIR(2));
 	mvprintw(0, 0, "%-*s", COLS, "bit_stuffer v. 1.2");
 	attroff(A_BOLD);
 	attroff(COLOR_PAIR(2));
-	mvprintw(2, 0, " Programme pour corrompre les donnees d'une zone de memoire.\n");
-	printw(" Utilisez [Z | Q | S | D] pour vous deplacer dans la memoire et la detruire.\n");
-	printw(" Appuyez sur [ESC] pour quitter le programme.\n");
-	attron(COLOR_PAIR(1));
-	printw(" restez sur le bon segment a l'aide des potentiometres de memoire de la bombe.\n");
-	printw(" (un potentiometre est une molette que l'on peut tourner).\n");
-	attroff(COLOR_PAIR(1));
-	attron(A_BOLD);
+	display_instructions();
 	attron(COLOR_PAIR(2));
 	mvprintw(8, 0, "%-*s", COLS, "Derniers inputs");
 	attroff(A_BOLD);
@@ -57,8 +65,10 @@ void	bit_stuffer(portopts **conn_options, dispopts **disp_options)
 
 	if (write((*conn_options)->fd, "start_lab", 9) == -1)
 	{
-		strncpy((*disp_options)->bomb_output, "!> WRITING ERROR >> ", BIG_BUFFER);
-		strncpy((*disp_options)->bomb_output + 20, strerror(errno), BIG_BUFFER);
+		strncpy((*disp_options)->bomb_output, "!> WRITING ERROR >> ",
+			BIG_BUFFER - 2);
+		strncpy((*disp_options)->bomb_output + 20, strerror(errno),
+			BIG_BUFFER - 2);
 		(*disp_options)->bomb_output[BIG_BUFFER - 1] = 0;
 		return ;
 	}
@@ -71,17 +81,19 @@ void	bit_stuffer(portopts **conn_options, dispopts **disp_options)
 		if (c == '\e')
 			break ;
 		state = -1 * ((c == 'z' && write((*conn_options)->fd, "moveZ", 5) == -1)
-			|| (c == 'q' && write((*conn_options)->fd, "moveQ", 5) == -1)
-			|| (c == 's' && write((*conn_options)->fd, "moveS", 5) == -1)
-			|| (c == 'd' && write((*conn_options)->fd, "moveD", 5) == -1));
+				|| (c == 'q' && write((*conn_options)->fd, "moveQ", 5) == -1)
+				|| (c == 's' && write((*conn_options)->fd, "moveS", 5) == -1)
+				|| (c == 'd' && write((*conn_options)->fd, "moveD", 5) == -1));
 		printw("%c", c * (c == 'z' || c == 'q' || c == 's' || c == 'd'));
 	}
 	if (state == 0)
 		state = check_answer(conn_options, disp_options);
 	if (state < 0)
 	{
-		strncpy((*disp_options)->bomb_output, "!> WRITING ERROR >> ", BIG_BUFFER);
-		strncpy((*disp_options)->bomb_output + 20, strerror(errno), BIG_BUFFER);
+		strncpy((*disp_options)->bomb_output, "!> WRITING ERROR >> ",
+			BIG_BUFFER - 2);
+		strncpy((*disp_options)->bomb_output + 20, strerror(errno),
+			BIG_BUFFER - 2);
 		(*disp_options)->bomb_output[BIG_BUFFER - 1] = 0;
 		goto_layout_labyrinth(conn_options, disp_options);
 		return ;
