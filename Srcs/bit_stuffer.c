@@ -27,7 +27,7 @@ static void	display_ui(void)
 	while (++i < LINES - 5)
 		printw("%-*s", COLS, "");
 	put_separation(i, COLS);
-	move(8, 0);
+	move(9, 0);
 	curs_set(1);
 }
 

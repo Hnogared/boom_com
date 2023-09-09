@@ -142,9 +142,8 @@ void	goto_layout_password(portopts **conn_options, dispopts **disp_options, bool
 		" * La memoire peut etre divisee en octets (8 bits) afin d'etre lue.\n"
 		" * Pour calculer la valeur d'un octet, ajoutez les valeurs de ses bits comme ci-dessous :\n"
 		" *\n"
-		" *  0 1 0 0 1 0 1 0 = 0*128 + 1*64 + 0*32 + 0*16 + 1*8 + 0*4 + 1*2 + 0*1 = 74"
-		" *  0 0 1 1 0 1 0 0 = 0*128 + 0*64 + 1*32 + 1*16 + 0*8 + 1*4 + 0*2 + 0*1 = 52"
-		" *\n"
+		" *  0 1 0 0 1 0 1 0 = 0*128 + 1*64 + 0*32 + 0*16 + 1*8 + 0*4 + 1*2 + 0*1 = 74\n"
+		" *  0 0 1 1 0 1 0 0 = 0*128 + 0*64 + 1*32 + 1*16 + 0*8 + 1*4 + 0*2 + 0*1 = 52\n\n"
 		" * Veuillez vous referer a tableau ascii (man ascii) pour l'interpretation de chaque octet.\n"
 		" # [1] Quitter le programme (ou tapez 'exit')\n"
 		" # [2] Deconnection de la bombe\n", BIG_BUFFER - 2);
