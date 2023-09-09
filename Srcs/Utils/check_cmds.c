@@ -23,6 +23,14 @@ int	check_choice(portopts **conn_options, dispopts **disp_options)
 			goto_layout_2(conn_options, disp_options, (*disp_options)->layout == 1);
 		else if ((*disp_options)->layout == -3)
 			goto_layout_3(conn_options, disp_options, false);
+		else if ((*disp_options)->layout == -4)
+			goto_layout_firewalloff(conn_options, disp_options);
+		else if ((*disp_options)->layout == -5)
+			goto_layout_labyrinth(conn_options, disp_options);
+		else if ((*disp_options)->layout == -6)
+			goto_layout_bytes(conn_options, disp_options);
+		else if ((*disp_options)->layout == -7)
+			goto_layout_password(conn_options, disp_options, false);
 		else
 			goto_layout_1(conn_options, disp_options);
 		return (1);
@@ -33,6 +41,8 @@ int	check_choice(portopts **conn_options, dispopts **disp_options)
 			goto_layout_3(conn_options, disp_options, true);
 		if ((*disp_options)->layout == 5)
 			bit_stuffer(conn_options, disp_options);
+		if ((*disp_options)->layout == 6)
+			goto_layout_password(conn_options, disp_options, true);
 		return (1);
 	}
 	return (0);
