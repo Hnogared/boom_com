@@ -46,6 +46,7 @@ static int	check_answer(portopts **conn_options, dispopts **disp_options)
 		(*disp_options)->bomb_output[BIG_BUFFER - 2] = 0;
 		return (1);
 	}
+	fprintf(stderr, "%s\n", temp);
 	return (0);
 }
 
