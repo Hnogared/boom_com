@@ -13,37 +13,37 @@ int	check_view_cmds(t_dispopts *dispopts_p)
 	return (1);
 }
 
-int	check_choice(t_portopts *portopts_p, t_dispopts *dispopts_p)
+int	check_choice(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
 	if ((dispopts_p->cmd)[0] == '1' && (dispopts_p->cmd)[1] == '\n')
 		exit_helper(*portopts_p, *dispopts_p);
 	if ((dispopts_p->cmd)[0] == '2' && (dispopts_p->cmd)[1] == '\n')
 	{
 		if (dispopts_p->layout == -2 || dispopts_p->layout == 1)
-			goto_layout_2(portopts_p, dispopts_p, dispopts_p->layout == 1);
+			goto_layout_2(win, portopts_p, dispopts_p, dispopts_p->layout == 1);
 		else if (dispopts_p->layout == -3)
-			goto_layout_3(portopts_p, dispopts_p, false);
+			goto_layout_3(win, portopts_p, dispopts_p, false);
 		else if (dispopts_p->layout == -4)
-			goto_layout_firewalloff(portopts_p, dispopts_p);
+			goto_layout_firewalloff(win, portopts_p, dispopts_p);
 		else if (dispopts_p->layout == -5)
-			goto_layout_labyrinth(portopts_p, dispopts_p);
+			goto_layout_labyrinth(win, portopts_p, dispopts_p);
 		else if (dispopts_p->layout == -6)
-			goto_layout_bytes(portopts_p, dispopts_p);
+			goto_layout_bytes(win, portopts_p, dispopts_p);
 		else if (dispopts_p->layout == -7)
-			goto_layout_password(portopts_p, dispopts_p, false);
+			goto_layout_password(win, portopts_p, dispopts_p, false);
 		else
-			goto_layout_1(portopts_p, dispopts_p);
+			goto_layout_1(win, portopts_p, dispopts_p);
 		(dispopts_p->cmd)[0] = 0;
 		return (1);
 	}
 	if ((dispopts_p->cmd)[0] == '3' && (dispopts_p->cmd)[1] == '\n')
 	{
 		if (dispopts_p->layout == 2)
-			goto_layout_3(portopts_p, dispopts_p, true);
+			goto_layout_3(win, portopts_p, dispopts_p, true);
 		if (dispopts_p->layout == 5)
 			bit_stuffer(portopts_p, dispopts_p);
 		if (dispopts_p->layout == 6)
-			goto_layout_password(portopts_p, dispopts_p, true);
+			goto_layout_password(win, portopts_p, dispopts_p, true);
 		(dispopts_p->cmd)[0] = 0;
 		return (1);
 	}
@@ -89,10 +89,10 @@ int	check_conn_cmds(t_portopts *portopts_p, t_dispopts *dispopts_p)
 	return (0);
 }
 
-int	check_help_cmds(t_portopts *portopts_p, t_dispopts *dispopts_p)
+int	check_help_cmds(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
 	if (!left_strcmp("help\n", dispopts_p->cmd) && dispopts_p->view)
-		goto_layout_help(portopts_p, dispopts_p);
+		goto_layout_help(win, portopts_p, dispopts_p);
 	else if (!left_strcmp("help cmd\n", dispopts_p->cmd) && dispopts_p->view)
 	{
 		strncpy(dispopts_p->cmd_output, "$> The *CONFEDERATION BOMB DEFUSER v4.6* is an interface for using disarming tools on terrorist devices.\n\n"

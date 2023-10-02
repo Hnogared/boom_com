@@ -95,11 +95,11 @@ void	bit_stuffer(t_portopts *portopts_p, t_dispopts *dispopts_p)
 		strncpy(dispopts_p->bomb_output + 20, strerror(errno),
 			BIG_BUFFER - 2);
 		dispopts_p->bomb_output[BIG_BUFFER - 1] = 0;
-		goto_layout_labyrinth(portopts_p, dispopts_p);
+		goto_layout_labyrinth(g_data_s.dispopts_s.msg_win, portopts_p, dispopts_p);
 		return ;
 	}
 	if (state)
-		goto_layout_bytes(portopts_p, dispopts_p);
+		goto_layout_bytes(g_data_s.dispopts_s.msg_win, portopts_p, dispopts_p);
 	else
-		goto_layout_labyrinth(portopts_p, dispopts_p);
+		goto_layout_labyrinth(g_data_s.dispopts_s.msg_win, portopts_p, dispopts_p);
 }

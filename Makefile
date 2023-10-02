@@ -6,6 +6,7 @@ VPATH		= Srcs:			\
 SRCS		= main.c			\
 			  init_data.c		\
 			  init_readline.c	\
+			  rlncurses.c		\
 		  	  loading_menus.c	\
 		  	  select_menus.c	\
 		  	  defusing_menu.c	\

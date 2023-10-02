@@ -1,21 +1,28 @@
 #ifndef DEFUSER_WIZARD_H
 # define DEFUSER_WIZARD_H
 
+// For strnlen() and wcwidth()
+# define _XOPEN_SOURCE 700
+
 # include <stdio.h>
 # include <stdlib.h>
+# include <stdint.h>
+# include <stdbool.h>
+# include <stdnoreturn.h>
 # include <unistd.h>
 # include <errno.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <string.h>
-# include <stdbool.h>
 # include <termios.h>
+# include <curses.h>
 # include <ncurses.h>
 # include <sys/ioctl.h>
 # include <fcntl.h>
 # include <dirent.h>
-
-# include "rlncurses.h"
+# include <locale.h>
+# include <wchar.h>
+# include <wctype.h>
 
 # define FILES_TAB_SIZE	9
 # define LITTLE_BUFFER	80
@@ -36,6 +43,19 @@
 #  undef COLOR_BLACK
 #  define COLOR_BLACK	8
 # endif
+
+# define max(a, b)         \
+  ({ typeof(a) _a = a;    \
+     typeof(b) _b = b;    \
+     _a > _b ? _a : _b; })
+
+// Checks errors for (most) ncurses functions. CHECK(fn, x, y, z) is a checked
+// version of fn(x, y, z).
+# define CHECK(fn, ...)                            \
+  do                                               \
+      if (fn(__VA_ARGS__) == ERR)                  \
+          fail_exit(#fn"("#__VA_ARGS__") failed"); \
+  while (false)
 
 typedef struct s_portopts
 {
@@ -58,6 +78,14 @@ typedef struct s_dispopts
 	WINDOW	*msg_win;
 	WINDOW	*cmd_win;
 }				t_dispopts;
+
+typedef struct s_rlncurses
+{
+	bool			visual_mode;
+	bool			should_exit;
+	bool			input_avail;
+	unsigned char	input;
+}				t_rlncurses;
 
 typedef struct s_data
 {
@@ -103,14 +131,15 @@ char			*menu_port_select(void);
 /* defusing_menu.c file */
 int				exec_command(t_portopts *portopts_p, t_dispopts *dispopts_p);
 void			update_command(t_portopts *portopts_p, t_dispopts *dispopts_p);
-void			menu_defusing(t_portopts *portopts_p, t_dispopts *dispopts_p);
-void			print_output(t_portopts *port_options, t_dispopts *dispopts_p);
+void			menu_defusing(WINDOW *msg_win, t_portopts *portopts_p, t_dispopts *dispopts_p);
+void			cmd_win_redisplay(WINDOW *cmd_win, bool for_resize);
+//void			print_output(t_portopts *port_options, t_dispopts *dispopts_p);
 void			print_prompt(t_portopts *portopts_p, t_dispopts *dispopts_p);
 
 /* check_cmds.c file */
 int				check_view_cmds(t_dispopts *dispopts_p);
-int				check_choice(t_portopts *portopts_p, t_dispopts *dispopts_p);
-int				check_help_cmds(t_portopts *portopts_p, t_dispopts *dispopts_p);
+int				check_choice(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p);
+int				check_help_cmds(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p);
 int				check_conn_cmds(t_portopts *portopts_p, t_dispopts *dispopts_p);
 
 /* setup_functions.c */
@@ -122,13 +151,19 @@ struct termios	set_termios_opt(int fd, int baudrate);
 void			exit_helper(t_portopts portopts_s, t_dispopts dispopts_s);
 
 /* layout_changes.c */
-void			goto_layout_help(t_portopts *portopts_p, t_dispopts *dispopts_p);
-void			goto_layout_1(t_portopts *portopts_p, t_dispopts *dispopts_p);
-void			goto_layout_2(t_portopts *portopts_p, t_dispopts *dispopts_p, bool loading);
-void			goto_layout_3(t_portopts *portopts_p, t_dispopts *dispopts_p, bool loading);
-void			goto_layout_firewalloff(t_portopts *portopts_p, t_dispopts *dispopts_p);
-void			goto_layout_labyrinth(t_portopts *portopts_p, t_dispopts *dispopts_p);
-void			goto_layout_bytes(t_portopts *portopts_p, t_dispopts *dispopts_p);
-void			goto_layout_password(t_portopts *portopts_p, t_dispopts *dispopts_p, bool mode);
+void			goto_layout_help(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p);
+void			goto_layout_1(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p);
+void			goto_layout_2(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p, bool loading);
+void			goto_layout_3(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p, bool loading);
+void			goto_layout_firewalloff(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p);
+void			goto_layout_labyrinth(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p);
+void			goto_layout_bytes(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p);
+void			goto_layout_password(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p, bool mode);
+
+/* rlncurses.c */
+size_t			strnwidth(const char *s, size_t n, size_t offset);
+size_t			strwidth(const char *s, size_t offset);
+noreturn void	fail_exit(const char *msg);
+void 			resize(t_portopts *portopts_p, t_dispopts *dispopts_p);
 
 #endif
