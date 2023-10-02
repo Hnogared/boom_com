@@ -5,3 +5,4 @@ defuser_wizard
 temp*
 test*
 log
+readline-and-ncurses

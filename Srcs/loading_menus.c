@@ -60,13 +60,13 @@ int	play_startup(void)
 	printw("%-*s", COLS, "");
 	printw("%-*s", COLS, "I read and agree to the terms of service (press space to confirm) ");
 	printw("%-*s", COLS, "");
-	if (get_keypress() != ' ')
+	if (get_keypress(NULL) != ' ')
 	{
 		curs_set(1);
 		mvprintw(LINES - 1, 0, "%-*s", COLS, "");
 		printw("%-*s", COLS, "");
 		mvprintw(LINES - 1, 0, "Disagree to the terms of service and exit ? (y/N) ");
-		ch = get_keypress();
+		ch = get_keypress(NULL);
 		attroff(COLOR_PAIR(4));
 		if (ch == 'y' || ch == 'Y')
 			return (1);

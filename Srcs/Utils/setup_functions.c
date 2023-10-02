@@ -17,7 +17,7 @@ int	open_usb_port(portopts **conn_options)
 	return (0);
 }
 
-int	get_keypress(void)
+int	get_keypress(FILE *foo)
 {
 	int	ch;
 
@@ -26,6 +26,7 @@ int	get_keypress(void)
 	while (ch == ERR)
 		ch = getch();
 	nocbreak();
+	foo += 0;
 	return (ch);
 }
 
@@ -95,10 +96,12 @@ struct termios	set_termios_opt(int fd, int baudrate)
 
 void	exit_helper(portopts *conn_options, dispopts *disp_options)
 {
-	if (conn_options->fd > -1)
-		close(conn_options->fd);
 	if (conn_options)
+	{
 		free(conn_options);
+		if (conn_options->fd > -1)
+			close(conn_options->fd);
+	}
 	if (disp_options)
 		free(disp_options);
 	clear();

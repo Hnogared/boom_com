@@ -77,7 +77,7 @@ void	bit_stuffer(portopts **conn_options, dispopts **disp_options)
 	state = 0;
 	while (state == 0)
 	{
-		c = get_keypress();
+		c = get_keypress(NULL);
 		if (c == '\e')
 			break ;
 		state = -1 * ((c == 'z' && write((*conn_options)->fd, "moveZ", 5) == -1)

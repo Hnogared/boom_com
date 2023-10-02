@@ -21,7 +21,7 @@ INCL		= Includes
 
 CC			= gcc
 CFLAGS		= -Wall -Werror -Wextra
-LIBS		= -lncurses
+LIBS		= -lncurses -lreadline
 
 RM			= rm -rf
 

@@ -56,9 +56,19 @@ void	print_output(portopts *conn_options, dispopts **disp_options)
 
 void	update_command(portopts **conn_options, dispopts **disp_options)
 {
-	int		ch;
+	char	*line;
+//	char	c;
 
-	ch = get_keypress();
+	cbreak();
+	line = readline(NULL);
+//	move(LINES - 2, 0);
+//	get_keypress(NULL);
+	rl_callback_read_char();	
+	if (conn_options || disp_options)
+		return ;
+	fprintf(stderr, "%s\n", line);
+
+/*	ch = get_keypress();
 	if (ch == '\n' && (*disp_options)->cmd[0] == '@')
 	{
 		if ((*conn_options)->fd < 0)
@@ -67,7 +77,7 @@ void	update_command(portopts **conn_options, dispopts **disp_options)
 		{
 			strncpy((*disp_options)->bomb_output, "!> WRITING ERROR >> ", BIG_BUFFER);
 			strncpy((*disp_options)->bomb_output + 20, strerror(errno), BIG_BUFFER);
-			(*disp_options)->bomb_output[BIG_BUFFER - 1] = 0;
+			
 		}
 		bzero((*disp_options)->cmd, (*disp_options)->cmd_len + 1);
 		(*disp_options)->cmd_len = 0;
@@ -97,7 +107,7 @@ void	update_command(portopts **conn_options, dispopts **disp_options)
 		(*disp_options)->cmd[(*disp_options)->cmd_len] = ch;
 		(*disp_options)->cmd[(*disp_options)->cmd_len + 1] = 0;
 		(*disp_options)->cmd_len++;
-	}
+	}*/
 }
 
 void	print_prompt(portopts **conn_options, dispopts **disp_options)
@@ -119,10 +129,13 @@ void	print_prompt(portopts **conn_options, dispopts **disp_options)
 	// Print command prompt
 	attron(COLOR_PAIR(4));
 	mvprintw(LINES - 2, 0, "%*s", COLS, "");
-	printw("%*s", COLS, "");
-	mvprintw(LINES - 1, 0, "(Command) $~ %s", (*disp_options)->cmd);
-	move(LINES - 1, 13 + (*disp_options)->cmd_len);
+//	printw("%*s", COLS, "");
+//	mvprintw(LINES - 1, 0, "(Command) $~ %s", (*disp_options)->cmd);
+//	move(LINES - 1, 13 + (*disp_options)->cmd_len);
+//	move(LINES - 1, 0);
 	attroff(COLOR_PAIR(4));
+	if (disp_options)
+		return ;
 }
 
 void	menu_defusing(portopts **conn_options, dispopts **disp_options)
