@@ -41,4 +41,8 @@ typedef struct s_rlncurses
 	unsigned char	input;
 }				t_rlncurses;
 
+size_t			strnwidth(const char *s, size_t n, size_t offset);
+size_t			strwidth(const char *s, size_t offset);
+noreturn void	fail_exit(const char *msg);
+
 #endif

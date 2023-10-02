@@ -32,7 +32,7 @@ char	*menu_port_select(void)
 		}
 		else
 			break ;
-		ch = get_keypress(NULL);
+		ch = get_keypress();
 		if (ch >= '1' && ch <= '0' + i)
 		{
 			port = files_tab[ch - '0' - 1];
@@ -80,7 +80,7 @@ int	menu_baudrate_select(void)
 			mvprintw(LINES - 1, 0, ">> [ERROR] Invalid input, please try again: ");
 		else
 			mvprintw(LINES - 2, 0, "\nPlease type one of the above (1-3 | ESC) to proceed: ");
-		ch = get_keypress(NULL);
+		ch = get_keypress();
 		if (ch >= '1' && ch <= '3')
 			return (ch - '0');
 		if (ch == 27)

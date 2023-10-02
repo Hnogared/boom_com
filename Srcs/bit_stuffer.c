@@ -39,37 +39,37 @@ static void	display_ui(void)
 	curs_set(1);
 }
 
-static int	check_answer(portopts **conn_options, dispopts **disp_options)
+static int	check_answer(t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
 	int		size;
 	char	temp[BIG_BUFFER];
 
-	size = read((*conn_options)->fd, temp, BIG_BUFFER - 1);
+	size = read(portopts_p->fd, temp, BIG_BUFFER - 1);
 	if (size < -1)
 		return (-1);
 	if (strstr(temp, "end_lab"))
 	{
-		strncpy((*disp_options)->bomb_output, "�#erbonjou��memerror detected",
+		strncpy(dispopts_p->bomb_output, "�#erbonjou��memerror detected",
 			BIG_BUFFER - 1);
-		(*disp_options)->bomb_output[BIG_BUFFER - 2] = 0;
+		dispopts_p->bomb_output[BIG_BUFFER - 2] = 0;
 		return (1);
 	}
 	fprintf(stderr, "%s\n", temp);
 	return (0);
 }
 
-void	bit_stuffer(portopts **conn_options, dispopts **disp_options)
+void	bit_stuffer(t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
 	int		state;
 	char	c;
 
-	if (write((*conn_options)->fd, "start_lab", 9) == -1)
+	if (write(portopts_p->fd, "start_lab", 9) == -1)
 	{
-		strncpy((*disp_options)->bomb_output, "!> WRITING ERROR >> ",
+		strncpy(dispopts_p->bomb_output, "!> WRITING ERROR >> ",
 			BIG_BUFFER - 2);
-		strncpy((*disp_options)->bomb_output + 20, strerror(errno),
+		strncpy(dispopts_p->bomb_output + 20, strerror(errno),
 			BIG_BUFFER - 2);
-		(*disp_options)->bomb_output[BIG_BUFFER - 1] = 0;
+		dispopts_p->bomb_output[BIG_BUFFER - 1] = 0;
 		return ;
 	}
 	clear();
@@ -77,29 +77,29 @@ void	bit_stuffer(portopts **conn_options, dispopts **disp_options)
 	state = 0;
 	while (state == 0)
 	{
-		c = get_keypress(NULL);
+		c = get_keypress();
 		if (c == '\e')
 			break ;
-		state = -1 * ((c == 'z' && write((*conn_options)->fd, "moveZ", 5) == -1)
-				|| (c == 'q' && write((*conn_options)->fd, "moveQ", 5) == -1)
-				|| (c == 's' && write((*conn_options)->fd, "moveS", 5) == -1)
-				|| (c == 'd' && write((*conn_options)->fd, "moveD", 5) == -1));
+		state = -1 * ((c == 'z' && write(portopts_p->fd, "moveZ", 5) == -1)
+				|| (c == 'q' && write(portopts_p->fd, "moveQ", 5) == -1)
+				|| (c == 's' && write(portopts_p->fd, "moveS", 5) == -1)
+				|| (c == 'd' && write(portopts_p->fd, "moveD", 5) == -1));
 		printw("%c", c * (c == 'z' || c == 'q' || c == 's' || c == 'd'));
 	}
 	if (state == 0)
-		state = check_answer(conn_options, disp_options);
+		state = check_answer(portopts_p, dispopts_p);
 	if (state < 0)
 	{
-		strncpy((*disp_options)->bomb_output, "!> WRITING ERROR >> ",
+		strncpy(dispopts_p->bomb_output, "!> WRITING ERROR >> ",
 			BIG_BUFFER - 2);
-		strncpy((*disp_options)->bomb_output + 20, strerror(errno),
+		strncpy(dispopts_p->bomb_output + 20, strerror(errno),
 			BIG_BUFFER - 2);
-		(*disp_options)->bomb_output[BIG_BUFFER - 1] = 0;
-		goto_layout_labyrinth(conn_options, disp_options);
+		dispopts_p->bomb_output[BIG_BUFFER - 1] = 0;
+		goto_layout_labyrinth(portopts_p, dispopts_p);
 		return ;
 	}
 	if (state)
-		goto_layout_bytes(conn_options, disp_options);
+		goto_layout_bytes(portopts_p, dispopts_p);
 	else
-		goto_layout_labyrinth(conn_options, disp_options);
+		goto_layout_labyrinth(portopts_p, dispopts_p);
 }

@@ -51,10 +51,12 @@ typedef struct s_dispopts
 	int		view;
 	int		cmd_len;
 	char	prompt_char;
-	char	cmd[LITTLE_BUFFER];
+	char	*cmd;
 	char	cmd_output[BIG_BUFFER];
 	char	bomb_output[BIG_BUFFER];
 	WINDOW	*win;
+	WINDOW	*msg_win;
+	WINDOW	*cmd_win;
 }				t_dispopts;
 
 typedef struct s_data
@@ -68,12 +70,14 @@ extern t_data	g_data_s;
 
 
 /* init.c */
-void			init_display(t_dispopts *disp_options);
+void			init_display(t_rlncurses *rlncurses_p, t_dispopts *disp_options);
 void			init_portopts(t_portopts *port_options);
+
+/* init_readline.c */
 void 			init_readline(void);
 
 /* bit_stuffer.c */
-void			bit_stuffer(t_portopts **port_options, t_dispopts **disp_options);
+void			bit_stuffer(t_portopts *portopts_p, t_dispopts *dispopts_p);
 
 /* strings_utils.c file */
 int				chrstr(char c, char *str);
@@ -90,42 +94,41 @@ void			put_loading(char *name, char *confirm, int line_pos, int progress, int le
 
 /* loading_menus.c file */
 int				play_startup(void);
-void			play_connect(t_portopts **port_options, t_dispopts **disp_options);
+void			play_connect(t_portopts *portopts_p, t_dispopts *dispopts_p);
 
 /* select_menus.c file */
 int				menu_baudrate_select(void);
 char			*menu_port_select(void);
 
 /* defusing_menu.c file */
-int				exec_command(t_portopts **port_options, t_dispopts **disp_options);
-void			update_command(t_portopts **port_options, t_dispopts **disp_options);
-void			menu_defusing(t_portopts **port_options, t_dispopts **disp_options);
-void			print_output(t_portopts *port_options, t_dispopts **disp_options);
-void			print_prompt(t_portopts **port_options, t_dispopts **disp_options);
+int				exec_command(t_portopts *portopts_p, t_dispopts *dispopts_p);
+void			update_command(t_portopts *portopts_p, t_dispopts *dispopts_p);
+void			menu_defusing(t_portopts *portopts_p, t_dispopts *dispopts_p);
+void			print_output(t_portopts *port_options, t_dispopts *dispopts_p);
+void			print_prompt(t_portopts *portopts_p, t_dispopts *dispopts_p);
 
 /* check_cmds.c file */
-int				check_view_cmds(t_dispopts **disp_options);
-int				check_choice(t_portopts **port_options, t_dispopts **disp_options);
-int				check_help_cmds(t_portopts **port_options, t_dispopts **disp_options);
-int				check_conn_cmds(t_portopts **port_options, t_dispopts **disp_options);
+int				check_view_cmds(t_dispopts *dispopts_p);
+int				check_choice(t_portopts *portopts_p, t_dispopts *dispopts_p);
+int				check_help_cmds(t_portopts *portopts_p, t_dispopts *dispopts_p);
+int				check_conn_cmds(t_portopts *portopts_p, t_dispopts *dispopts_p);
 
 /* setup_functions.c */
-int				open_usb_port(t_portopts **port_options);
-int				get_keypress(FILE *foo);
-//int				get_keypress(void);
+int				open_usb_port(t_portopts *portopts_p);
+int				get_keypress(void);
 int				get_baudrate(int mode);
 char			**get_files_tab(char *directory);
 struct termios	set_termios_opt(int fd, int baudrate);
-void			exit_helper(t_portopts *port_options, t_dispopts *disp_options);
+void			exit_helper(t_portopts portopts_s, t_dispopts dispopts_s);
 
 /* layout_changes.c */
-void			goto_layout_help(t_portopts **port_options, t_dispopts **disp_options);
-void			goto_layout_1(t_portopts **port_options, t_dispopts **disp_options);
-void			goto_layout_2(t_portopts **port_options, t_dispopts **disp_options, bool loading);
-void			goto_layout_3(t_portopts **port_options, t_dispopts **disp_options, bool loading);
-void			goto_layout_firewalloff(t_portopts **port_options, t_dispopts **disp_options);
-void			goto_layout_labyrinth(t_portopts **port_options, t_dispopts **disp_options);
-void			goto_layout_bytes(t_portopts **port_options, t_dispopts **disp_options);
-void			goto_layout_password(t_portopts **port_options, t_dispopts **disp_options, bool mode);
+void			goto_layout_help(t_portopts *portopts_p, t_dispopts *dispopts_p);
+void			goto_layout_1(t_portopts *portopts_p, t_dispopts *dispopts_p);
+void			goto_layout_2(t_portopts *portopts_p, t_dispopts *dispopts_p, bool loading);
+void			goto_layout_3(t_portopts *portopts_p, t_dispopts *dispopts_p, bool loading);
+void			goto_layout_firewalloff(t_portopts *portopts_p, t_dispopts *dispopts_p);
+void			goto_layout_labyrinth(t_portopts *portopts_p, t_dispopts *dispopts_p);
+void			goto_layout_bytes(t_portopts *portopts_p, t_dispopts *dispopts_p);
+void			goto_layout_password(t_portopts *portopts_p, t_dispopts *dispopts_p, bool mode);
 
 #endif

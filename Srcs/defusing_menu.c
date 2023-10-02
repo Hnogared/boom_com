@@ -1,60 +1,60 @@
 #include "../Includes/defuser_wizard.h"
 
-int	exec_command(portopts **conn_options, dispopts **disp_options)
+int	exec_command(t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
-	if (!left_strcmp("exit\n", (*disp_options)->cmd))
-		exit_helper(*conn_options, *disp_options);
-	if (!left_strcmp("man\n", (*disp_options)->cmd))
+	if (!left_strcmp("exit\n", dispopts_p->cmd))
+		exit_helper(*portopts_p, *dispopts_p);
+	if (!left_strcmp("man\n", dispopts_p->cmd))
 	{
 		system("less defuser_man.txt");
 		return (0);
 	}
-	check_view_cmds(disp_options);
-	check_help_cmds(conn_options, disp_options);
-	check_choice(conn_options, disp_options);
+	check_view_cmds(dispopts_p);
+	check_help_cmds(portopts_p, dispopts_p);
+	check_choice(portopts_p, dispopts_p);
 	return (0);
 }
 
-void	print_output(portopts *conn_options, dispopts **disp_options)
+void	print_output(t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
 	int		size;
 	char	temp[BIG_BUFFER];
 
-	if (conn_options->fd != -1)
+	if (portopts_p->fd != -1)
 	{
-		size = read(conn_options->fd, temp, BIG_BUFFER - 1);
+		size = read(portopts_p->fd, temp, BIG_BUFFER - 1);
 		if (size < 0)
 		{
-			strncpy((*disp_options)->bomb_output, "!> READING_ERROR >> ", BIG_BUFFER);
-			strncpy((*disp_options)->bomb_output + 20, strerror(errno), BIG_BUFFER);
-			(*disp_options)->bomb_output[BIG_BUFFER - 1] = 0;
+			strncpy(dispopts_p->bomb_output, "!> READING_ERROR >> ", BIG_BUFFER);
+			strncpy(dispopts_p->bomb_output + 20, strerror(errno), BIG_BUFFER);
+			dispopts_p->bomb_output[BIG_BUFFER - 1] = 0;
 			return ;
 		}
 		temp[size] = 0;
 		if (strchr(temp, '$'))
-			memmove((*disp_options)->bomb_output, temp, size + 1);
+			memmove(dispopts_p->bomb_output, temp, size + 1);
 	}
-	if ((*disp_options)->view == 1)
+	if (dispopts_p->view == 1)
 		return ;
-	mvprintw(2, 0, "%s\n", crop((*disp_options)->bomb_output));
-	if ((*disp_options)->layout == 3 && strstr((*disp_options)->bomb_output, "RECONFIGURATION"))
-		goto_layout_firewalloff(&conn_options, disp_options);
-	if ((*disp_options)->layout == 4 && strstr((*disp_options)->bomb_output, "firewall corrupted"))
-		goto_layout_labyrinth(&conn_options, disp_options);
-//	if ((*disp_options)->layout == 5 && strstr((*disp_options)->bomb_output, "end_lab"))
+	mvprintw(2, 0, "%s\n", crop(dispopts_p->bomb_output));
+	if (dispopts_p->layout == 3 && strstr(dispopts_p->bomb_output, "RECONFIGURATION"))
+		goto_layout_firewalloff(portopts_p, dispopts_p);
+	if (dispopts_p->layout == 4 && strstr(dispopts_p->bomb_output, "firewall corrupted"))
+		goto_layout_labyrinth(portopts_p, dispopts_p);
+//	if (dispopts_p->layout == 5 && strstr(dispopts_p->bomb_output, "end_lab"))
 //		goto_layout_bytes(&conn_options, disp_options);
-	if ((*disp_options)->prompt_char == '$' && strstr((*disp_options)->bomb_output, "SUPERUSER"))
-		(*disp_options)->prompt_char = '#';
-	if ((*disp_options)->view != 1 && conn_options->fd >= 0)
+	if (dispopts_p->prompt_char == '$' && strstr(dispopts_p->bomb_output, "SUPERUSER"))
+		dispopts_p->prompt_char = '#';
+	if (dispopts_p->view != 1 && portopts_p->fd >= 0)
 	{
-		printw("\nUSER ~ %c ", (*disp_options)->prompt_char);
-		if ((*disp_options)->cmd && (*disp_options)->cmd[0] == '@')
-			printw("%s", (*disp_options)->cmd + 1);
+		printw("\nUSER ~ %c ", dispopts_p->prompt_char);
+		if (dispopts_p->cmd && dispopts_p->cmd[0] == '@')
+			printw("%s", dispopts_p->cmd + 1);
 		printw("\n");
 	}
 }
 
-void	update_command(portopts **conn_options, dispopts **disp_options)
+void	update_command(t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
 	char	*line;
 //	char	c;
@@ -64,55 +64,55 @@ void	update_command(portopts **conn_options, dispopts **disp_options)
 //	move(LINES - 2, 0);
 //	get_keypress(NULL);
 	rl_callback_read_char();	
-	if (conn_options || disp_options)
+	if (portopts_p || dispopts_p)
 		return ;
 	fprintf(stderr, "%s\n", line);
 
 /*	ch = get_keypress();
-	if (ch == '\n' && (*disp_options)->cmd[0] == '@')
+	if (ch == '\n' && dispopts_p->cmd[0] == '@')
 	{
-		if ((*conn_options)->fd < 0)
-			strncpy((*disp_options)->bomb_output, "!> WRITING ERROR >> Aucune connection etablie.", BIG_BUFFER);
-		else if (write((*conn_options)->fd, (*disp_options)->cmd + 1, (*disp_options)->cmd_len - 1) == -1)
+		if (portopts_p->fd < 0)
+			strncpy(dispopts_p->bomb_output, "!> WRITING ERROR >> Aucune connection etablie.", BIG_BUFFER);
+		else if (write(portopts_p->fd, dispopts_p->cmd + 1, dispopts_p->cmd_len - 1) == -1)
 		{
-			strncpy((*disp_options)->bomb_output, "!> WRITING ERROR >> ", BIG_BUFFER);
-			strncpy((*disp_options)->bomb_output + 20, strerror(errno), BIG_BUFFER);
+			strncpy(dispopts_p->bomb_output, "!> WRITING ERROR >> ", BIG_BUFFER);
+			strncpy(dispopts_p->bomb_output + 20, strerror(errno), BIG_BUFFER);
 			
 		}
-		bzero((*disp_options)->cmd, (*disp_options)->cmd_len + 1);
-		(*disp_options)->cmd_len = 0;
-		if ((*disp_options)->view == 1)
-			(*disp_options)->view = 2;
+		bzero(dispopts_p->cmd, dispopts_p->cmd_len + 1);
+		dispopts_p->cmd_len = 0;
+		if (dispopts_p->view == 1)
+			dispopts_p->view = 2;
 	}
-	else if (ch == '\n' && (*disp_options)->cmd_len && (*disp_options)->cmd_len < LITTLE_BUFFER - 2)
+	else if (ch == '\n' && dispopts_p->cmd_len && dispopts_p->cmd_len < LITTLE_BUFFER - 2)
 	{
-		(*disp_options)->cmd[(*disp_options)->cmd_len] = ch;
-		(*disp_options)->cmd[(*disp_options)->cmd_len + 1] = 0;
+		dispopts_p->cmd[dispopts_p->cmd_len] = ch;
+		dispopts_p->cmd[dispopts_p->cmd_len + 1] = 0;
 		exec_command(conn_options, disp_options);
-		bzero((*disp_options)->cmd, (*disp_options)->cmd_len + 1);
-		(*disp_options)->cmd_len = 0;
-		if ((*disp_options)->view == 0)
-			(*disp_options)->view = 2;
+		bzero(dispopts_p->cmd, dispopts_p->cmd_len + 1);
+		dispopts_p->cmd_len = 0;
+		if (dispopts_p->view == 0)
+			dispopts_p->view = 2;
 	}
-	else if (ch == 127 && (*disp_options)->cmd_len > 0)
+	else if (ch == 127 && dispopts_p->cmd_len > 0)
 	{
-		(*disp_options)->cmd[(*disp_options)->cmd_len - 1] = '\0';
-		(*disp_options)->cmd_len--;
+		dispopts_p->cmd[dispopts_p->cmd_len - 1] = '\0';
+		dispopts_p->cmd_len--;
 	}
 	else if (ch == '\t')
-		(*disp_options)->view = ((*disp_options)->view + 1) % 3;
-	else if (((ch != ERR && ch > ' ' && ch != 127) || (ch == ' ' && (*disp_options)->cmd_len))
-		&& (*disp_options)->cmd_len < LITTLE_BUFFER - 3)
+		dispopts_p->view = (dispopts_p->view + 1) % 3;
+	else if (((ch != ERR && ch > ' ' && ch != 127) || (ch == ' ' && dispopts_p->cmd_len))
+		&& dispopts_p->cmd_len < LITTLE_BUFFER - 3)
 	{
-		(*disp_options)->cmd[(*disp_options)->cmd_len] = ch;
-		(*disp_options)->cmd[(*disp_options)->cmd_len + 1] = 0;
-		(*disp_options)->cmd_len++;
+		dispopts_p->cmd[dispopts_p->cmd_len] = ch;
+		dispopts_p->cmd[dispopts_p->cmd_len + 1] = 0;
+		dispopts_p->cmd_len++;
 	}*/
 }
 
-void	print_prompt(portopts **conn_options, dispopts **disp_options)
+void	print_prompt(t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
-	if ((*conn_options)->fd < 0)
+	if (portopts_p->fd < 0)
 	{
 		put_separation(LINES - 5, COLS);
 		attron(A_BOLD);
@@ -130,15 +130,15 @@ void	print_prompt(portopts **conn_options, dispopts **disp_options)
 	attron(COLOR_PAIR(4));
 	mvprintw(LINES - 2, 0, "%*s", COLS, "");
 //	printw("%*s", COLS, "");
-//	mvprintw(LINES - 1, 0, "(Command) $~ %s", (*disp_options)->cmd);
-//	move(LINES - 1, 13 + (*disp_options)->cmd_len);
+//	mvprintw(LINES - 1, 0, "(Command) $~ %s", dispopts_p->cmd);
+//	move(LINES - 1, 13 + dispopts_p->cmd_len);
 //	move(LINES - 1, 0);
 	attroff(COLOR_PAIR(4));
-	if (disp_options)
+	if (dispopts_p)
 		return ;
 }
 
-void	menu_defusing(portopts **conn_options, dispopts **disp_options)
+void	menu_defusing(t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
 	clear();
 	refresh();
@@ -146,26 +146,26 @@ void	menu_defusing(portopts **conn_options, dispopts **disp_options)
 	attron(A_BOLD);
 	attron(COLOR_PAIR(2));
 	mvprintw(0, 0, "%*s", COLS, "");
-	if ((*disp_options)->view == 0)
+	if (dispopts_p->view == 0)
 		mvprintw(0, 0, "[1 BOMB INTERPRETOR][2 ...]");
-	if ((*disp_options)->view == 1)
+	if (dispopts_p->view == 1)
 		mvprintw(0, 0, "[1 ...][2 DEFUSER GUI]");
-	if ((*disp_options)->view == 2)
+	if (dispopts_p->view == 2)
 		mvprintw(0, 0, "[1 BOMB INTERPRETOR]");
-	if ((*conn_options)->port[0])
-		mvprintw(0, COLS - 35, "(PORT %-19.19s @ %06d)\n", (*conn_options)->port, get_baudrate((*conn_options)->baudrate));
+	if (portopts_p->port[0])
+		mvprintw(0, COLS - 35, "(PORT %-19.19s @ %06d)\n", portopts_p->port, get_baudrate(portopts_p->baudrate));
 	else
 		mvprintw(0, COLS - 9, "(No port)\n");
 	attroff(COLOR_PAIR(2));
 	attroff(A_BOLD);
 	// Print the output of the bomb
-	if ((*disp_options)->bomb_output[0] == '!')
+	if (dispopts_p->bomb_output[0] == '!')
 		attron(COLOR_PAIR(1));
-	print_output(*conn_options, disp_options);
-	if ((*disp_options)->bomb_output[0] == '!')
+	print_output(portopts_p, dispopts_p);
+	if (dispopts_p->bomb_output[0] == '!')
 		attroff(COLOR_PAIR(1));
 	// Print the debugger console and the output of the rpi
-	if ((*disp_options)->view == 2)
+	if (dispopts_p->view == 2)
 	{
 		attron(A_BOLD);
 		attron(COLOR_PAIR(2));
@@ -175,13 +175,13 @@ void	menu_defusing(portopts **conn_options, dispopts **disp_options)
 		attroff(A_BOLD);
 		printw("\n");
 	}
-	if ((*disp_options)->view != 0)
+	if (dispopts_p->view != 0)
 	{
-		if ((*disp_options)->cmd_output[0] == '!')
+		if (dispopts_p->cmd_output[0] == '!')
 			attron(COLOR_PAIR(1));
-		printw("%s\n", (*disp_options)->cmd_output);
-		if ((*disp_options)->cmd_output[0] == '!')
+		printw("%s\n", dispopts_p->cmd_output);
+		if (dispopts_p->cmd_output[0] == '!')
 			attroff(COLOR_PAIR(1));
 	}
-	print_prompt(conn_options, disp_options);
+	print_prompt(portopts_p, dispopts_p);
 }

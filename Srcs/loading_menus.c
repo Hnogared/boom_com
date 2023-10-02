@@ -60,13 +60,13 @@ int	play_startup(void)
 	printw("%-*s", COLS, "");
 	printw("%-*s", COLS, "I read and agree to the terms of service (press space to confirm) ");
 	printw("%-*s", COLS, "");
-	if (get_keypress(NULL) != ' ')
+	if (get_keypress() != ' ')
 	{
 		curs_set(1);
 		mvprintw(LINES - 1, 0, "%-*s", COLS, "");
 		printw("%-*s", COLS, "");
 		mvprintw(LINES - 1, 0, "Disagree to the terms of service and exit ? (y/N) ");
-		ch = get_keypress(NULL);
+		ch = get_keypress();
 		attroff(COLOR_PAIR(4));
 		if (ch == 'y' || ch == 'Y')
 			return (1);
@@ -75,26 +75,26 @@ int	play_startup(void)
 	return (0);
 }
 
-int	open_port(portopts **conn_options, dispopts **disp_options)
+int	open_port(t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
 	char	*error_type;
 
-	(*conn_options)->fd = open((*conn_options)->port, O_RDWR | O_NOCTTY);
-	if ((*conn_options)->fd < 0 || !(*conn_options)->toptions)
+	portopts_p->fd = open(portopts_p->port, O_RDWR | O_NOCTTY);
+	if (portopts_p->fd < 0 || !portopts_p->toptions)
 	{
 		curs_set(1);
 		error_type = "!> CONNECTION ERROR >> ";
-		strncpy((*disp_options)->cmd_output, error_type, BIG_BUFFER);
-		strncpy((*disp_options)->cmd_output + strlen(error_type), strerror(errno), BIG_BUFFER);
-		(*disp_options)->cmd_output[BIG_BUFFER - 1] = 0;
-		(*conn_options)->port[0] = 0;
+		strncpy(dispopts_p->cmd_output, error_type, BIG_BUFFER);
+		strncpy(dispopts_p->cmd_output + strlen(error_type), strerror(errno), BIG_BUFFER);
+		dispopts_p->cmd_output[BIG_BUFFER - 1] = 0;
+		portopts_p->port[0] = 0;
 	}
 	else
-		*(*conn_options)->toptions = set_termios_opt((*conn_options)->fd, cfgetispeed((*conn_options)->toptions));
-	return ((*conn_options)->fd);
+		*portopts_p->toptions = set_termios_opt(portopts_p->fd, cfgetispeed(portopts_p->toptions));
+	return (portopts_p->fd);
 }
 
-void	play_connect(portopts **conn_options, dispopts **disp_options)
+void	play_connect(t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
 	int		i;
 	int		delay;
@@ -118,7 +118,7 @@ void	play_connect(portopts **conn_options, dispopts **disp_options)
 			put_loading("ANALYSING FIRMWARE...", "\t(OK)", LINES - 7, (i - 40) * 3, 60);
 		put_separation(LINES - 4, COLS);
 		put_loading("PROGRESS", NULL, LINES - 2, i, 60);
-		if (i == 55 && open_port(conn_options, disp_options) < 0)
+		if (i == 55 && open_port(portopts_p, dispopts_p) < 0)
 			return ;
 		delay = 100;
 		if (i < 30 || i > 45)
