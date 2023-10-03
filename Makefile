@@ -10,11 +10,11 @@ SRCS		=	main.c					\
 				init_data.c				\
 				init_readline.c			\
 				rlncurses.c				\
-		  		defusing_menu.c			\
 				check_cmds.c			\
 		  		display_utils.c			\
 		  		setup_functions.c		\
 		  		strings_utils.c			\
+		  		main_layout.c			\
 		  		select_layouts.c		\
 		  		loading_layouts.c		\
 				layout_transitions.c	\

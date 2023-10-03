@@ -15,28 +15,24 @@ int	exec_command(t_portopts *portopts_p, t_dispopts *dispopts_p)
 	return (0);
 }
 
-void	print_output(t_portopts *portopts_p, t_dispopts *dispopts_p)
+void	read_bomb_out(t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
 	int		size;
 	char	temp[BIG_BUFFER];
 
-	if (portopts_p->fd != -1)
-	{
-		size = read(portopts_p->fd, temp, BIG_BUFFER - 1);
-		if (size < 0)
-		{
-			strncpy(dispopts_p->bomb_output, "!> READING_ERROR >> ", BIG_BUFFER - 2);
-			strncpy(dispopts_p->bomb_output + 20, strerror(errno), BIG_BUFFER - 2);
-			dispopts_p->bomb_output[BIG_BUFFER - 1] = 0;
-			return ;
-		}
-		temp[size] = 0;
-		if (strchr(temp, '$'))
-			memmove(dispopts_p->bomb_output, temp, size + 1);
-	}
-	if (dispopts_p->view == 1)
+	if (portopts_p->fd < -1)
 		return ;
-	mvprintw(2, 0, "%s\n", crop(dispopts_p->bomb_output));
+	size = read(portopts_p->fd, temp, BIG_BUFFER - 1);
+	if (size < 0)
+	{
+		strcpy(dispopts_p->bomb_output, "!> READING_ERROR >> ");
+		strcpy(dispopts_p->bomb_output + 20, strerror(errno));
+		dispopts_p->bomb_output[BIG_BUFFER - 1] = 0;
+		return ;
+	}
+	temp[size] = 0;
+	if (strchr(temp, '$'))
+		memmove(dispopts_p->bomb_output, temp, size + 1);
 	if (dispopts_p->layout == 3 && strstr(dispopts_p->bomb_output, "RECONFIGURATION"))
 		goto_layout_firewalloff(portopts_p, dispopts_p);
 	if (dispopts_p->layout == 4 && strstr(dispopts_p->bomb_output, "firewall corrupted"))
@@ -54,12 +50,24 @@ void	print_output(t_portopts *portopts_p, t_dispopts *dispopts_p)
 	}
 }
 
+void	print_bomb_out(t_dispopts dispopts_s)
+{
+	if (dispopts_s.view == 1)
+		return ;
+	if (dispopts_s.bomb_output[0] == '!')
+		attron(COLOR_PAIR(1));
+	mvprintw(2, 0, "%s\n", crop(dispopts_s.bomb_output));
+	if (dispopts_s.bomb_output[0] == '!')
+		attroff(COLOR_PAIR(1));
+}
+
 void cmd_win_redisplay(WINDOW *cmd_win, bool for_resize)
 {
-	size_t prompt_width = strwidth(rl_display_prompt, 0);
-	size_t cursor_col = prompt_width +
-						strnwidth(rl_line_buffer, rl_point, prompt_width);
+	size_t prompt_width;
+	size_t cursor_col;
 
+	prompt_width = strwidth(rl_display_prompt, 0);
+	cursor_col = prompt_width + strnwidth(rl_line_buffer, rl_point, prompt_width);
 	CHECK(werase, cmd_win);
 	// This might write a string wider than the terminal currently, so don't
 	// check for errors
@@ -104,7 +112,26 @@ void	update_command(t_portopts *portopts_p, t_dispopts *dispopts_p,
 	}
 }
 
-void	print_prompt(t_portopts *portopts_p)
+static void	print_tabs(t_portopts portopts_s, t_dispopts dispopts_s)
+{
+	attron(A_BOLD);
+	attron(COLOR_PAIR(2));
+	mvprintw(0, 0, "%*s", COLS, "");
+	if (dispopts_s.view == 0)
+		mvprintw(0, 0, "[1 BOMB INTERPRETOR][2 ...]");
+	if (dispopts_s.view == 1)
+		mvprintw(0, 0, "[1 ...][2 DEFUSER GUI]");
+	if (dispopts_s.view == 2)
+		mvprintw(0, 0, "[1 BOMB INTERPRETOR]");
+	if (portopts_s.port[0])
+		mvprintw(0, COLS - 35, "(PORT %-19.19s @ %06d)\n", portopts_s.port, get_baudrate(portopts_s.baudrate));
+	else
+		mvprintw(0, COLS - 9, "(No port)\n");
+	attroff(COLOR_PAIR(2));
+	attroff(A_BOLD);
+}
+
+static void	print_prompt(t_portopts *portopts_p)
 {
 	if (portopts_p->fd < 0)
 	{
@@ -126,33 +153,9 @@ void	print_prompt(t_portopts *portopts_p)
 	attroff(COLOR_PAIR(4));
 }
 
-void	menu_defusing(t_portopts *portopts_p, t_dispopts *dispopts_p)
+static void	print_cmd_out(t_dispopts dispopts_s)
 {
-	CHECK(werase, dispopts_p->win);
-
-	attron(A_BOLD);
-	attron(COLOR_PAIR(2));
-	mvprintw(0, 0, "%*s", COLS, "");
-	if (dispopts_p->view == 0)
-		mvprintw(0, 0, "[1 BOMB INTERPRETOR][2 ...]");
-	if (dispopts_p->view == 1)
-		mvprintw(0, 0, "[1 ...][2 DEFUSER GUI]");
-	if (dispopts_p->view == 2)
-		mvprintw(0, 0, "[1 BOMB INTERPRETOR]");
-	if (portopts_p->port[0])
-		mvprintw(0, COLS - 35, "(PORT %-19.19s @ %06d)\n", portopts_p->port, get_baudrate(portopts_p->baudrate));
-	else
-		mvprintw(0, COLS - 9, "(No port)\n");
-	attroff(COLOR_PAIR(2));
-	attroff(A_BOLD);
-	// Print the output of the bomb
-	if (dispopts_p->bomb_output[0] == '!')
-		attron(COLOR_PAIR(1));
-	print_output(portopts_p, dispopts_p);
-	if (dispopts_p->bomb_output[0] == '!')
-		attroff(COLOR_PAIR(1));
-	// Print the debugger console and the output of the rpi
-	if (dispopts_p->view == 2)
+	if (dispopts_s.view == 2)
 	{
 		attron(A_BOLD);
 		attron(COLOR_PAIR(2));
@@ -162,14 +165,26 @@ void	menu_defusing(t_portopts *portopts_p, t_dispopts *dispopts_p)
 		attroff(A_BOLD);
 		printw("\n");
 	}
-	if (dispopts_p->view != 0)
+	if (dispopts_s.view != 0)
 	{
-		if (dispopts_p->cmd_output[0] == '!')
+		if (dispopts_s.cmd_output[0] == '!')
 			attron(COLOR_PAIR(1));
-		printw("%s\n", dispopts_p->cmd_output);
-		if (dispopts_p->cmd_output[0] == '!')
+		printw("%s\n", dispopts_s.cmd_output);
+		if (dispopts_s.cmd_output[0] == '!')
 			attroff(COLOR_PAIR(1));
 	}
+
+}
+
+void	menu_defusing(t_portopts *portopts_p, t_dispopts *dispopts_p)
+{
+	CHECK(werase, dispopts_p->win);
+	read_bomb_out(portopts_p, dispopts_p);
+	print_tabs(*portopts_p, *dispopts_p);
+	// Print the output of the bomb
+	print_bomb_out(dispopts_p);
+	// Print the debugger console and the output of the rpi
+	print_cmd_out(*dispopts_p);
 	print_prompt(portopts_p);
 	CHECK(refresh);
 }

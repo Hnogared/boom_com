@@ -137,7 +137,7 @@ void			update_command(t_portopts *portopts_p, t_dispopts *dispopts_s, t_rlncurse
 void			menu_defusing(t_portopts *portopts_p, t_dispopts *dispopts_p);
 void			cmd_win_redisplay(WINDOW *cmd_win, bool for_resize);
 //void			print_output(t_portopts *port_options, t_dispopts *dispopts_p);
-void			print_prompt(t_portopts *portopts_p);
+//void			print_prompt(t_portopts *portopts_p);
 
 /* check_cmds.c file */
 int				check_view_cmds(t_dispopts *dispopts_p);
