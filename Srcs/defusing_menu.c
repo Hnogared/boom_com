@@ -79,53 +79,54 @@ void cmd_win_redisplay(WINDOW *cmd_win, bool for_resize)
 		CHECK(wrefresh, cmd_win);
 }
 
-void	update_command(t_portopts *portopts_p, t_dispopts *dispopts_p)
+void	update_command(t_dispopts dispopts_s, t_rlncurses *rlncurses_p)
 {
-	char	*line;
-//	char	c;
+	char	c;
 
 	cbreak();
-	line = readline(NULL);
-//	move(LINES - 2, 0);
-//	get_keypress(NULL);
-	rl_callback_read_char();	
-	if (portopts_p || dispopts_p)
-		return ;
-	fprintf(stderr, "%s\n", line);
+	c = wgetch(dispopts_s.cmd_win);
+	forward_to_readline(c, rlncurses_p);
 }
 
-void	print_prompt(t_portopts *portopts_p, t_dispopts *dispopts_p)
+void	print_prompt(t_portopts *portopts_p)
 {
-
-	// Print command prompt
+	if (portopts_p->fd < 0)
+	{
+		put_separation(LINES - 5, COLS);
+		attron(A_BOLD);
+		attron(COLOR_PAIR(3));
+		put_centered("/!\\ Aucune connection etablie. /!\\", -1, COLS);
+		printw("%*s", COLS, "");
+		put_centered("Veuillez verifier la connection USB et reessayez.", LINES - 3, COLS);
+		attroff(A_BOLD);
+		attroff(COLOR_PAIR(3));
+	}
+	else
+		put_separation(LINES - 3, COLS);
 	attron(COLOR_PAIR(4));
 	mvprintw(LINES - 2, 0, "%*s", COLS, "");
-//	printw("%*s", COLS, "");
-//	mvprintw(LINES - 1, 0, "(Command) $~ %s", dispopts_p->cmd);
-//	move(LINES - 1, 13 + dispopts_p->cmd_len);
-//	move(LINES - 1, 0);
+	printw("%*s", COLS, "");
 	attroff(COLOR_PAIR(4));
-	if (portopts_p || dispopts_p)
-		return ;
 }
 
 void	menu_defusing(WINDOW *msg_win, t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
-	CHECK(werase, msg_win);
+//	CHECK(werase, msg_win);
 
+	clear();
 	attron(A_BOLD);
 	attron(COLOR_PAIR(2));
-	mvwprintw(msg_win, 0, 0, "%*s", COLS, "");
+	mvprintw(0, 0, "%*s", COLS, "");
 	if (dispopts_p->view == 0)
-		mvwprintw(msg_win, 0, 0, "[1 BOMB INTERPRETOR][2 ...]");
+		mvprintw(0, 0, "[1 BOMB INTERPRETOR][2 ...]");
 	if (dispopts_p->view == 1)
-		mvwprintw(msg_win, 0, 0, "[1 ...][2 DEFUSER GUI]");
+		mvprintw(0, 0, "[1 ...][2 DEFUSER GUI]");
 	if (dispopts_p->view == 2)
-		mvwprintw(msg_win, 0, 0, "[1 BOMB INTERPRETOR]");
+		mvprintw(0, 0, "[1 BOMB INTERPRETOR]");
 	if (portopts_p->port[0])
-		mvwprintw(msg_win, 0, COLS - 35, "(PORT %-19.19s @ %06d)\n", portopts_p->port, get_baudrate(portopts_p->baudrate));
+		mvprintw(0, COLS - 35, "(PORT %-19.19s @ %06d)\n", portopts_p->port, get_baudrate(portopts_p->baudrate));
 	else
-		mvwprintw(msg_win, 0, COLS - 9, "(No port)\n");
+		mvprintw(0, COLS - 9, "(No port)\n");
 	attroff(COLOR_PAIR(2));
 	attroff(A_BOLD);
 	// Print the output of the bomb
@@ -153,18 +154,6 @@ void	menu_defusing(WINDOW *msg_win, t_portopts *portopts_p, t_dispopts *dispopts
 		if (dispopts_p->cmd_output[0] == '!')
 			attroff(COLOR_PAIR(1));
 	}
-
-	if (portopts_p->fd < 0)
-	{
-		put_separation(LINES - 5, COLS);
-		attron(A_BOLD);
-		attron(COLOR_PAIR(3));
-		put_centered("/!\\ Aucune connection etablie. /!\\", -1, COLS);
-		printw("%*s", COLS, "");
-		put_centered("Veuillez verifier la connection USB et reessayez.", LINES - 3, COLS);
-		attroff(A_BOLD);
-		attroff(COLOR_PAIR(3));
-	}
-	else
-		put_separation(LINES - 3, COLS);
+	print_prompt(portopts_p);
+	refresh();
 }
