@@ -1,6 +1,6 @@
-#include "../Includes/defuser_wizard.h"
+#include "../../Includes/defuser_wizard.h"
 
-void	goto_layout_help(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p)
+void	goto_layout_help(t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
 	strncpy(dispopts_p->cmd_output, " * Bienvenue sur l'aide au desamorcage.\n"
 		" *\n"
@@ -8,10 +8,10 @@ void	goto_layout_help(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_
 		" # [2] Retour\n", BIG_BUFFER - 2);
 	dispopts_p->cmd_output[BIG_BUFFER - 1] = 0;
 	dispopts_p->layout *= -1;
-	menu_defusing(win, portopts_p, dispopts_p);
+	menu_defusing(portopts_p, dispopts_p);
 }
 
-void	goto_layout_1(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p)
+void	goto_layout_1(t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
 	if (portopts_p->fd > -1)
 	{
@@ -30,10 +30,10 @@ void	goto_layout_1(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p)
 	dispopts_p->cmd_output[BIG_BUFFER - 1] = 0;
 	dispopts_p->view = 1;
 	dispopts_p->layout = 1;
-	menu_defusing(win, portopts_p, dispopts_p);
+	menu_defusing(portopts_p, dispopts_p);
 }
 
-void	goto_layout_2(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p, bool loading)
+void	goto_layout_2(t_portopts *portopts_p, t_dispopts *dispopts_p, bool loading)
 {
 	if (loading == true)
 		main_menu_loading("Intrusion en cours...");
@@ -43,7 +43,7 @@ void	goto_layout_2(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p, 
 		strcpy(dispopts_p->bomb_output, "!> CONNECTION_ERROR >> ");
 		strcpy(dispopts_p->bomb_output + 20, strerror(errno));
 		dispopts_p->bomb_output[BIG_BUFFER - 1] = 0;
-		menu_defusing(win, portopts_p, dispopts_p);
+		//menu_defusing(portopts_p, dispopts_p);
 		return ;
 	}
 	strncpy(dispopts_p->bomb_output,
@@ -55,10 +55,10 @@ void	goto_layout_2(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p, 
 		" # [3] Scan du systeme\n", BIG_BUFFER - 2);
 	dispopts_p->cmd_output[BIG_BUFFER - 1] = 0;
 	dispopts_p->layout = 2;
-	menu_defusing(win, portopts_p, dispopts_p);
+	menu_defusing(portopts_p, dispopts_p);
 }
 
-void	goto_layout_3(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p, bool loading)
+void	goto_layout_3(t_portopts *portopts_p, t_dispopts *dispopts_p, bool loading)
 {
 	if (loading == true)
 		main_menu_loading("Scan des fichiers de la bombe...");
@@ -79,10 +79,10 @@ void	goto_layout_3(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p, 
 	dispopts_p->cmd_output[BIG_BUFFER - 1] = 0;
 	dispopts_p->view = 2;
 	dispopts_p->layout = 3;
-	menu_defusing(win, portopts_p, dispopts_p);
+	menu_defusing(portopts_p, dispopts_p);
 }
 
-void	goto_layout_firewalloff(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p)
+void	goto_layout_firewalloff(t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
 	strncpy(dispopts_p->cmd_output, " > Attaque reussie\n"
 		" * Le firewall a ete partiellement desactive\n"
@@ -100,10 +100,10 @@ void	goto_layout_firewalloff(WINDOW *win, t_portopts *portopts_p, t_dispopts *di
 	dispopts_p->cmd_output[BIG_BUFFER - 1] = 0;
 	dispopts_p->view = 2;
 	dispopts_p->layout = 4;
-	menu_defusing(win, portopts_p, dispopts_p);
+	menu_defusing(portopts_p, dispopts_p);
 }
 
-void	goto_layout_labyrinth(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p)
+void	goto_layout_labyrinth(t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
 	strncpy(dispopts_p->cmd_output, " > Firewall desactive, acces a la memoire ouvert\n"
 		" * 'bit_stuffer' est un programme de corruption de memoire.\n"
@@ -114,10 +114,10 @@ void	goto_layout_labyrinth(WINDOW *win, t_portopts *portopts_p, t_dispopts *disp
 	dispopts_p->cmd_output[BIG_BUFFER - 1] = 0;
 	dispopts_p->view = 2;
 	dispopts_p->layout = 5;
-	menu_defusing(win, portopts_p, dispopts_p);
+	menu_defusing(portopts_p, dispopts_p);
 }
 
-void	goto_layout_bytes(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p)
+void	goto_layout_bytes(t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
 	strncpy(dispopts_p->cmd_output, " > Overflow de la memoire\n"
 		" # [1] Quitter le programme (ou tapez 'exit')\n"
@@ -126,17 +126,17 @@ void	goto_layout_bytes(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts
 	dispopts_p->cmd_output[BIG_BUFFER - 1] = 0;
 	dispopts_p->view = 2;
 	dispopts_p->layout = 6;
-	menu_defusing(win, portopts_p, dispopts_p);
+	menu_defusing(portopts_p, dispopts_p);
 }
 
-void	goto_layout_password(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p, bool mode)
+void	goto_layout_password(t_portopts *portopts_p, t_dispopts *dispopts_p, bool mode)
 {
 	if (mode && write(portopts_p->fd, "bytestuffer PK84u9", 18) == -1)
 	{
 		strncpy(dispopts_p->bomb_output, "!> WRITING ERROR >> ", BIG_BUFFER);
 		strncpy(dispopts_p->bomb_output + 20, strerror(errno), BIG_BUFFER);
 		dispopts_p->bomb_output[BIG_BUFFER - 1] = 0;
-		goto_layout_password(win, portopts_p, dispopts_p, false);
+		goto_layout_password(portopts_p, dispopts_p, false);
 		return ;
 	}
 	strncpy(dispopts_p->cmd_output, " > Affichage de la memoire corrompue\n"
@@ -151,5 +151,5 @@ void	goto_layout_password(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispo
 	dispopts_p->cmd_output[BIG_BUFFER - 1] = 0;
 	dispopts_p->view = 2;
 	dispopts_p->layout = 7;
-	menu_defusing(win, portopts_p, dispopts_p);
+	menu_defusing(portopts_p, dispopts_p);
 }

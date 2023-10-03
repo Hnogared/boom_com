@@ -93,19 +93,27 @@ struct termios	set_termios_opt(int fd, int baudrate)
 	return (toptions);
 }
 
+static void	free_dispopts(t_dispopts dispopts_s)
+{
+	if (dispopts_s.win)
+		CHECK(delwin, dispopts_s.win);
+	if (dispopts_s.cmd_win)
+		CHECK(delwin, dispopts_s.cmd_win);
+	CHECK(endwin);
+}
+
 void	exit_helper(t_portopts portopts_s, t_dispopts dispopts_s)
 {
-	if (portopts_s.fd > -1)
-		close(portopts_s.fd);
 	clear();
-	curs_set(0);
 	attron(COLOR_PAIR(1));
 	mvprintw(0, 0, "Exiting bomb defusing helper, goodbye...");
 	attroff(COLOR_PAIR(1));
-	timeout(750);
-	getch();
-	endwin();
-	if (dispopts_s.cmd)
-		exit(0);
+	if (portopts_s.fd > -1)
+		close(portopts_s.fd);
+	free_dispopts(dispopts_s);
+	rl_clear_history();
+	rl_callback_handler_remove();
+	rl_unbind_key('\t');
+	curs_set(1);
 	exit(0);
 }

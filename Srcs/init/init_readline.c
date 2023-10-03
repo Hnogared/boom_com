@@ -1,4 +1,4 @@
-#include "../Includes/defuser_wizard.h"
+#include "../../Includes/defuser_wizard.h"
 
 static int readline_getc(FILE *dummy)
 {
@@ -35,11 +35,14 @@ static void line_handler(char *line)
 	if (is_whitespace_str(line))
 		return ;
 	add_history(line);
-	g_data_s.dispopts_s.cmd  = line;
-	exec_command(&g_data_s.portopts_s, &g_data_s.dispopts_s);
+	g_data_s.dispopts_s.cmd = line;
+	if (*line != '@')
+		exec_command(&g_data_s.portopts_s, &g_data_s.dispopts_s);
+	else
+		
 	free(g_data_s.dispopts_s.cmd);
 	g_data_s.dispopts_s.cmd = NULL;
-	menu_defusing(g_data_s.dispopts_s.msg_win, &g_data_s.portopts_s, &g_data_s.dispopts_s);
+	menu_defusing(&g_data_s.portopts_s, &g_data_s.dispopts_s);
 }
 
 void init_readline(void)

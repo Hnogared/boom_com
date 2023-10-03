@@ -1,32 +1,35 @@
-NAME		= defuser_wizard
+NAME		=	defuser_wizard
 
-VPATH		= Srcs:			\
-			  Srcs/Utils
+VPATH		=	Srcs:			\
+				Srcs/init:		\
+				Srcs/layouts:	\
+				Srcs/builtins:	\
+				Srcs/utils
 
-SRCS		= main.c			\
-			  init_data.c		\
-			  init_readline.c	\
-			  rlncurses.c		\
-		  	  loading_menus.c	\
-		  	  select_menus.c	\
-		  	  defusing_menu.c	\
-			  check_cmds.c		\
-		  	  display_utils.c	\
-		  	  setup_functions.c	\
-		  	  strings_utils.c	\
-			  layout_changes.c	\
-			  bit_stuffer.c
+SRCS		=	main.c					\
+				init_data.c				\
+				init_readline.c			\
+				rlncurses.c				\
+		  		defusing_menu.c			\
+				check_cmds.c			\
+		  		display_utils.c			\
+		  		setup_functions.c		\
+		  		strings_utils.c			\
+		  		select_layouts.c		\
+		  		loading_layouts.c		\
+				layout_transitions.c	\
+				bit_stuffer.c
 
-OBJS_DIR	= Objs
-OBJS		= $(addprefix $(OBJS_DIR)/, $(SRCS:.c=.o))
+OBJS_DIR	=	Objs
+OBJS		=	$(addprefix $(OBJS_DIR)/, $(SRCS:.c=.o))
 
-INCL		= Includes
+INCL		=	Includes
 
-CC			= gcc
-CFLAGS		= -Wall -Werror -Wextra -g
-LIBS		= -lncurses -lreadline
+CC			=	gcc
+CFLAGS		=	-Wall -Werror -Wextra -g
+LIBS		=	-lncurses -lreadline
 
-RM			= rm -rf
+RM			=	rm -rf
 
 
 all:		$(NAME)

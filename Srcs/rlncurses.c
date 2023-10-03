@@ -80,7 +80,6 @@ void	forward_to_readline(char c, t_rlncurses *rlncurses_p)
 
 void deinit_ncurses(t_rlncurses *rlncurses_p, t_dispopts dispopts_s)
 {
-	CHECK(delwin, dispopts_s.msg_win);
 	CHECK(delwin, dispopts_s.cmd_win);
 	CHECK(endwin);
 	rlncurses_p->visual_mode = false;
@@ -95,13 +94,12 @@ void resize(t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
 	if (LINES >= 2)
 	{
-		CHECK(wresize, dispopts_p->msg_win, LINES - 2, COLS);
 		CHECK(wresize, dispopts_p->cmd_win, 1, COLS);
 		CHECK(mvwin, dispopts_p->cmd_win, LINES - 1, 0);
 	}
 
 	// Batch refreshes and commit them with doupdate()
-	menu_defusing(dispopts_p->msg_win, portopts_p, dispopts_p);
+	menu_defusing(portopts_p, dispopts_p);
 	cmd_win_redisplay(dispopts_p->cmd_win, true);
 	CHECK(doupdate);
 }

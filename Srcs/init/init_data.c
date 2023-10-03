@@ -1,4 +1,4 @@
-#include "../Includes/defuser_wizard.h"
+#include "../../Includes/defuser_wizard.h"
 
 static void	init_colors(t_dispopts *dispopts_p)
 {
@@ -51,22 +51,14 @@ static void init_ncurses(t_rlncurses *rlncurses_p, t_dispopts *dispopts_p)
 	// for terminals that do not support cursor visibility adjustments.
 	curs_set(2);
 
-	if (LINES >= 2) {
-		dispopts_p->msg_win = newwin(LINES - 1, COLS, 0, 0);
+	if (LINES >= 2)
 		dispopts_p->cmd_win = newwin(1, COLS, LINES - 1, 0);
-	}
-	else {
+	else
 		// Degenerate case. Give the windows the minimum workable size to
 		// prevent errors from e.g. wmove().
-		dispopts_p->msg_win = newwin(1, COLS, 0, 0);
 		dispopts_p->cmd_win = newwin(1, COLS, 0, 0);
-	}
-	if (!dispopts_p->msg_win || !dispopts_p->cmd_win)
+	if (!dispopts_p->cmd_win)
 		fail_exit("Failed to allocate windows");
-
-	// Allow strings longer than the message window and show only the last part
-	// if the string doesn't fit
-	CHECK(scrollok, dispopts_p->msg_win, TRUE);
 }
 
 void	init_display(t_rlncurses *rlncurses_p, t_dispopts *dispopts_p)

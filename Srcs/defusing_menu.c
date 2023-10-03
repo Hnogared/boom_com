@@ -10,12 +10,12 @@ int	exec_command(t_portopts *portopts_p, t_dispopts *dispopts_p)
 		return (0);
 	}
 	check_view_cmds(dispopts_p);
-	check_help_cmds(g_data_s.dispopts_s.msg_win, portopts_p, dispopts_p);
-	check_choice(g_data_s.dispopts_s.msg_win, portopts_p, dispopts_p);
+	check_help_cmds(portopts_p, dispopts_p);
+	check_choice(portopts_p, dispopts_p);
 	return (0);
 }
 
-void	print_output(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p)
+void	print_output(t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
 	int		size;
 	char	temp[BIG_BUFFER];
@@ -25,8 +25,8 @@ void	print_output(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p)
 		size = read(portopts_p->fd, temp, BIG_BUFFER - 1);
 		if (size < 0)
 		{
-			strncpy(dispopts_p->bomb_output, "!> READING_ERROR >> ", BIG_BUFFER);
-			strncpy(dispopts_p->bomb_output + 20, strerror(errno), BIG_BUFFER);
+			strncpy(dispopts_p->bomb_output, "!> READING_ERROR >> ", BIG_BUFFER - 2);
+			strncpy(dispopts_p->bomb_output + 20, strerror(errno), BIG_BUFFER - 2);
 			dispopts_p->bomb_output[BIG_BUFFER - 1] = 0;
 			return ;
 		}
@@ -36,11 +36,11 @@ void	print_output(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p)
 	}
 	if (dispopts_p->view == 1)
 		return ;
-	mvwprintw(win, 2, 0, "%s\n", crop(dispopts_p->bomb_output));
+	mvprintw(2, 0, "%s\n", crop(dispopts_p->bomb_output));
 	if (dispopts_p->layout == 3 && strstr(dispopts_p->bomb_output, "RECONFIGURATION"))
-		goto_layout_firewalloff(win, portopts_p, dispopts_p);
+		goto_layout_firewalloff(portopts_p, dispopts_p);
 	if (dispopts_p->layout == 4 && strstr(dispopts_p->bomb_output, "firewall corrupted"))
-		goto_layout_labyrinth(win, portopts_p, dispopts_p);
+		goto_layout_labyrinth(portopts_p, dispopts_p);
 //	if (dispopts_p->layout == 5 && strstr(dispopts_p->bomb_output, "end_lab"))
 //		goto_layout_bytes(&conn_options, disp_options);
 	if (dispopts_p->prompt_char == '$' && strstr(dispopts_p->bomb_output, "SUPERUSER"))
@@ -95,6 +95,10 @@ void	update_command(t_portopts *portopts_p, t_dispopts *dispopts_p,
 		CHECK(clearok, curscr, TRUE);
 		resize(portopts_p, dispopts_p);
 		break ;
+	case '\t':
+		dispopts_p->view = (dispopts_p->view + 1) % 3;
+		menu_defusing(portopts_p, dispopts_p);
+		break ;
 	default:
 		forward_to_readline(c, rlncurses_p);
 	}
@@ -122,9 +126,9 @@ void	print_prompt(t_portopts *portopts_p)
 	attroff(COLOR_PAIR(4));
 }
 
-void	menu_defusing(WINDOW *msg_win, t_portopts *portopts_p, t_dispopts *dispopts_p)
+void	menu_defusing(t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
-	CHECK(werase, msg_win);
+	CHECK(werase, dispopts_p->win);
 
 	attron(A_BOLD);
 	attron(COLOR_PAIR(2));
@@ -144,7 +148,7 @@ void	menu_defusing(WINDOW *msg_win, t_portopts *portopts_p, t_dispopts *dispopts
 	// Print the output of the bomb
 	if (dispopts_p->bomb_output[0] == '!')
 		attron(COLOR_PAIR(1));
-	print_output(msg_win, portopts_p, dispopts_p);
+	print_output(portopts_p, dispopts_p);
 	if (dispopts_p->bomb_output[0] == '!')
 		attroff(COLOR_PAIR(1));
 	// Print the debugger console and the output of the rpi

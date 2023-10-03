@@ -78,7 +78,6 @@ typedef struct s_dispopts
 	char	cmd_output[BIG_BUFFER];
 	char	bomb_output[BIG_BUFFER];
 	WINDOW	*win;
-	WINDOW	*msg_win;
 	WINDOW	*cmd_win;
 }				t_dispopts;
 
@@ -118,6 +117,7 @@ char			*ft_strjoin(char *dest, char *src);
 void			free_str_tab(char **str_tab);
 
 /* display_utils.c file */
+void			cycle_view(void);
 void			main_menu_loading(char *message);
 void			put_centered(char *str, int line, int width);
 void			put_separation(int line, int width);
@@ -134,15 +134,15 @@ char			*menu_port_select(void);
 /* defusing_menu.c file */
 int				exec_command(t_portopts *portopts_p, t_dispopts *dispopts_p);
 void			update_command(t_portopts *portopts_p, t_dispopts *dispopts_s, t_rlncurses *rlncurses_p);
-void			menu_defusing(WINDOW *msg_win, t_portopts *portopts_p, t_dispopts *dispopts_p);
+void			menu_defusing(t_portopts *portopts_p, t_dispopts *dispopts_p);
 void			cmd_win_redisplay(WINDOW *cmd_win, bool for_resize);
 //void			print_output(t_portopts *port_options, t_dispopts *dispopts_p);
 void			print_prompt(t_portopts *portopts_p);
 
 /* check_cmds.c file */
 int				check_view_cmds(t_dispopts *dispopts_p);
-int				check_choice(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p);
-int				check_help_cmds(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p);
+int				check_choice(t_portopts *portopts_p, t_dispopts *dispopts_p);
+int				check_help_cmds(t_portopts *portopts_p, t_dispopts *dispopts_p);
 int				check_conn_cmds(t_portopts *portopts_p, t_dispopts *dispopts_p);
 
 /* setup_functions.c */
@@ -154,14 +154,14 @@ struct termios	set_termios_opt(int fd, int baudrate);
 void			exit_helper(t_portopts portopts_s, t_dispopts dispopts_s);
 
 /* layout_changes.c */
-void			goto_layout_help(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p);
-void			goto_layout_1(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p);
-void			goto_layout_2(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p, bool loading);
-void			goto_layout_3(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p, bool loading);
-void			goto_layout_firewalloff(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p);
-void			goto_layout_labyrinth(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p);
-void			goto_layout_bytes(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p);
-void			goto_layout_password(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p, bool mode);
+void			goto_layout_help(t_portopts *portopts_p, t_dispopts *dispopts_p);
+void			goto_layout_1(t_portopts *portopts_p, t_dispopts *dispopts_p);
+void			goto_layout_2(t_portopts *portopts_p, t_dispopts *dispopts_p, bool loading);
+void			goto_layout_3(t_portopts *portopts_p, t_dispopts *dispopts_p, bool loading);
+void			goto_layout_firewalloff(t_portopts *portopts_p, t_dispopts *dispopts_p);
+void			goto_layout_labyrinth(t_portopts *portopts_p, t_dispopts *dispopts_p);
+void			goto_layout_bytes(t_portopts *portopts_p, t_dispopts *dispopts_p);
+void			goto_layout_password(t_portopts *portopts_p, t_dispopts *dispopts_p, bool mode);
 
 /* rlncurses.c */
 size_t			strnwidth(const char *s, size_t n, size_t offset);
