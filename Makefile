@@ -23,7 +23,7 @@ OBJS		= $(addprefix $(OBJS_DIR)/, $(SRCS:.c=.o))
 INCL		= Includes
 
 CC			= gcc
-CFLAGS		= -Wall -Werror -Wextra
+CFLAGS		= -Wall -Werror -Wextra -g
 LIBS		= -lncurses -lreadline
 
 RM			= rm -rf

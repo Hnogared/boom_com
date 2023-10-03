@@ -19,19 +19,27 @@ static void readline_redisplay(void)
 	cmd_win_redisplay(g_data_s.dispopts_s.cmd_win, false);
 }
 
+static int	is_whitespace_str(char *str)
+{
+	if (!str || !*str)
+		return (1);
+	while (*str && (*str == 32 || (*str >= 9 && *str <= 13) || *str == 127))
+		str++;
+	return (!*str);
+}
+
 static void line_handler(char *line)
 {
 	if (!line)
-		// Ctrl-D pressed on empty line
-		g_data_s.rlncurses_s.should_exit = true;
-	else {
-		if (*line)
-			add_history(line);
-		if (g_data_s.dispopts_s.cmd)
-			free(g_data_s.dispopts_s.cmd);
-	   	g_data_s.dispopts_s.cmd  = line;
-		menu_defusing(g_data_s.dispopts_s.msg_win, &g_data_s.portopts_s, &g_data_s.dispopts_s);
-	}
+		exit_helper(g_data_s.portopts_s, g_data_s.dispopts_s);
+	if (is_whitespace_str(line))
+		return ;
+	add_history(line);
+	g_data_s.dispopts_s.cmd  = line;
+	exec_command(&g_data_s.portopts_s, &g_data_s.dispopts_s);
+	free(g_data_s.dispopts_s.cmd);
+	g_data_s.dispopts_s.cmd = NULL;
+	menu_defusing(g_data_s.dispopts_s.msg_win, &g_data_s.portopts_s, &g_data_s.dispopts_s);
 }
 
 void init_readline(void)
@@ -58,5 +66,5 @@ void init_readline(void)
 	rl_input_available_hook = readline_input_avail;
 	rl_redisplay_function = readline_redisplay;
 
-	rl_callback_handler_install("command %> ", line_handler);
+	rl_callback_handler_install(PROMPT " ", line_handler);
 }

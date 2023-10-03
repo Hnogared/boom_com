@@ -3,7 +3,7 @@
 void	goto_layout_help(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
 	strncpy(dispopts_p->cmd_output, " * Bienvenue sur l'aide au desamorcage.\n"
-		" * "
+		" *\n"
 		" # [1] Quitter le programme (ou tapez 'exit')\n"
 		" # [2] Retour\n", BIG_BUFFER - 2);
 	dispopts_p->cmd_output[BIG_BUFFER - 1] = 0;
@@ -41,8 +41,8 @@ void	goto_layout_2(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p, 
 	if (open_usb_port(portopts_p))
 	{
 		strncpy(dispopts_p->bomb_output, "!> CONNECTION_ERROR >> ", BIG_BUFFER - 2);
-		strncpy(dispopts_p->bomb_output + 20, strerror(errno), BIG_BUFFER - 2);
-		dispopts_p->bomb_output[BIG_BUFFER - 1] = 0;
+//		strncpy(dispopts_p->bomb_output + 20, strerror(errno), BIG_BUFFER - 2);
+//		dispopts_p->bomb_output[BIG_BUFFER - 2] = 0;
 		return ;
 	}
 	strncpy(dispopts_p->bomb_output,

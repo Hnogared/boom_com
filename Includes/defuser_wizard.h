@@ -30,6 +30,8 @@
 # define LITTLE_BUFFER	80
 # define BIG_BUFFER		4096
 
+# define PROMPT	"commande %>"
+
 	/*
 	 *	COLOR_BLACK   0
      *  COLOR_RED     1
@@ -132,7 +134,7 @@ char			*menu_port_select(void);
 
 /* defusing_menu.c file */
 int				exec_command(t_portopts *portopts_p, t_dispopts *dispopts_p);
-void			update_command(t_dispopts dispopts_s, t_rlncurses *rlncurses_p);
+void			update_command(t_portopts *portopts_p, t_dispopts *dispopts_s, t_rlncurses *rlncurses_p);
 void			menu_defusing(WINDOW *msg_win, t_portopts *portopts_p, t_dispopts *dispopts_p);
 void			cmd_win_redisplay(WINDOW *cmd_win, bool for_resize);
 //void			print_output(t_portopts *port_options, t_dispopts *dispopts_p);

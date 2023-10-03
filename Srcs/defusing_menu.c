@@ -2,9 +2,9 @@
 
 int	exec_command(t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
-	if (!left_strcmp("exit\n", dispopts_p->cmd))
+	if (!left_strcmp("exit", dispopts_p->cmd))
 		exit_helper(*portopts_p, *dispopts_p);
-	if (!left_strcmp("man\n", dispopts_p->cmd))
+	if (!left_strcmp("man", dispopts_p->cmd))
 	{
 		system("less defuser_man.txt");
 		return (0);
@@ -79,13 +79,25 @@ void cmd_win_redisplay(WINDOW *cmd_win, bool for_resize)
 		CHECK(wrefresh, cmd_win);
 }
 
-void	update_command(t_dispopts dispopts_s, t_rlncurses *rlncurses_p)
+void	update_command(t_portopts *portopts_p, t_dispopts *dispopts_p,
+	t_rlncurses *rlncurses_p)
 {
-	char	c;
+	int	c;
 
 	cbreak();
-	c = wgetch(dispopts_s.cmd_win);
-	forward_to_readline(c, rlncurses_p);
+	c = wgetch(dispopts_p->cmd_win);
+	switch (c)
+	{
+	case KEY_RESIZE:
+		resize(portopts_p, dispopts_p);
+		break ;
+	case '\f':
+		CHECK(clearok, curscr, TRUE);
+		resize(portopts_p, dispopts_p);
+		break ;
+	default:
+		forward_to_readline(c, rlncurses_p);
+	}
 }
 
 void	print_prompt(t_portopts *portopts_p)
@@ -106,14 +118,14 @@ void	print_prompt(t_portopts *portopts_p)
 	attron(COLOR_PAIR(4));
 	mvprintw(LINES - 2, 0, "%*s", COLS, "");
 	printw("%*s", COLS, "");
+	mvprintw(LINES - 1, 0, "%s", PROMPT " ");
 	attroff(COLOR_PAIR(4));
 }
 
 void	menu_defusing(WINDOW *msg_win, t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
-//	CHECK(werase, msg_win);
+	CHECK(werase, msg_win);
 
-	clear();
 	attron(A_BOLD);
 	attron(COLOR_PAIR(2));
 	mvprintw(0, 0, "%*s", COLS, "");
@@ -155,5 +167,5 @@ void	menu_defusing(WINDOW *msg_win, t_portopts *portopts_p, t_dispopts *dispopts
 			attroff(COLOR_PAIR(1));
 	}
 	print_prompt(portopts_p);
-	refresh();
+	CHECK(refresh);
 }

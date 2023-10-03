@@ -2,11 +2,11 @@
 
 int	check_view_cmds(t_dispopts *dispopts_p)
 {
-	if (!left_strcmp("set-view bomb\n", dispopts_p->cmd))
+	if (!strcmp("set-view bomb", dispopts_p->cmd))
 		dispopts_p->view = 0;
-	else if (!left_strcmp("set-view defuser\n", dispopts_p->cmd))
+	else if (!strcmp("set-view defuser", dispopts_p->cmd))
 		dispopts_p->view = 1;
-	else if (!left_strcmp("set-view split\n", dispopts_p->cmd))
+	else if (!strcmp("set-view split", dispopts_p->cmd))
 		dispopts_p->view = 2;
 	else
 		return (0);
@@ -15,9 +15,9 @@ int	check_view_cmds(t_dispopts *dispopts_p)
 
 int	check_choice(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
-	if ((dispopts_p->cmd)[0] == '1' && (dispopts_p->cmd)[1] == '\n')
+	if ((dispopts_p->cmd)[0] == '1' && (dispopts_p->cmd)[1] == 0)
 		exit_helper(*portopts_p, *dispopts_p);
-	if ((dispopts_p->cmd)[0] == '2' && (dispopts_p->cmd)[1] == '\n')
+	if ((dispopts_p->cmd)[0] == '2' && (dispopts_p->cmd)[1] == 0)
 	{
 		if (dispopts_p->layout == -2 || dispopts_p->layout == 1)
 			goto_layout_2(win, portopts_p, dispopts_p, dispopts_p->layout == 1);
@@ -33,10 +33,10 @@ int	check_choice(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p)
 			goto_layout_password(win, portopts_p, dispopts_p, false);
 		else
 			goto_layout_1(win, portopts_p, dispopts_p);
-		(dispopts_p->cmd)[0] = 0;
+	//	(dispopts_p->cmd)[0] = 0;
 		return (1);
 	}
-	if ((dispopts_p->cmd)[0] == '3' && (dispopts_p->cmd)[1] == '\n')
+	if ((dispopts_p->cmd)[0] == '3' && (dispopts_p->cmd)[1] == 0)
 	{
 		if (dispopts_p->layout == 2)
 			goto_layout_3(win, portopts_p, dispopts_p, true);
@@ -44,7 +44,7 @@ int	check_choice(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p)
 			bit_stuffer(portopts_p, dispopts_p);
 		if (dispopts_p->layout == 6)
 			goto_layout_password(win, portopts_p, dispopts_p, true);
-		(dispopts_p->cmd)[0] = 0;
+	//	(dispopts_p->cmd)[0] = 0;
 		return (1);
 	}
 	return (0);
@@ -55,7 +55,7 @@ int	check_conn_cmds(t_portopts *portopts_p, t_dispopts *dispopts_p)
 	int		baudrate;
 	char	*temp;
 
-	if (!left_strcmp("set-port\n", dispopts_p->cmd))
+	if (!strcmp("set-port", dispopts_p->cmd))
 	{
 		temp = menu_port_select();
 		if (temp)
@@ -68,7 +68,7 @@ int	check_conn_cmds(t_portopts *portopts_p, t_dispopts *dispopts_p)
 			play_connect(portopts_p, dispopts_p);
 		return (1);
 	}
-	else if (!left_strcmp("set-baudrate\n", dispopts_p->cmd))
+	else if (!strcmp("set-baudrate", dispopts_p->cmd))
 	{
 		if (!*portopts_p->port && dispopts_p->view)
 		{
@@ -91,9 +91,9 @@ int	check_conn_cmds(t_portopts *portopts_p, t_dispopts *dispopts_p)
 
 int	check_help_cmds(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
-	if (!left_strcmp("help\n", dispopts_p->cmd) && dispopts_p->view)
+	if (!strcmp("help", dispopts_p->cmd) && dispopts_p->view)
 		goto_layout_help(win, portopts_p, dispopts_p);
-	else if (!left_strcmp("help cmd\n", dispopts_p->cmd) && dispopts_p->view)
+	else if (!strcmp("help cmd", dispopts_p->cmd) && dispopts_p->view)
 	{
 		strncpy(dispopts_p->cmd_output, "$> The *CONFEDERATION BOMB DEFUSER v4.6* is an interface for using disarming tools on terrorist devices.\n\n"
 			"   There are two types of commands that can be sent through the program :\n"
@@ -103,7 +103,7 @@ int	check_help_cmds(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p)
 			"   You can type 'help' or read the manual (cmd 'man') for more information.\n", BIG_BUFFER);
 		dispopts_p->cmd_output[BIG_BUFFER - 1] = 0;
 	}
-	else if (!left_strcmp("help nav\n", dispopts_p->cmd) && dispopts_p->view)
+	else if (!strcmp("help nav", dispopts_p->cmd) && dispopts_p->view)
 	{
 		strncpy(dispopts_p->cmd_output, "$> It is possible to navigate and rearrange the workspace as needed.\n"
 			"   This can be achieved by using the following commands.\n\n"
@@ -115,7 +115,7 @@ int	check_help_cmds(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p)
 			"   # set-view split    Split the screen horizontally between the bomb and defuser views.\n", BIG_BUFFER);
 		dispopts_p->cmd_output[BIG_BUFFER - 1] = 0;
 	}
-	else if (!left_strcmp("help connect\n", dispopts_p->cmd) && dispopts_p->view)
+	else if (!strcmp("help connect", dispopts_p->cmd) && dispopts_p->view)
 	{
 		strncpy(dispopts_p->cmd_output, "$> Quick guide on how to setup a connection between your defuser and a bomb.\n\n"
 			"   1. Connect one of the defuser's USB ports to the device to disarm.\n"
@@ -133,7 +133,7 @@ int	check_help_cmds(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p)
 			"   # set-baudrate  Change the port data transfer rate.\n", BIG_BUFFER);
 		dispopts_p->cmd_output[BIG_BUFFER - 1] = 0;
 	}
-	else if (!left_strcmp("help hacks\n", dispopts_p->cmd) && dispopts_p->view)
+	else if (!strcmp("help hacks", dispopts_p->cmd) && dispopts_p->view)
 	{
 		strncpy(dispopts_p->cmd_output, "$> Quick guide on hacking attacks on electronics/informatics usign the defuser.\n\n"
 			"   1. Look for vulnerabilities : outdated software, open ports.\n"
