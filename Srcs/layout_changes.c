@@ -40,9 +40,10 @@ void	goto_layout_2(WINDOW *win, t_portopts *portopts_p, t_dispopts *dispopts_p, 
 	dispopts_p->view = 2;
 	if (open_usb_port(portopts_p))
 	{
-		strncpy(dispopts_p->bomb_output, "!> CONNECTION_ERROR >> ", BIG_BUFFER - 2);
-//		strncpy(dispopts_p->bomb_output + 20, strerror(errno), BIG_BUFFER - 2);
-//		dispopts_p->bomb_output[BIG_BUFFER - 2] = 0;
+		strcpy(dispopts_p->bomb_output, "!> CONNECTION_ERROR >> ");
+		strcpy(dispopts_p->bomb_output + 20, strerror(errno));
+		dispopts_p->bomb_output[BIG_BUFFER - 1] = 0;
+		menu_defusing(win, portopts_p, dispopts_p);
 		return ;
 	}
 	strncpy(dispopts_p->bomb_output,

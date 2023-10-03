@@ -1,7 +1,6 @@
 #ifndef DEFUSER_WIZARD_H
 # define DEFUSER_WIZARD_H
 
-
 // For strnlen() and wcwidth()
 # define _GNU_SOURCE
 # include <unistd.h>
