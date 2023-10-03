@@ -1,19 +1,19 @@
 #include "../Includes/defuser_wizard.h"
 
-int	open_usb_port(t_portopts *portopts_p)
+int	open_usb_port(portopts **conn_options)
 {
 	char	**usb_paths;
 
 	usb_paths = (char *[]){"/dev/ttyUSB0", "/dev/ttyUSB1", "/dev/ttyUSB2",
 		"/dev/ttyUSB3", "/dev/ttyUSB4", NULL};
-	portopts_p->fd = -1;
-	while (*usb_paths && portopts_p->fd == -1)
-		portopts_p->fd = open(*(usb_paths++), O_RDWR | O_NOCTTY);
-	if (portopts_p->fd == -1)
+	(*conn_options)->fd = -1;
+	while (*usb_paths && (*conn_options)->fd == -1)
+		(*conn_options)->fd = open(*(usb_paths++), O_RDWR | O_NOCTTY);
+	if ((*conn_options)->fd == -1)
 		return (1);
-	memmove(portopts_p->port, *usb_paths, 13);
-	portopts_p->baudrate = 3;
-	set_termios_opt(portopts_p->fd, 3);
+	memmove((*conn_options)->port, *usb_paths, 13);
+	(*conn_options)->baudrate = 3;
+	set_termios_opt((*conn_options)->fd, 3);
 	return (0);
 }
 
@@ -93,10 +93,14 @@ struct termios	set_termios_opt(int fd, int baudrate)
 	return (toptions);
 }
 
-void	exit_helper(t_portopts portopts_s, t_dispopts dispopts_s)
+void	exit_helper(portopts *conn_options, dispopts *disp_options)
 {
-	if (portopts_s.fd > -1)
-		close(portopts_s.fd);
+	if (conn_options->fd > -1)
+		close(conn_options->fd);
+	if (conn_options)
+		free(conn_options);
+	if (disp_options)
+		free(disp_options);
 	clear();
 	curs_set(0);
 	attron(COLOR_PAIR(1));
@@ -105,7 +109,5 @@ void	exit_helper(t_portopts portopts_s, t_dispopts dispopts_s)
 	timeout(750);
 	getch();
 	endwin();
-	if (dispopts_s.cmd)
-		exit(0);
 	exit(0);
 }

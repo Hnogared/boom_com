@@ -4,9 +4,6 @@ VPATH		= Srcs:			\
 			  Srcs/Utils
 
 SRCS		= main.c			\
-			  init_data.c		\
-			  init_readline.c	\
-			  rlncurses.c		\
 		  	  loading_menus.c	\
 		  	  select_menus.c	\
 		  	  defusing_menu.c	\
@@ -23,8 +20,8 @@ OBJS		= $(addprefix $(OBJS_DIR)/, $(SRCS:.c=.o))
 INCL		= Includes
 
 CC			= gcc
-CFLAGS		= -Wall -Werror -Wextra -g
-LIBS		= -lncurses -lreadline
+CFLAGS		= -Wall -Werror -Wextra
+LIBS		= -lncurses
 
 RM			= rm -rf
 
