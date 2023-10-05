@@ -18,6 +18,7 @@ SRCS		=	main.c					\
 		  		select_layouts.c		\
 		  		loading_layouts.c		\
 				layout_transitions.c	\
+				errors_utils.c			\
 				bit_stuffer.c
 
 OBJS_DIR	=	Objs

@@ -40,10 +40,8 @@ void	goto_layout_2(t_portopts *portopts_p, t_dispopts *dispopts_p, bool loading)
 	dispopts_p->view = 2;
 	if (open_usb_port(portopts_p))
 	{
-		strcpy(dispopts_p->bomb_output, "!> CONNECTION_ERROR >> ");
-		strcpy(dispopts_p->bomb_output + 20, strerror(errno));
-		dispopts_p->bomb_output[BIG_BUFFER - 1] = 0;
-		//menu_defusing(portopts_p, dispopts_p);
+		save_error(dispopts_p->bomb_output, BIG_BUFFER, BIN_NAME, "port error");
+	//	menu_defusing(portopts_p, dispopts_p);
 		return ;
 	}
 	strncpy(dispopts_p->bomb_output,

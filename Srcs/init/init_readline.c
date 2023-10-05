@@ -18,7 +18,7 @@ static void readline_redisplay(void)
 {
 	cmd_win_redisplay(g_data_s.dispopts_s.cmd_win, false);
 }
-
+/*
 static int	is_whitespace_str(char *str)
 {
 	if (!str || !*str)
@@ -27,19 +27,28 @@ static int	is_whitespace_str(char *str)
 		str++;
 	return (!*str);
 }
-
+*/
 static void line_handler(char *line)
 {
+	char	*temp;
+
 	if (!line)
 		exit_helper(g_data_s.portopts_s, g_data_s.dispopts_s);
-	if (is_whitespace_str(line))
+	temp = ft_strtrim(line, "\t\n\v\f\r ");
+	free(line);
+	if (!temp)
+	{
+		save_error(g_data_s.dispopts_s.bomb_output, BIG_BUFFER, BIN_NAME,
+			__func__);
 		return ;
+	}
+	if (!*temp)
+		return (free(temp));
+	line = temp;
 	add_history(line);
 	g_data_s.dispopts_s.cmd = line;
 	if (*line != '@')
 		exec_command(&g_data_s.portopts_s, &g_data_s.dispopts_s);
-	else
-		
 	free(g_data_s.dispopts_s.cmd);
 	g_data_s.dispopts_s.cmd = NULL;
 	menu_defusing(&g_data_s.portopts_s, &g_data_s.dispopts_s);

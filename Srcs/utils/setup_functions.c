@@ -55,7 +55,7 @@ char	**get_files_tab(char *directory)
 	dir = readdir(d);
 	while (dir && i < FILES_TAB_SIZE)
 	{
-		if (!left_strcmp(dir->d_name, "tty") && dir->d_name[3]
+		if (!strncmp(dir->d_name, "tty", 3) && dir->d_name[3]
 			&& !(dir->d_name[3] >= '0' && dir->d_name[3] <= '9'))
 			files_tab[i++] = dir->d_name;
 		dir = readdir(d);

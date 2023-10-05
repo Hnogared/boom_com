@@ -1,18 +1,5 @@
 #include "../Includes/defuser_wizard.h"
 
-int	chrstr(char c, char *str)
-{
-	int	i;
-
-	i = -1;
-	while (str[++i])
-	{
-		if (str[i] == c)
-			return (1);
-	}
-	return (0);
-}
-
 int	left_strcmp(char *str1, char *str2)
 {
 	while (str1 && str2 && *str1 == *str2)
@@ -23,6 +10,40 @@ int	left_strcmp(char *str1, char *str2)
 	if (str2 && !*str2)
 		return (0);
 	return (1);
+}
+
+char	*safer_strncpy(char *dest, char *src, size_t dest_len, size_t len)
+{
+	if (!dest || !src || !dest_len || !len)
+		return (dest);
+	len = (len < dest_len) * len + (dest_len < len) * (dest_len - 1);
+	dest[len] = 0;
+	return (strncpy(dest, src, len));
+}
+
+char	*ft_strtrim(char *str, char *set)
+{
+	char	*start;
+	char	*end;
+	char	*res;
+
+	if (!str || !set)
+		return (NULL);
+	start = str;
+	while (*start && strchr(set, *start))
+		start++;
+	if (!*start)
+		return (strdup(""));
+	end = start;
+	while (*(end + 1))
+		end++;
+	while (strchr(set, *end))
+		end--;
+	res = strndup(start, end - start + 1);
+	if (!res)
+		return (NULL);
+	res[end - start + 1] = 0;
+	return (res);
 }
 
 char	*crop(char *str)

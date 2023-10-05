@@ -25,6 +25,10 @@
 # include <wchar.h>
 # include <wctype.h>
 
+# ifndef BIN_NAME
+#  define BIN_NAME	"defuser_wizard"
+# endif
+
 # define FILES_TAB_SIZE	9
 # define LITTLE_BUFFER	80
 # define BIG_BUFFER		4096
@@ -110,11 +114,17 @@ void 			init_readline(void);
 void			bit_stuffer(t_portopts *portopts_p, t_dispopts *dispopts_p);
 
 /* strings_utils.c file */
-int				chrstr(char c, char *str);
-int				left_strcmp(char *str1, char *str2);
+//int				chrstr(char c, char *str);
+//int				left_strcmp(char *str1, char *str2);
+char			*safer_strncpy(char *dest, char *src, size_t dest_len, size_t len);
+char			*ft_strtrim(char *str, char *set);
 char			*crop(char *str);
 char			*ft_strjoin(char *dest, char *src);
 void			free_str_tab(char **str_tab);
+
+/* errors_utils.c */
+void			save_error(char *dest, size_t dest_buff, const char *prefix,
+	const char *prefix2);
 
 /* display_utils.c file */
 void			cycle_view(void);

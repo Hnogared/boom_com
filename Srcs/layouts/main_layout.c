@@ -2,9 +2,9 @@
 
 int	exec_command(t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
-	if (!left_strcmp("exit", dispopts_p->cmd))
+	if (!strcmp("exit", dispopts_p->cmd))
 		exit_helper(*portopts_p, *dispopts_p);
-	if (!left_strcmp("man", dispopts_p->cmd))
+	if (!strcmp("man", dispopts_p->cmd))
 	{
 		system("less defuser_man.txt");
 		return (0);
@@ -12,6 +12,7 @@ int	exec_command(t_portopts *portopts_p, t_dispopts *dispopts_p)
 	check_view_cmds(dispopts_p);
 	check_help_cmds(portopts_p, dispopts_p);
 	check_choice(portopts_p, dispopts_p);
+	check_conn_cmds(portopts_p, dispopts_p);
 	return (0);
 }
 
@@ -182,7 +183,7 @@ void	menu_defusing(t_portopts *portopts_p, t_dispopts *dispopts_p)
 	read_bomb_out(portopts_p, dispopts_p);
 	print_tabs(*portopts_p, *dispopts_p);
 	// Print the output of the bomb
-	print_bomb_out(dispopts_p);
+	print_bomb_out(*dispopts_p);
 	// Print the debugger console and the output of the rpi
 	print_cmd_out(*dispopts_p);
 	print_prompt(portopts_p);
