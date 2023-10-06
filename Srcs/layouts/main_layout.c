@@ -48,9 +48,9 @@ static void	print_outputs(t_portopts portopts_s, t_dispopts dispopts_s)
 	printw("%s\n", dispopts_s.cmd_output);
 }
 
-static void	print_conn_error(t_portopts *portopts_p)
+static void	print_conn_error(t_portopts portopts_s)
 {
-	if (portopts_p->fd < 0)
+	if (portopts_s.fd < 0)
 	{
 		put_separation(LINES - 4, COLS);
 		attron(A_BOLD);
@@ -66,13 +66,13 @@ static void	print_conn_error(t_portopts *portopts_p)
 		put_separation(LINES - 2, COLS);
 }
 
-void	main_layout(t_portopts *portopts_p, t_dispopts *dispopts_p)
+void	main_layout(t_data *data_p)
 {
-	CHECK(werase, dispopts_p->win);
-	read_bomb_out(portopts_p, dispopts_p);
-	print_tabs(*portopts_p, *dispopts_p);
-	print_outputs(*portopts_p, *dispopts_p);
-	print_conn_error(portopts_p);
+	CHECK(werase, data_p->dispopts_s.win);
+	read_bomb_out(&data_p->portopts_s, &data_p->dispopts_s);
+	print_tabs(data_p->portopts_s, data_p->dispopts_s);
+	print_outputs(data_p->portopts_s, data_p->dispopts_s);
+	print_conn_error(data_p->portopts_s);
 	attron(COLOR_PAIR(4));
 	mvprintw(LINES - 1, 0, "%s", PROMPT " ");
 	attroff(COLOR_PAIR(4));

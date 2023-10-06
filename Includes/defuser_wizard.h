@@ -37,6 +37,7 @@
 # define LITTLE_BUFFER	80
 # define BIG_BUFFER		4096
 # define BOMBOUT_BUFFER	4096
+# define CMDOUT_BUFFER	4096
 
 # define BOMB_VIEW		0
 # define DEFUSER_VIEW	1
@@ -103,8 +104,8 @@ typedef struct s_dispopts
 	int		cmd_len;
 	char	prompt_char;
 	char	*cmd;
-	char	cmd_output[BIG_BUFFER];
-	char	bomb_output[BIG_BUFFER];
+	char	cmd_output[CMDOUT_BUFFER];
+	char	bomb_output[BOMBOUT_BUFFER];
 	WINDOW	*win;
 	WINDOW	*cmd_win;
 }				t_dispopts;
@@ -119,6 +120,7 @@ typedef struct s_rlncurses
 
 typedef struct s_data
 {
+	int			history_lvl;
 	t_portopts	portopts_s;
 	t_dispopts	dispopts_s;
 	t_rlncurses	rlncurses_s;
@@ -208,17 +210,17 @@ size_t			strwidth(const char *s, size_t offset);
 
 /* Srcs/layouts ************************************************************* */
 /* layout_transitions.c */
-void			goto_layout_help(t_portopts *portopts_p, t_dispopts *dispopts_p);
-void			goto_layout_1(t_portopts *portopts_p, t_dispopts *dispopts_p);
-void			goto_layout_2(t_portopts *portopts_p, t_dispopts *dispopts_p, bool loading);
-void			goto_layout_3(t_portopts *portopts_p, t_dispopts *dispopts_p, bool loading);
-void			goto_layout_firewalloff(t_portopts *portopts_p, t_dispopts *dispopts_p);
-void			goto_layout_labyrinth(t_portopts *portopts_p, t_dispopts *dispopts_p);
-void			goto_layout_bytes(t_portopts *portopts_p, t_dispopts *dispopts_p);
-void			goto_layout_password(t_portopts *portopts_p, t_dispopts *dispopts_p, bool mode);
+void			goto_layout_help(t_data *data_p);
+void			goto_layout_1(t_data *data_p);
+void			goto_layout_2(t_data *data_p, bool loading);
+void			goto_layout_3(t_data *data_p, bool loading);
+void			goto_layout_firewalloff(t_data *data_p);
+void			goto_layout_labyrinth(t_data *data_p);
+void			goto_layout_bytes(t_data *data_p);
+void			goto_layout_password(t_data *data_p, bool mode);
 
 /* main_layout.c */
-void			main_layout(t_portopts *portopts_p, t_dispopts *dispopts_p);
+void			main_layout(t_data *data_p);
 
 /* loading_layouts.c */
 int				play_startup(void);
