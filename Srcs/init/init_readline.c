@@ -4,14 +4,14 @@ static int readline_getc(FILE *dummy)
 {
 	(void)dummy;
 	g_data_s.rlncurses_s.input_avail = false;
-	return g_data_s.rlncurses_s.input;
+	return (g_data_s.rlncurses_s.input);
 }
 
 // Not bothering with 'input_avail' and just returning 0 here seems to do the
 // right thing too, but this might be safer across readline versions
 static int readline_input_avail(void)
 {
-	return g_data_s.rlncurses_s.input_avail;
+	return (g_data_s.rlncurses_s.input_avail);
 }
 
 static void readline_redisplay(void)
@@ -24,7 +24,7 @@ static void line_handler(char *line)
 	char	*temp;
 
 	if (!line)
-		exit_helper(g_data_s.portopts_s, g_data_s.dispopts_s);
+		exit_helper(g_data_s);
 	temp = ft_strtrim(line, "\t\n\v\f\r ");
 	free(line);
 	if (!temp)
@@ -39,17 +39,33 @@ static void line_handler(char *line)
 	add_history(line);
 	g_data_s.dispopts_s.cmd = line;
 	if (*line != '@')
-		exec_command(&g_data_s.portopts_s, &g_data_s.dispopts_s);
+		exec_command(&g_data_s);
 	free(g_data_s.dispopts_s.cmd);
 	g_data_s.dispopts_s.cmd = NULL;
 	main_layout(&g_data_s.portopts_s, &g_data_s.dispopts_s);
+}
+
+static int	interpret_keyseq(int a, int b)
+{
+	if (a != 1)
+		return (0);
+//	if (b == 65)
+	fprintf(stderr, "%d %d yoyo\n", a, b);
+	return (0);
 }
 
 void init_readline(void)
 {
 	// Disable completion. TODO: Is there a more robust way to do this?
 	if (rl_bind_key('\t', rl_insert))
-		fail_exit("Invalid key passed to rl_bind_key()");
+		fail_exit("rl_bind_key() invalid key '\\t'");
+	
+	// Bind the 'shift-up' and 'shift-down' sequences to the bomb output history
+	// navigation
+	if (rl_bind_keyseq(KEYSEQ_SHIFT_UP, interpret_keyseq))
+		fail_exit("rl_bind_keyseq() invalid keyseq '" KEYSEQ_SHIFT_UP "'");
+	if (rl_bind_keyseq(KEYSEQ_SHIFT_DOWN, interpret_keyseq))
+		fail_exit("rl_bind_keyseq() invalid keyseq '" KEYSEQ_SHIFT_DOWN "'");
 
 	// Let ncurses do all terminal and signal handling
 	rl_catch_signals = 0;

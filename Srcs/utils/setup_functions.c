@@ -17,18 +17,6 @@ int	open_usb_port(t_portopts *portopts_p)
 	return (0);
 }
 
-int	get_keypress(void)
-{
-	int	ch;
-
-	halfdelay(1);
-	ch = getch();
-	while (ch == ERR)
-		ch = getch();
-	nocbreak();
-	return (ch);
-}
-
 int	get_baudrate(int mode)
 {
 	if (mode == 0 || mode == 1)
@@ -102,15 +90,17 @@ static void	free_dispopts(t_dispopts dispopts_s)
 	CHECK(endwin);
 }
 
-void	exit_helper(t_portopts portopts_s, t_dispopts dispopts_s)
+void	exit_helper(t_data data_s)
 {
 	clear();
 	attron(COLOR_PAIR(1));
 	mvprintw(0, 0, "Exiting bomb defusing helper, goodbye...");
 	attroff(COLOR_PAIR(1));
-	if (portopts_s.fd > -1)
-		close(portopts_s.fd);
-	free_dispopts(dispopts_s);
+	if (data_s.portopts_s.fd > -1)
+		close(data_s.portopts_s.fd);
+	free_dispopts(data_s.dispopts_s);
+	if (data_s.bomb_out_history)
+		free_history(data_s.bomb_out_history);
 	rl_clear_history();
 	rl_callback_handler_remove();
 	rl_unbind_key('\t');

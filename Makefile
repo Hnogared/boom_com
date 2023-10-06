@@ -1,10 +1,11 @@
 NAME		=	defuser_wizard
 
-VPATH		=	Srcs:			\
-				Srcs/init:		\
-				Srcs/cmd_win	\
-				Srcs/layouts:	\
-				Srcs/builtins:	\
+VPATH		=	Srcs:						\
+				Srcs/init:					\
+				Srcs/cmd_win:				\
+				Srcs/layouts:				\
+				Srcs/bomb_communication:	\
+				Srcs/builtins:				\
 				Srcs/utils
 
 SRCS		=	main.c					\
@@ -13,6 +14,8 @@ SRCS		=	main.c					\
 				command_handling.c		\
 				cmd_win_display.c		\
 				check_cmds.c			\
+				bomb_read_write.c		\
+				bomb_out_history.c		\
 		  		display_utils.c			\
 		  		setup_functions.c		\
 		  		strings_utils.c			\

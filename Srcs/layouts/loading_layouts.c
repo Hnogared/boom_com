@@ -75,7 +75,7 @@ int	play_startup(void)
 	return (0);
 }
 
-int	open_port(t_portopts *portopts_p, t_dispopts *dispopts_p)
+static int	open_port(t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
 	portopts_p->fd = open(portopts_p->port, O_RDWR | O_NOCTTY);
 	if (portopts_p->fd < 0 || !portopts_p->toptions)

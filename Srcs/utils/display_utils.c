@@ -10,7 +10,7 @@ void	main_menu_loading(char *message)
 	delay = 30;
 	while (i * 3 <= COLS)
 	{
-		put_loading(message, "\t(OK)", LINES - 7, i * 3, COLS);
+		put_loading(message, "\t(OK)", LINES - 6, i * 3, COLS);
 		cbreak();
 		timeout(delay);
 		getch();

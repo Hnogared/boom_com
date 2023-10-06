@@ -15,8 +15,6 @@ int	check_view_cmds(t_dispopts *dispopts_p)
 
 int	check_choice(t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
-	if ((dispopts_p->cmd)[0] == '1' && (dispopts_p->cmd)[1] == 0)
-		exit_helper(*portopts_p, *dispopts_p);
 	if ((dispopts_p->cmd)[0] == '2' && (dispopts_p->cmd)[1] == 0)
 	{
 		if (dispopts_p->layout == -2 || dispopts_p->layout == 1)

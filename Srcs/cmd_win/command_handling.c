@@ -1,18 +1,31 @@
 #include "../../Includes/defuser_wizard.h"
 
-int	exec_command(t_portopts *portopts_p, t_dispopts *dispopts_p)
+int	get_keypress(void)
 {
-	if (!strcmp("exit", dispopts_p->cmd))
-		exit_helper(*portopts_p, *dispopts_p);
-	if (!strcmp("man", dispopts_p->cmd))
+	int	ch;
+
+	halfdelay(1);
+	ch = getch();
+	while (ch == ERR)
+		ch = getch();
+	nocbreak();
+	return (ch);
+}
+
+int	exec_command(t_data *data_p)
+{
+	if (!strcmp("exit", data_p->dispopts_s.cmd)
+			|| !strcmp("1", data_p->dispopts_s.cmd))
+		exit_helper(*data_p);
+	if (!strcmp("man", data_p->dispopts_s.cmd))
 	{
 		system("less defuser_man.txt");
 		return (0);
 	}
-	check_view_cmds(dispopts_p);
-	check_help_cmds(portopts_p, dispopts_p);
-	check_choice(portopts_p, dispopts_p);
-	check_conn_cmds(portopts_p, dispopts_p);
+	check_view_cmds(&data_p->dispopts_s);
+	check_help_cmds(&data_p->portopts_s, &data_p->dispopts_s);
+	check_choice(&data_p->portopts_s, &data_p->dispopts_s);
+	check_conn_cmds(&data_p->portopts_s, &data_p->dispopts_s);
 	return (0);
 }
 

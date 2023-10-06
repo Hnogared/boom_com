@@ -44,6 +44,9 @@
 
 # define PROMPT	"commande %>"
 
+# define KEYSEQ_SHIFT_UP	"\e[1;2A"
+# define KEYSEQ_SHIFT_DOWN	"\e[1;2B"
+
 /*
  *	COLOR_BLACK   0
  *  COLOR_RED     1
@@ -77,6 +80,14 @@
 /* ************************************************************************** */
 /* structures declarations                                                    */
 /* ************************************************************************** */
+typedef struct s_history
+{
+	char	*cmd;
+	char	*bomb_output;
+	void	*previous;
+	void	*next;
+}				t_history;
+
 typedef struct s_portopts
 {
 	int				fd;
@@ -111,6 +122,7 @@ typedef struct s_data
 	t_portopts	portopts_s;
 	t_dispopts	dispopts_s;
 	t_rlncurses	rlncurses_s;
+	t_history	*bomb_out_history;
 }				t_data;
 
 extern t_data	g_data_s;
@@ -120,9 +132,33 @@ extern t_data	g_data_s;
 /* prototypes                                                                 */
 /* ************************************************************************** */
 
+/* Srcs/bomb_communication ************************************************** */
+/* bomb_read_write.c */
+void			read_bomb_out(t_portopts *portopts_p, t_dispopts *dispopts_p);
+
+/* bomb_out_history.c */
+t_history		*new_history_node(char *cmd, char *bomb_out, void *previous,
+	void *next);
+t_history		*history_add_front(t_history **history_p, t_history *new_node);
+void			free_history_node(t_history *node_p);
+void			free_history(t_history *history_p);
+
+
 /* Srcs/builtins ************************************************************ */
 /* bit_stuffer.c */
 void			bit_stuffer(t_portopts *portopts_p, t_dispopts *dispopts_p);
+
+
+/* Srcs/cmd_win ************************************************************* */
+/* check_cmds.c */
+int				check_view_cmds(t_dispopts *dispopts_p);
+int				check_choice(t_portopts *portopts_p, t_dispopts *dispopts_p);
+int				check_help_cmds(t_portopts *portopts_p, t_dispopts *dispopts_p);
+int				check_conn_cmds(t_portopts *portopts_p, t_dispopts *dispopts_p);
+
+/* cmd_win_display.c */
+void 			resize(t_portopts *portopts_p, t_dispopts *dispopts_p);
+void			print_cmd_win(WINDOW *cmd_win, bool for_resize);
 
 
 /* Srcs/init **************************************************************** */
@@ -133,18 +169,30 @@ void			init_portopts(t_portopts *port_options);
 /* init_readline.c */
 void 			init_readline(void);
 
+/* command_handling.c */
+int				get_keypress(void);
+int				exec_command(t_data *data_p);
+void			update_command(t_portopts *portopts_p, t_dispopts *dispopts_s, t_rlncurses *rlncurses_p);
+
 
 /* Srcs/utils *************************************************************** */
-/* errors_utils.c */
-void			save_error(char *dest, size_t dest_buff, const char *prefix,
-	const char *prefix2);
-
 /* display_utils.c file */
-void			cycle_view(void);
 void			main_menu_loading(char *message);
 void			put_centered(char *str, int line, int width);
 void			put_separation(int line, int width);
 void			put_loading(char *name, char *confirm, int line_pos, int progress, int length);
+
+/* errors_utils.c */
+noreturn void	fail_exit(const char *msg);
+void			save_error(char *dest, size_t dest_buff, const char *prefix,
+	const char *prefix2);
+
+/* setup_functions.c */
+int				open_usb_port(t_portopts *portopts_p);
+int				get_baudrate(int mode);
+char			**get_files_tab(char *directory);
+struct termios	set_termios_opt(int fd, int baudrate);
+void			exit_helper(t_data data_s);
 
 /* strings_utils.c */
 char			*safer_strncpy(char *dest, char *src, size_t dest_len, size_t len);
@@ -153,37 +201,13 @@ char			*crop(char *str);
 char			*ft_strjoin(char *dest, char *src);
 void			free_str_tab(char **str_tab);
 
-/* Srcs/layouts ************************************************************* */
-/* loading_layouts.c */
-int				play_startup(void);
-void			play_connect(t_portopts *portopts_p, t_dispopts *dispopts_p);
+/* strings_utils_2.c */
+size_t			strnwidth(const char *s, size_t n, size_t offset);
+size_t			strwidth(const char *s, size_t offset);
 
-/* select_layouts.c */
-int				menu_baudrate_select(void);
-char			*menu_port_select(void);
-
-/* main_layout.c */
-int				exec_command(t_portopts *portopts_p, t_dispopts *dispopts_p);
-void			update_command(t_portopts *portopts_p, t_dispopts *dispopts_s, t_rlncurses *rlncurses_p);
-void			main_layout(t_portopts *portopts_p, t_dispopts *dispopts_p);
-void			print_cmd_win(WINDOW *cmd_win, bool for_resize);
 
 /* Srcs/layouts ************************************************************* */
-/* check_cmds.c file */
-int				check_view_cmds(t_dispopts *dispopts_p);
-int				check_choice(t_portopts *portopts_p, t_dispopts *dispopts_p);
-int				check_help_cmds(t_portopts *portopts_p, t_dispopts *dispopts_p);
-int				check_conn_cmds(t_portopts *portopts_p, t_dispopts *dispopts_p);
-
-/* setup_functions.c */
-int				open_usb_port(t_portopts *portopts_p);
-int				get_keypress(void);
-int				get_baudrate(int mode);
-char			**get_files_tab(char *directory);
-struct termios	set_termios_opt(int fd, int baudrate);
-void			exit_helper(t_portopts portopts_s, t_dispopts dispopts_s);
-
-/* layout_changes.c */
+/* layout_transitions.c */
 void			goto_layout_help(t_portopts *portopts_p, t_dispopts *dispopts_p);
 void			goto_layout_1(t_portopts *portopts_p, t_dispopts *dispopts_p);
 void			goto_layout_2(t_portopts *portopts_p, t_dispopts *dispopts_p, bool loading);
@@ -193,11 +217,15 @@ void			goto_layout_labyrinth(t_portopts *portopts_p, t_dispopts *dispopts_p);
 void			goto_layout_bytes(t_portopts *portopts_p, t_dispopts *dispopts_p);
 void			goto_layout_password(t_portopts *portopts_p, t_dispopts *dispopts_p, bool mode);
 
-/* rlncurses.c */
-size_t			strnwidth(const char *s, size_t n, size_t offset);
-size_t			strwidth(const char *s, size_t offset);
-noreturn void	fail_exit(const char *msg);
-void 			resize(t_portopts *portopts_p, t_dispopts *dispopts_p);
-//void			forward_to_readline(char c, t_rlncurses *rlncurses_p);
+/* main_layout.c */
+void			main_layout(t_portopts *portopts_p, t_dispopts *dispopts_p);
+
+/* loading_layouts.c */
+int				play_startup(void);
+void			play_connect(t_portopts *portopts_p, t_dispopts *dispopts_p);
+
+/* select_layouts.c */
+int				menu_baudrate_select(void);
+char			*menu_port_select(void);
 
 #endif
