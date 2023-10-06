@@ -1,5 +1,15 @@
 #include "../../Includes/defuser_wizard.h"
 
+noreturn void	fail_exit(const char *msg)
+{
+	// Make sure endwin() is only called in visual mode. As a note, calling it
+	// twice does not seem to be supported and messed with the cursor position.
+	if (g_data_s.rlncurses_s.visual_mode)
+		endwin();
+	fprintf(stderr, "%s\n", msg);
+	exit(EXIT_FAILURE);
+}
+
 void	save_error(char *dest, size_t dest_buff, const char *prefix,
 	const char *prefix2)
 {

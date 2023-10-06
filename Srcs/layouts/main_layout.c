@@ -1,21 +1,5 @@
 #include "../Includes/defuser_wizard.h"
 
-int	exec_command(t_portopts *portopts_p, t_dispopts *dispopts_p)
-{
-	if (!strcmp("exit", dispopts_p->cmd))
-		exit_helper(*portopts_p, *dispopts_p);
-	if (!strcmp("man", dispopts_p->cmd))
-	{
-		system("less defuser_man.txt");
-		return (0);
-	}
-	check_view_cmds(dispopts_p);
-	check_help_cmds(portopts_p, dispopts_p);
-	check_choice(portopts_p, dispopts_p);
-	check_conn_cmds(portopts_p, dispopts_p);
-	return (0);
-}
-
 void	read_bomb_out(t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
 	int		size;
@@ -26,9 +10,7 @@ void	read_bomb_out(t_portopts *portopts_p, t_dispopts *dispopts_p)
 	size = read(portopts_p->fd, temp, BIG_BUFFER - 1);
 	if (size < 0)
 	{
-		strcpy(dispopts_p->bomb_output, "!> READING_ERROR >> ");
-		strcpy(dispopts_p->bomb_output + 20, strerror(errno));
-		dispopts_p->bomb_output[BIG_BUFFER - 1] = 0;
+		save_error(dispopts_p->bomb_output, BIG_BUFFER, BIN_NAME, "read error");
 		return ;
 	}
 	temp[size] = 0;
@@ -51,69 +33,6 @@ void	read_bomb_out(t_portopts *portopts_p, t_dispopts *dispopts_p)
 	}
 }
 
-void	print_bomb_out(t_dispopts dispopts_s)
-{
-	if (dispopts_s.view == 1)
-		return ;
-	if (dispopts_s.bomb_output[0] == '!')
-		attron(COLOR_PAIR(1));
-	mvprintw(2, 0, "%s\n", crop(dispopts_s.bomb_output));
-	if (dispopts_s.bomb_output[0] == '!')
-		attroff(COLOR_PAIR(1));
-}
-
-void print_cmd_win(WINDOW *cmd_win, bool for_resize)
-{
-	size_t prompt_width;
-	size_t cursor_col;
-
-	prompt_width = strwidth(rl_display_prompt, 0);
-	cursor_col = prompt_width + strnwidth(rl_line_buffer, rl_point, prompt_width);
-	CHECK(werase, cmd_win);
-	// This might write a string wider than the terminal currently, so don't
-	// check for errors
-	mvwprintw(cmd_win, 0, 0, "%s%s", rl_display_prompt, rl_line_buffer);
-	// Hide the cursor if it lies outside the window. Otherwise it'll
-	// appear on the very right.
-	if (cursor_col >= (size_t) COLS)
-		curs_set(0);
-	else
-	{
-		CHECK(wmove, cmd_win, 0, cursor_col);
-		curs_set(2);
-	}
-	// We batch window updates when resizing
-	if (for_resize)
-		CHECK(wnoutrefresh, cmd_win);
-	else
-		CHECK(wrefresh, cmd_win);
-}
-
-void	update_command(t_portopts *portopts_p, t_dispopts *dispopts_p,
-	t_rlncurses *rlncurses_p)
-{
-	int	c;
-
-	cbreak();
-	c = wgetch(dispopts_p->cmd_win);
-	switch (c)
-	{
-	case KEY_RESIZE:
-		resize(portopts_p, dispopts_p);
-		break ;
-	case '\f':
-		CHECK(clearok, curscr, TRUE);
-		resize(portopts_p, dispopts_p);
-		break ;
-	case '\t':
-		dispopts_p->view = (dispopts_p->view + 1) % 3;
-		menu_defusing(portopts_p, dispopts_p);
-		break ;
-	default:
-		forward_to_readline(c, rlncurses_p);
-	}
-}
-
 static void	print_tabs(t_portopts portopts_s, t_dispopts dispopts_s)
 {
 	attron(A_BOLD);
@@ -126,15 +45,23 @@ static void	print_tabs(t_portopts portopts_s, t_dispopts dispopts_s)
 	if (dispopts_s.view == 2)
 		mvprintw(0, 0, "[1 BOMB INTERPRETOR]");
 	if (portopts_s.port[0])
-		mvprintw(0, COLS - 35, "(PORT %-19.19s @ %06d)\n", portopts_s.port, get_baudrate(portopts_s.baudrate));
+		mvprintw(0, COLS - 35, "(PORT %-19.19s @ %06d)\n", portopts_s.port,
+			get_baudrate(portopts_s.baudrate));
 	else
 		mvprintw(0, COLS - 9, "(No port)\n");
 	attroff(COLOR_PAIR(2));
 	attroff(A_BOLD);
 }
 
-static void	print_cmd_out(t_dispopts dispopts_s)
+static void	print_outputs(t_dispopts dispopts_s)
 {
+	if (dispopts_s.view == 1)
+		return ;
+	if (dispopts_s.bomb_output[0] == '!')
+		attron(COLOR_PAIR(1));
+	mvprintw(2, 0, "%s\n", crop(dispopts_s.bomb_output));
+	if (dispopts_s.bomb_output[0] == '!')
+		attroff(COLOR_PAIR(1));
 	if (dispopts_s.view == 2)
 	{
 		attron(A_BOLD);
@@ -163,7 +90,8 @@ static void	print_conn_error(t_portopts *portopts_p)
 		attron(COLOR_PAIR(3));
 		put_centered("/!\\ Aucune connection etablie. /!\\", -1, COLS);
 		printw("%*s", COLS, "");
-		put_centered("Veuillez verifier la connection USB et reessayez.", LINES - 2, COLS);
+		put_centered("Veuillez verifier la connection USB et reessayez.",
+			LINES - 2, COLS);
 		attroff(A_BOLD);
 		attroff(COLOR_PAIR(3));
 	}
@@ -176,8 +104,7 @@ void	menu_defusing(t_portopts *portopts_p, t_dispopts *dispopts_p)
 	CHECK(werase, dispopts_p->win);
 	read_bomb_out(portopts_p, dispopts_p);
 	print_tabs(*portopts_p, *dispopts_p);
-	print_bomb_out(*dispopts_p);
-	print_cmd_out(*dispopts_p);
+	print_outputs(*dispopts_p);
 	print_conn_error(portopts_p);
 	attron(COLOR_PAIR(4));
 	mvprintw(LINES - 1, 0, "%s", PROMPT " ");

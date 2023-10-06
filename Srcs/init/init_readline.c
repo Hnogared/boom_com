@@ -16,18 +16,9 @@ static int readline_input_avail(void)
 
 static void readline_redisplay(void)
 {
-	cmd_win_redisplay(g_data_s.dispopts_s.cmd_win, false);
+	print_cmd_win(g_data_s.dispopts_s.cmd_win, false);
 }
-/*
-static int	is_whitespace_str(char *str)
-{
-	if (!str || !*str)
-		return (1);
-	while (*str && (*str == 32 || (*str >= 9 && *str <= 13) || *str == 127))
-		str++;
-	return (!*str);
-}
-*/
+
 static void line_handler(char *line)
 {
 	char	*temp;

@@ -2,6 +2,7 @@ NAME		=	defuser_wizard
 
 VPATH		=	Srcs:			\
 				Srcs/init:		\
+				Srcs/cmd_win	\
 				Srcs/layouts:	\
 				Srcs/builtins:	\
 				Srcs/utils
@@ -9,11 +10,13 @@ VPATH		=	Srcs:			\
 SRCS		=	main.c					\
 				init_data.c				\
 				init_readline.c			\
-				rlncurses.c				\
+				command_handling.c		\
+				cmd_win_display.c		\
 				check_cmds.c			\
 		  		display_utils.c			\
 		  		setup_functions.c		\
 		  		strings_utils.c			\
+		  		strings_utils_2.c		\
 		  		main_layout.c			\
 		  		select_layouts.c		\
 		  		loading_layouts.c		\

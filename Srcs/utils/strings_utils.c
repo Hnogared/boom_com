@@ -1,17 +1,5 @@
 #include "../Includes/defuser_wizard.h"
 
-int	left_strcmp(char *str1, char *str2)
-{
-	while (str1 && str2 && *str1 == *str2)
-	{
-		str1++;
-		str2++;
-	}
-	if (str2 && !*str2)
-		return (0);
-	return (1);
-}
-
 char	*safer_strncpy(char *dest, char *src, size_t dest_len, size_t len)
 {
 	if (!dest || !src || !dest_len || !len)

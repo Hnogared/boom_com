@@ -145,7 +145,7 @@ char			*menu_port_select(void);
 int				exec_command(t_portopts *portopts_p, t_dispopts *dispopts_p);
 void			update_command(t_portopts *portopts_p, t_dispopts *dispopts_s, t_rlncurses *rlncurses_p);
 void			menu_defusing(t_portopts *portopts_p, t_dispopts *dispopts_p);
-void			cmd_win_redisplay(WINDOW *cmd_win, bool for_resize);
+void			print_cmd_win(WINDOW *cmd_win, bool for_resize);
 //void			print_output(t_portopts *port_options, t_dispopts *dispopts_p);
 //void			print_prompt(t_portopts *portopts_p);
 
@@ -178,6 +178,6 @@ size_t			strnwidth(const char *s, size_t n, size_t offset);
 size_t			strwidth(const char *s, size_t offset);
 noreturn void	fail_exit(const char *msg);
 void 			resize(t_portopts *portopts_p, t_dispopts *dispopts_p);
-void			forward_to_readline(char c, t_rlncurses *rlncurses_p);
+//void			forward_to_readline(char c, t_rlncurses *rlncurses_p);
 
 #endif
