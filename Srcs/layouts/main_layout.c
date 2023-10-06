@@ -62,7 +62,7 @@ void	print_bomb_out(t_dispopts dispopts_s)
 		attroff(COLOR_PAIR(1));
 }
 
-void cmd_win_redisplay(WINDOW *cmd_win, bool for_resize)
+void print_cmd_win(WINDOW *cmd_win, bool for_resize)
 {
 	size_t prompt_width;
 	size_t cursor_col;
@@ -73,11 +73,12 @@ void cmd_win_redisplay(WINDOW *cmd_win, bool for_resize)
 	// This might write a string wider than the terminal currently, so don't
 	// check for errors
 	mvwprintw(cmd_win, 0, 0, "%s%s", rl_display_prompt, rl_line_buffer);
+	// Hide the cursor if it lies outside the window. Otherwise it'll
+	// appear on the very right.
 	if (cursor_col >= (size_t) COLS)
-		// Hide the cursor if it lies outside the window. Otherwise it'll
-		// appear on the very right.
 		curs_set(0);
-	else {
+	else
+	{
 		CHECK(wmove, cmd_win, 0, cursor_col);
 		curs_set(2);
 	}
@@ -132,28 +133,6 @@ static void	print_tabs(t_portopts portopts_s, t_dispopts dispopts_s)
 	attroff(A_BOLD);
 }
 
-static void	print_prompt(t_portopts *portopts_p)
-{
-	if (portopts_p->fd < 0)
-	{
-		put_separation(LINES - 5, COLS);
-		attron(A_BOLD);
-		attron(COLOR_PAIR(3));
-		put_centered("/!\\ Aucune connection etablie. /!\\", -1, COLS);
-		printw("%*s", COLS, "");
-		put_centered("Veuillez verifier la connection USB et reessayez.", LINES - 3, COLS);
-		attroff(A_BOLD);
-		attroff(COLOR_PAIR(3));
-	}
-	else
-		put_separation(LINES - 3, COLS);
-	attron(COLOR_PAIR(4));
-	mvprintw(LINES - 2, 0, "%*s", COLS, "");
-	printw("%*s", COLS, "");
-	mvprintw(LINES - 1, 0, "%s", PROMPT " ");
-	attroff(COLOR_PAIR(4));
-}
-
 static void	print_cmd_out(t_dispopts dispopts_s)
 {
 	if (dispopts_s.view == 2)
@@ -166,15 +145,30 @@ static void	print_cmd_out(t_dispopts dispopts_s)
 		attroff(A_BOLD);
 		printw("\n");
 	}
-	if (dispopts_s.view != 0)
-	{
-		if (dispopts_s.cmd_output[0] == '!')
-			attron(COLOR_PAIR(1));
-		printw("%s\n", dispopts_s.cmd_output);
-		if (dispopts_s.cmd_output[0] == '!')
-			attroff(COLOR_PAIR(1));
-	}
+	if (dispopts_s.view == 0)
+		return ;
+	if (dispopts_s.cmd_output[0] == '!')
+		attron(COLOR_PAIR(1));
+	printw("%s\n", dispopts_s.cmd_output);
+	if (dispopts_s.cmd_output[0] == '!')
+		attroff(COLOR_PAIR(1));
+}
 
+static void	print_conn_error(t_portopts *portopts_p)
+{
+	if (portopts_p->fd < 0)
+	{
+		put_separation(LINES - 4, COLS);
+		attron(A_BOLD);
+		attron(COLOR_PAIR(3));
+		put_centered("/!\\ Aucune connection etablie. /!\\", -1, COLS);
+		printw("%*s", COLS, "");
+		put_centered("Veuillez verifier la connection USB et reessayez.", LINES - 2, COLS);
+		attroff(A_BOLD);
+		attroff(COLOR_PAIR(3));
+	}
+	else
+		put_separation(LINES - 2, COLS);
 }
 
 void	menu_defusing(t_portopts *portopts_p, t_dispopts *dispopts_p)
@@ -182,10 +176,11 @@ void	menu_defusing(t_portopts *portopts_p, t_dispopts *dispopts_p)
 	CHECK(werase, dispopts_p->win);
 	read_bomb_out(portopts_p, dispopts_p);
 	print_tabs(*portopts_p, *dispopts_p);
-	// Print the output of the bomb
 	print_bomb_out(*dispopts_p);
-	// Print the debugger console and the output of the rpi
 	print_cmd_out(*dispopts_p);
-	print_prompt(portopts_p);
+	print_conn_error(portopts_p);
+	attron(COLOR_PAIR(4));
+	mvprintw(LINES - 1, 0, "%s", PROMPT " ");
+	attroff(COLOR_PAIR(4));
 	CHECK(refresh);
 }

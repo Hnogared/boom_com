@@ -22,7 +22,7 @@ static void	init_colors(t_dispopts *dispopts_p)
 		init_pair(1, COLOR_RED, bg);
 		init_pair(2, bg, COLOR_WHITE);
 		init_pair(3, COLOR_RED, COLOR_WHITE);
-		init_pair(4, COLOR_GREEN, COLOR_BLACK);
+		init_pair(4, COLOR_GREEN, bg);
 		CHECK(wbkgd, dispopts_p->cmd_win, COLOR_PAIR(4));
 	}
 	else

@@ -20,8 +20,6 @@ int	main(void)
 	goto_layout_1(&g_data_s.portopts_s, &g_data_s.dispopts_s);
 //	open_usb_port(&conn_options);
 //	goto_layout_labyrinth(&conn_options, &disp_options);
-//	CHECK(werase, g_data_s.dispopts_s.win);
-//	menu_defusing(&g_data_s.portopts_s, &g_data_s.dispopts_s);
 	while (1)
 	{
 		update_command(&g_data_s.portopts_s, &g_data_s.dispopts_s, &g_data_s.rlncurses_s);
