@@ -8,7 +8,7 @@ void	goto_layout_help(t_portopts *portopts_p, t_dispopts *dispopts_p)
 		" # [2] Retour\n", BIG_BUFFER - 2);
 	dispopts_p->cmd_output[BIG_BUFFER - 1] = 0;
 	dispopts_p->layout *= -1;
-	menu_defusing(portopts_p, dispopts_p);
+	main_layout(portopts_p, dispopts_p);
 }
 
 void	goto_layout_1(t_portopts *portopts_p, t_dispopts *dispopts_p)
@@ -30,7 +30,7 @@ void	goto_layout_1(t_portopts *portopts_p, t_dispopts *dispopts_p)
 	dispopts_p->cmd_output[BIG_BUFFER - 1] = 0;
 	dispopts_p->view = 1;
 	dispopts_p->layout = 1;
-	menu_defusing(portopts_p, dispopts_p);
+	main_layout(portopts_p, dispopts_p);
 }
 
 void	goto_layout_2(t_portopts *portopts_p, t_dispopts *dispopts_p, bool loading)
@@ -41,7 +41,7 @@ void	goto_layout_2(t_portopts *portopts_p, t_dispopts *dispopts_p, bool loading)
 	if (open_usb_port(portopts_p))
 	{
 		save_error(dispopts_p->bomb_output, BIG_BUFFER, BIN_NAME, "port error");
-	//	menu_defusing(portopts_p, dispopts_p);
+	//	main_layout(portopts_p, dispopts_p);
 		return ;
 	}
 	strncpy(dispopts_p->bomb_output,
@@ -53,7 +53,7 @@ void	goto_layout_2(t_portopts *portopts_p, t_dispopts *dispopts_p, bool loading)
 		" # [3] Scan du systeme\n", BIG_BUFFER - 2);
 	dispopts_p->cmd_output[BIG_BUFFER - 1] = 0;
 	dispopts_p->layout = 2;
-	menu_defusing(portopts_p, dispopts_p);
+	main_layout(portopts_p, dispopts_p);
 }
 
 void	goto_layout_3(t_portopts *portopts_p, t_dispopts *dispopts_p, bool loading)
@@ -77,7 +77,7 @@ void	goto_layout_3(t_portopts *portopts_p, t_dispopts *dispopts_p, bool loading)
 	dispopts_p->cmd_output[BIG_BUFFER - 1] = 0;
 	dispopts_p->view = 2;
 	dispopts_p->layout = 3;
-	menu_defusing(portopts_p, dispopts_p);
+	main_layout(portopts_p, dispopts_p);
 }
 
 void	goto_layout_firewalloff(t_portopts *portopts_p, t_dispopts *dispopts_p)
@@ -98,7 +98,7 @@ void	goto_layout_firewalloff(t_portopts *portopts_p, t_dispopts *dispopts_p)
 	dispopts_p->cmd_output[BIG_BUFFER - 1] = 0;
 	dispopts_p->view = 2;
 	dispopts_p->layout = 4;
-	menu_defusing(portopts_p, dispopts_p);
+	main_layout(portopts_p, dispopts_p);
 }
 
 void	goto_layout_labyrinth(t_portopts *portopts_p, t_dispopts *dispopts_p)
@@ -112,7 +112,7 @@ void	goto_layout_labyrinth(t_portopts *portopts_p, t_dispopts *dispopts_p)
 	dispopts_p->cmd_output[BIG_BUFFER - 1] = 0;
 	dispopts_p->view = 2;
 	dispopts_p->layout = 5;
-	menu_defusing(portopts_p, dispopts_p);
+	main_layout(portopts_p, dispopts_p);
 }
 
 void	goto_layout_bytes(t_portopts *portopts_p, t_dispopts *dispopts_p)
@@ -124,7 +124,7 @@ void	goto_layout_bytes(t_portopts *portopts_p, t_dispopts *dispopts_p)
 	dispopts_p->cmd_output[BIG_BUFFER - 1] = 0;
 	dispopts_p->view = 2;
 	dispopts_p->layout = 6;
-	menu_defusing(portopts_p, dispopts_p);
+	main_layout(portopts_p, dispopts_p);
 }
 
 void	goto_layout_password(t_portopts *portopts_p, t_dispopts *dispopts_p, bool mode)
@@ -149,5 +149,5 @@ void	goto_layout_password(t_portopts *portopts_p, t_dispopts *dispopts_p, bool m
 	dispopts_p->cmd_output[BIG_BUFFER - 1] = 0;
 	dispopts_p->view = 2;
 	dispopts_p->layout = 7;
-	menu_defusing(portopts_p, dispopts_p);
+	main_layout(portopts_p, dispopts_p);
 }

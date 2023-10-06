@@ -42,7 +42,7 @@ static void line_handler(char *line)
 		exec_command(&g_data_s.portopts_s, &g_data_s.dispopts_s);
 	free(g_data_s.dispopts_s.cmd);
 	g_data_s.dispopts_s.cmd = NULL;
-	menu_defusing(&g_data_s.portopts_s, &g_data_s.dispopts_s);
+	main_layout(&g_data_s.portopts_s, &g_data_s.dispopts_s);
 }
 
 void init_readline(void)

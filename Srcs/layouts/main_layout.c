@@ -99,7 +99,7 @@ static void	print_conn_error(t_portopts *portopts_p)
 		put_separation(LINES - 2, COLS);
 }
 
-void	menu_defusing(t_portopts *portopts_p, t_dispopts *dispopts_p)
+void	main_layout(t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
 	CHECK(werase, dispopts_p->win);
 	read_bomb_out(portopts_p, dispopts_p);

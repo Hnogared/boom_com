@@ -164,7 +164,7 @@ char			*menu_port_select(void);
 /* main_layout.c */
 int				exec_command(t_portopts *portopts_p, t_dispopts *dispopts_p);
 void			update_command(t_portopts *portopts_p, t_dispopts *dispopts_s, t_rlncurses *rlncurses_p);
-void			menu_defusing(t_portopts *portopts_p, t_dispopts *dispopts_p);
+void			main_layout(t_portopts *portopts_p, t_dispopts *dispopts_p);
 void			print_cmd_win(WINDOW *cmd_win, bool for_resize);
 
 /* Srcs/layouts ************************************************************* */

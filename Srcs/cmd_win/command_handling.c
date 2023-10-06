@@ -41,7 +41,7 @@ void	update_command(t_portopts *portopts_p, t_dispopts *dispopts_p,
 		break ;
 	case '\t':
 		dispopts_p->view = (dispopts_p->view + 1) % 3;
-		menu_defusing(portopts_p, dispopts_p);
+		main_layout(portopts_p, dispopts_p);
 		break ;
 	default:
 		forward_to_readline(c, rlncurses_p);

@@ -9,7 +9,7 @@ void resize(t_portopts *portopts_p, t_dispopts *dispopts_p)
 	}
 
 	// Batch refreshes and commit them with doupdate()
-	menu_defusing(portopts_p, dispopts_p);
+	main_layout(portopts_p, dispopts_p);
 	print_cmd_win(dispopts_p->cmd_win, true);
 	CHECK(doupdate);
 }
