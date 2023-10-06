@@ -35,7 +35,6 @@ void	read_bomb_out(t_portopts *portopts_p, t_dispopts *dispopts_p)
 
 static void	print_tabs(t_portopts portopts_s, t_dispopts dispopts_s)
 {
-	attron(A_BOLD);
 	attron(COLOR_PAIR(2));
 	mvprintw(0, 0, "%*s", COLS, "");
 	if (portopts_s.port[0])
@@ -56,37 +55,30 @@ static void	print_tabs(t_portopts portopts_s, t_dispopts dispopts_s)
 		if (dispopts_s.view == DEFUSER_VIEW)
 			attron(COLOR_PAIR(2));
 	}
-	move(1, 0);
+	move(2, 0);
 	attroff(COLOR_PAIR(2));
-	attroff(A_BOLD);
 }
 
-static void	print_outputs(t_dispopts dispopts_s)
+static void	print_outputs(t_portopts portopts_s, t_dispopts dispopts_s)
 {
 	if (dispopts_s.view != DEFUSER_VIEW)
 	{
-		if (dispopts_s.bomb_output[0] == '!')
+		if (portopts_s.fd == -1 && dispopts_s.bomb_output[0])
 			attron(COLOR_PAIR(1));
-		mvprintw(2, 0, "%s\n", crop(dispopts_s.bomb_output));
-		if (dispopts_s.bomb_output[0] == '!')
+		mvprintw(2, 0, "%s\n\n",
+			ft_strtrim(dispopts_s.bomb_output, "$ \t\n\v\f\r"));
+		if (portopts_s.fd == 1 && dispopts_s.bomb_output[0])
 			attroff(COLOR_PAIR(1));
 	}
 	if (dispopts_s.view == BOMB_VIEW)
 		return ;
 	if (dispopts_s.view == SPLIT_VIEW)
 	{
-		attron(A_BOLD);
 		attron(COLOR_PAIR(2));
-		printw("                    DEFUSER GUIDE%*s", COLS - 33, "");
+		printw("                    DEFUSER GUIDE%*s\n", COLS - 33, "");
 		attroff(COLOR_PAIR(2));
-		attroff(A_BOLD);
-		printw("\n");
 	}
-	if (dispopts_s.cmd_output[0] == '!')
-		attron(COLOR_PAIR(1));
 	printw("%s\n", dispopts_s.cmd_output);
-	if (dispopts_s.cmd_output[0] == '!')
-		attroff(COLOR_PAIR(1));
 }
 
 static void	print_conn_error(t_portopts *portopts_p)
@@ -112,7 +104,7 @@ void	main_layout(t_portopts *portopts_p, t_dispopts *dispopts_p)
 	CHECK(werase, dispopts_p->win);
 	read_bomb_out(portopts_p, dispopts_p);
 	print_tabs(*portopts_p, *dispopts_p);
-	print_outputs(*dispopts_p);
+	print_outputs(*portopts_p, *dispopts_p);
 	print_conn_error(portopts_p);
 	attron(COLOR_PAIR(4));
 	mvprintw(LINES - 1, 0, "%s", PROMPT " ");
