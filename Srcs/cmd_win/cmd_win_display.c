@@ -1,6 +1,3 @@
-// copyright (c) 2015-2019, ulf magnusson
-// spdx-license-identifier: isc
-
 #include "../Includes/defuser_wizard.h"
 
 void resize(t_portopts *portopts_p, t_dispopts *dispopts_p)

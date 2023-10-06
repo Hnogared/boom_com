@@ -25,6 +25,10 @@
 # include <wchar.h>
 # include <wctype.h>
 
+
+/* ************************************************************************** */
+/* defines                                                                    */
+/* ************************************************************************** */
 # ifndef BIN_NAME
 #  define BIN_NAME	"defuser_wizard"
 # endif
@@ -33,18 +37,22 @@
 # define LITTLE_BUFFER	80
 # define BIG_BUFFER		4096
 
+# define BOMB_VIEW		0
+# define DEFUSER_VIEW	1
+# define SPLIT_VIEW		2
+
 # define PROMPT	"commande %>"
 
-	/*
-	 *	COLOR_BLACK   0
-     *  COLOR_RED     1
-     *  COLOR_GREEN   2
-     *  COLOR_YELLOW  3
-     *  COLOR_BLUE    4
-     *  COLOR_MAGENTA 5
-     *  COLOR_CYAN    6
-     *	COLOR_WHITE   7
-	 */
+/*
+ *	COLOR_BLACK   0
+ *  COLOR_RED     1
+ *  COLOR_GREEN   2
+ *  COLOR_YELLOW  3
+ *  COLOR_BLUE    4
+ *  COLOR_MAGENTA 5
+ *  COLOR_CYAN    6
+ *	COLOR_WHITE   7
+ */
 # ifndef COLOR_BG
 #  define COLOR_BG		0
 #  undef COLOR_BLACK
@@ -64,6 +72,10 @@
           fail_exit(#fn"("#__VA_ARGS__") failed"); \
   while (false)
 
+
+/* ************************************************************************** */
+/* structures declarations                                                    */
+/* ************************************************************************** */
 typedef struct s_portopts
 {
 	int				fd;
@@ -103,25 +115,25 @@ typedef struct s_data
 extern t_data	g_data_s;
 
 
-/* init.c */
+/* ************************************************************************** */
+/* prototypes                                                                 */
+/* ************************************************************************** */
+
+/* Srcs/builtins ************************************************************ */
+/* bit_stuffer.c */
+void			bit_stuffer(t_portopts *portopts_p, t_dispopts *dispopts_p);
+
+
+/* Srcs/init **************************************************************** */
+/* init_data.c */
 void			init_display(t_rlncurses *rlncurses_p, t_dispopts *disp_options);
 void			init_portopts(t_portopts *port_options);
 
 /* init_readline.c */
 void 			init_readline(void);
 
-/* bit_stuffer.c */
-void			bit_stuffer(t_portopts *portopts_p, t_dispopts *dispopts_p);
 
-/* strings_utils.c file */
-//int				chrstr(char c, char *str);
-//int				left_strcmp(char *str1, char *str2);
-char			*safer_strncpy(char *dest, char *src, size_t dest_len, size_t len);
-char			*ft_strtrim(char *str, char *set);
-char			*crop(char *str);
-char			*ft_strjoin(char *dest, char *src);
-void			free_str_tab(char **str_tab);
-
+/* Srcs/utils *************************************************************** */
 /* errors_utils.c */
 void			save_error(char *dest, size_t dest_buff, const char *prefix,
 	const char *prefix2);
@@ -133,22 +145,29 @@ void			put_centered(char *str, int line, int width);
 void			put_separation(int line, int width);
 void			put_loading(char *name, char *confirm, int line_pos, int progress, int length);
 
-/* loading_menus.c file */
+/* strings_utils.c */
+char			*safer_strncpy(char *dest, char *src, size_t dest_len, size_t len);
+char			*ft_strtrim(char *str, char *set);
+char			*crop(char *str);
+char			*ft_strjoin(char *dest, char *src);
+void			free_str_tab(char **str_tab);
+
+/* Srcs/layouts ************************************************************* */
+/* loading_layouts.c */
 int				play_startup(void);
 void			play_connect(t_portopts *portopts_p, t_dispopts *dispopts_p);
 
-/* select_menus.c file */
+/* select_layouts.c */
 int				menu_baudrate_select(void);
 char			*menu_port_select(void);
 
-/* defusing_menu.c file */
+/* main_layout.c */
 int				exec_command(t_portopts *portopts_p, t_dispopts *dispopts_p);
 void			update_command(t_portopts *portopts_p, t_dispopts *dispopts_s, t_rlncurses *rlncurses_p);
 void			menu_defusing(t_portopts *portopts_p, t_dispopts *dispopts_p);
 void			print_cmd_win(WINDOW *cmd_win, bool for_resize);
-//void			print_output(t_portopts *port_options, t_dispopts *dispopts_p);
-//void			print_prompt(t_portopts *portopts_p);
 
+/* Srcs/layouts ************************************************************* */
 /* check_cmds.c file */
 int				check_view_cmds(t_dispopts *dispopts_p);
 int				check_choice(t_portopts *portopts_p, t_dispopts *dispopts_p);

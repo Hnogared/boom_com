@@ -3,11 +3,11 @@
 int	check_view_cmds(t_dispopts *dispopts_p)
 {
 	if (!strcmp("set-view bomb", dispopts_p->cmd))
-		dispopts_p->view = 0;
+		dispopts_p->view = BOMB_VIEW;
 	else if (!strcmp("set-view defuser", dispopts_p->cmd))
-		dispopts_p->view = 1;
+		dispopts_p->view = DEFUSER_VIEW;
 	else if (!strcmp("set-view split", dispopts_p->cmd))
-		dispopts_p->view = 2;
+		dispopts_p->view = SPLIT_VIEW;
 	else
 		return (0);
 	return (1);

@@ -55,25 +55,25 @@ static void	print_tabs(t_portopts portopts_s, t_dispopts dispopts_s)
 
 static void	print_outputs(t_dispopts dispopts_s)
 {
-	if (dispopts_s.view == 1)
+	if (dispopts_s.view != DEFUSER_VIEW)
+	{
+		if (dispopts_s.bomb_output[0] == '!')
+			attron(COLOR_PAIR(1));
+		mvprintw(2, 0, "%s\n", crop(dispopts_s.bomb_output));
+		if (dispopts_s.bomb_output[0] == '!')
+			attroff(COLOR_PAIR(1));
+	}
+	if (dispopts_s.view == BOMB_VIEW)
 		return ;
-	if (dispopts_s.bomb_output[0] == '!')
-		attron(COLOR_PAIR(1));
-	mvprintw(2, 0, "%s\n", crop(dispopts_s.bomb_output));
-	if (dispopts_s.bomb_output[0] == '!')
-		attroff(COLOR_PAIR(1));
-	if (dispopts_s.view == 2)
+	if (dispopts_s.view == SPLIT_VIEW)
 	{
 		attron(A_BOLD);
 		attron(COLOR_PAIR(2));
-		printw("                      [2 DEFUSER GUI]");
-		printw("%*s", COLS - 37, "");
+		printw("                      [2 DEFUSER GUI]%*s", COLS - 37, "");
 		attroff(COLOR_PAIR(2));
 		attroff(A_BOLD);
 		printw("\n");
 	}
-	if (dispopts_s.view == 0)
-		return ;
 	if (dispopts_s.cmd_output[0] == '!')
 		attron(COLOR_PAIR(1));
 	printw("%s\n", dispopts_s.cmd_output);
