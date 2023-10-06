@@ -29,7 +29,7 @@ static void line_handler(char *line)
 	free(line);
 	if (!temp)
 	{
-		save_error(g_data_s.dispopts_s.bomb_output, BIG_BUFFER, BIN_NAME,
+		save_error(g_data_s.dispopts_s.bomb_output, BOMBOUT_BUFFER, BIN_NAME,
 			__func__);
 		return ;
 	}

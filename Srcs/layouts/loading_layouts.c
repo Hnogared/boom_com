@@ -77,20 +77,16 @@ int	play_startup(void)
 
 int	open_port(t_portopts *portopts_p, t_dispopts *dispopts_p)
 {
-	char	*error_type;
-
 	portopts_p->fd = open(portopts_p->port, O_RDWR | O_NOCTTY);
 	if (portopts_p->fd < 0 || !portopts_p->toptions)
 	{
 		curs_set(1);
-		error_type = "!> CONNECTION ERROR >> ";
-		strncpy(dispopts_p->cmd_output, error_type, BIG_BUFFER);
-		strncpy(dispopts_p->cmd_output + strlen(error_type), strerror(errno), BIG_BUFFER);
-		dispopts_p->cmd_output[BIG_BUFFER - 1] = 0;
+		save_error(dispopts_p->bomb_output, BOMBOUT_BUFFER, BIN_NAME, __func__);
 		portopts_p->port[0] = 0;
 	}
 	else
-		*portopts_p->toptions = set_termios_opt(portopts_p->fd, cfgetispeed(portopts_p->toptions));
+		*portopts_p->toptions = set_termios_opt(portopts_p->fd,
+			cfgetispeed(portopts_p->toptions));
 	return (portopts_p->fd);
 }
 

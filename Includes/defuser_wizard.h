@@ -36,6 +36,7 @@
 # define FILES_TAB_SIZE	9
 # define LITTLE_BUFFER	80
 # define BIG_BUFFER		4096
+# define BOMBOUT_BUFFER	4096
 
 # define BOMB_VIEW		0
 # define DEFUSER_VIEW	1

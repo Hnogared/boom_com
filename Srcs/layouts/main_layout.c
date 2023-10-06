@@ -5,12 +5,12 @@ void	read_bomb_out(t_portopts *portopts_p, t_dispopts *dispopts_p)
 	int		size;
 	char	temp[BIG_BUFFER];
 
-	if (portopts_p->fd < -1)
+	if (portopts_p->fd == -1)
 		return ;
 	size = read(portopts_p->fd, temp, BIG_BUFFER - 1);
 	if (size < 0)
 	{
-		save_error(dispopts_p->bomb_output, BIG_BUFFER, BIN_NAME, "read error");
+		save_error(dispopts_p->bomb_output, BOMBOUT_BUFFER, BIN_NAME, "read error");
 		return ;
 	}
 	temp[size] = 0;
@@ -38,17 +38,25 @@ static void	print_tabs(t_portopts portopts_s, t_dispopts dispopts_s)
 	attron(A_BOLD);
 	attron(COLOR_PAIR(2));
 	mvprintw(0, 0, "%*s", COLS, "");
-	if (dispopts_s.view == 0)
-		mvprintw(0, 0, "[1 BOMB INTERPRETOR][2 ...]");
-	if (dispopts_s.view == 1)
-		mvprintw(0, 0, "[1 ...][2 DEFUSER GUI]");
-	if (dispopts_s.view == 2)
-		mvprintw(0, 0, "[1 BOMB INTERPRETOR]");
 	if (portopts_s.port[0])
-		mvprintw(0, COLS - 35, "(PORT %-19.19s @ %06d)\n", portopts_s.port,
+		mvprintw(0, COLS - 35, "(PORT %-19.19s @ %06d)", portopts_s.port,
 			get_baudrate(portopts_s.baudrate));
 	else
 		mvprintw(0, COLS - 9, "(No port)\n");
+	if (dispopts_s.view == BOMB_VIEW)
+		attron(COLOR_PAIR(4));
+	mvprintw(0, 1, " BOMB INTERPRETOR ");
+	if (dispopts_s.view == BOMB_VIEW)
+		attron(COLOR_PAIR(2));
+	if (dispopts_s.view != SPLIT_VIEW)
+	{
+		if (dispopts_s.view == DEFUSER_VIEW)
+			attron(COLOR_PAIR(4));
+		printw(" DEFUSER GUIDE ");
+		if (dispopts_s.view == DEFUSER_VIEW)
+			attron(COLOR_PAIR(2));
+	}
+	move(1, 0);
 	attroff(COLOR_PAIR(2));
 	attroff(A_BOLD);
 }
@@ -69,7 +77,7 @@ static void	print_outputs(t_dispopts dispopts_s)
 	{
 		attron(A_BOLD);
 		attron(COLOR_PAIR(2));
-		printw("                      [2 DEFUSER GUI]%*s", COLS - 37, "");
+		printw("                    DEFUSER GUIDE%*s", COLS - 33, "");
 		attroff(COLOR_PAIR(2));
 		attroff(A_BOLD);
 		printw("\n");
