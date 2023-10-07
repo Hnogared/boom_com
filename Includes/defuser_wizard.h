@@ -79,7 +79,6 @@ typedef struct s_data
 
 extern t_data	g_data_s;
 
-
 /* ************************************************************************** */
 /* prototypes                                                                 */
 /* ************************************************************************** */
@@ -90,16 +89,14 @@ void			read_bomb_out(t_data *data_p);
 
 /* bomb_out_history.c */
 t_history		*new_history_node(char *cmd, char *bomb_out, void *previous,
-	void *next);
+					void *next);
 t_history		*history_add_front(t_history **history_p, t_history *new_node);
 void			free_history_node(t_history *node_p);
 void			free_history(t_history *history_p);
 
-
 /* Srcs/builtins ************************************************************ */
 /* bit_stuffer.c */
 void			bit_stuffer(t_data *data_p);
-
 
 /* Srcs/cmd_win ************************************************************* */
 /* check_cmds.c */
@@ -109,35 +106,34 @@ int				check_help_cmds(t_data *data_p);
 int				check_conn_cmds(t_portopts *portopts_p, t_dispopts *dispopts_p);
 
 /* cmd_win_display.c */
-void 			resize(t_data *data_p);
+void			resize(t_data *data_p);
 void			print_cmd_win(WINDOW *cmd_win, bool for_resize);
-
 
 /* Srcs/init **************************************************************** */
 /* init_data.c */
-void			init_display(t_rlncurses *rlncurses_p, t_dispopts *disp_options);
+void			init_display(t_rlncurses *rlncurses_p, t_dispopts *dispopts_p);
 void			init_portopts(t_portopts *port_options);
 
 /* init_readline.c */
-void 			init_readline(void);
+void			init_readline(void);
 
 /* command_handling.c */
 int				get_keypress(void);
 int				exec_command(t_data *data_p);
 void			update_command(t_data *data_p);
 
-
 /* Srcs/utils *************************************************************** */
 /* display_utils.c file */
 void			main_menu_loading(char *message);
 void			put_centered(char *str, int line, int width);
 void			put_separation(int line, int width);
-void			put_loading(char *name, char *confirm, int line_pos, int progress, int length);
+void			put_loading(char *name, char *confirm, int line_pos, int prog,
+					int length);
 
 /* errors_utils.c */
 noreturn void	fail_exit(const char *msg);
 void			save_error(char *dest, size_t dest_buff, const char *prefix,
-	const char *prefix2);
+					const char *prefix2);
 
 /* setup_functions.c */
 int				open_usb_port(t_portopts *portopts_p);
@@ -147,7 +143,7 @@ struct termios	set_termios_opt(int fd, int baudrate);
 void			exit_helper(t_data data_s);
 
 /* strings_utils.c */
-char			*safer_strncpy(char *dest, char *src, size_t dest_len, size_t len);
+char			*safer_strncpy(char *dst, char *src, size_t dstlen, size_t len);
 char			*ft_strtrim(char *str, char *set);
 char			*crop(char *str);
 char			*ft_strjoin(char *dest, char *src);
@@ -156,7 +152,6 @@ void			free_str_tab(char **str_tab);
 /* strings_utils_2.c */
 size_t			strnwidth(const char *s, size_t n, size_t offset);
 size_t			strwidth(const char *s, size_t offset);
-
 
 /* Srcs/layouts ************************************************************* */
 /* layout_transitions.c */

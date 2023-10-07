@@ -11,7 +11,7 @@ noreturn void	fail_exit(const char *msg)
 }
 
 void	save_error(char *dest, size_t dest_buff, const char *prefix,
-	const char *prefix2)
+			const char *prefix2)
 {
 	size_t	prefix_len;
 	size_t	prefix2_len;

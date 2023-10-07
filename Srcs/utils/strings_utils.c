@@ -1,12 +1,12 @@
 #include "../Includes/defuser_wizard.h"
 
-char	*safer_strncpy(char *dest, char *src, size_t dest_len, size_t len)
+char	*safer_strncpy(char *dst, char *src, size_t dstlen, size_t len)
 {
-	if (!dest || !src || !dest_len || !len)
+	if (!dst || !src || !dstlen || !len)
 		return (dest);
-	len = (len < dest_len) * len + (dest_len < len) * (dest_len - 1);
-	dest[len] = 0;
-	return (strncpy(dest, src, len));
+	len = (len < dstlen) * len + (dstlen < len) * (dstlen - 1);
+	dst[len] = 0;
+	return (strncpy(dst, src, len));
 }
 
 char	*ft_strtrim(char *str, char *set)
