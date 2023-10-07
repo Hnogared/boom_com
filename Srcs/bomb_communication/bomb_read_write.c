@@ -1,15 +1,15 @@
 #include "../../Includes/defuser_wizard.h"
 
-static void	interpret_bomb_out(char *bomb_out, t_data *data_p)
+static void	interpret_bomb_out(char *bomb_out, int size, t_data *data_p)
 {
-	memmove(data_p->dispopts_s.bomb_output, temp, size + 1);
-	if (data_p->dispopts_s.layout == 3 && strstr(temp, "RECONFIGURATION"))
+	memmove(data_p->dispopts_s.bomb_output, bomb_out, size + 1);
+	if (data_p->dispopts_s.layout == 3 && strstr(bomb_out, "RECONFIGURATION"))
 		goto_layout_firewalloff(data_p);
-	if (data_p->dispopts_s.layout == 4 && strstr(temp, "firewall corrupted"))
+	if (data_p->dispopts_s.layout == 4 && strstr(bomb_out, "firewall corrupted"))
 		goto_layout_labyrinth(data_p);
 //	if (dispopts_p->layout == 5 && strstr(dispopts_p->bomb_output, "end_lab"))
 //		goto_layout_bytes(&conn_options, disp_options);
-	if (data_p->dispopts_s.prompt_char == '$' && strstr(temp, "SUPERUSER"))
+	if (data_p->dispopts_s.prompt_char == '$' && strstr(bomb_out, "SUPERUSER"))
 		data_p->dispopts_s.prompt_char = '#';
 	if (data_p->dispopts_s.view != DEFUSER_VIEW && data_p->portopts_s.fd != -1)
 	{
@@ -52,5 +52,6 @@ void	read_bomb_out(t_data *data_p)
 			__func__);
 		return ;
 	}
-	interpret_bomb_out(temp, data_p);
+	interpret_bomb_out(trimmed, size, data_p);
+	free(trimmed);
 }

@@ -48,6 +48,7 @@ void	update_command(t_data *data_p)
 	switch (c)
 	{
 	case ERR:
+		read_bomb_out(data_p);
 		break ;
 	case KEY_RESIZE:
 		resize(data_p);

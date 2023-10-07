@@ -72,7 +72,6 @@ static void	print_conn_error(t_portopts portopts_s)
 void	main_layout(t_data *data_p)
 {
 	CHECK(werase, data_p->dispopts_s.win);
-	read_bomb_out(data_p);
 	print_tabs(data_p->portopts_s, data_p->dispopts_s);
 	print_outputs(data_p->portopts_s, data_p->dispopts_s);
 	print_conn_error(data_p->portopts_s);
