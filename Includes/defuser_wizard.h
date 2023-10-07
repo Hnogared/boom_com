@@ -63,7 +63,6 @@ typedef struct s_dispopts
 typedef struct s_rlncurses
 {
 	bool			visual_mode;
-	bool			should_exit;
 	bool			input_avail;
 	unsigned char	input;
 }				t_rlncurses;

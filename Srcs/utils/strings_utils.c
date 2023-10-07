@@ -3,7 +3,7 @@
 char	*safer_strncpy(char *dst, char *src, size_t dstlen, size_t len)
 {
 	if (!dst || !src || !dstlen || !len)
-		return (dest);
+		return (dst);
 	len = (len < dstlen) * len + (dstlen < len) * (dstlen - 1);
 	dst[len] = 0;
 	return (strncpy(dst, src, len));

@@ -1,22 +1,8 @@
 #include "../../Includes/defuser_wizard.h"
 
-void	read_bomb_out(t_data *data_p)
+static void	interpret_bomb_out(char *bomb_out, t_data *data_p)
 {
-	int		size;
-	char	temp[BIG_BUFFER];
-
-	if (data_p->portopts_s.fd == -1)
-		return ;
-	size = read(data_p->portopts_s.fd, temp, BIG_BUFFER - 1);
-	if (size < 0)
-	{
-		save_error(data_p->dispopts_s.bomb_output, BOMBOUT_BUFFER, BIN_NAME,
-			"read error");
-		return ;
-	}
-	temp[size] = 0;
-	if (strchr(temp, '$'))
-		memmove(data_p->dispopts_s.bomb_output, temp, size + 1);
+	memmove(data_p->dispopts_s.bomb_output, temp, size + 1);
 	if (data_p->dispopts_s.layout == 3 && strstr(temp, "RECONFIGURATION"))
 		goto_layout_firewalloff(data_p);
 	if (data_p->dispopts_s.layout == 4 && strstr(temp, "firewall corrupted"))
@@ -32,4 +18,39 @@ void	read_bomb_out(t_data *data_p)
 			printw("%s", data_p->dispopts_s.cmd + 1);
 		printw("\n");
 	}
+}
+
+void	read_bomb_out(t_data *data_p)
+{
+	int		size;
+	char	*trimmed;
+	char	temp[BIG_BUFFER];
+
+	if (data_p->portopts_s.fd == -1)
+	{
+		if (!data_p->dispopts_s.bomb_output[0]
+			|| data_p->dispopts_s.bomb_output[1] != '!')
+			strncpy(data_p->dispopts_s.bomb_output, " ! [ No device ] ",
+				BOMBOUT_BUFFER);
+		return ;
+	}
+	size = read(data_p->portopts_s.fd, temp, BIG_BUFFER - 1);
+	if (size < 0)
+	{
+		save_error(data_p->dispopts_s.bomb_output, BOMBOUT_BUFFER, BIN_NAME,
+			"read error");
+		goto_layout_1(data_p);
+		return ;
+	}
+	if (!size)
+		return ;
+	temp[size] = 0;
+	trimmed = ft_strtrim(temp, "$ \t\n\v\f\r");
+	if (!trimmed)
+	{
+		save_error(data_p->dispopts_s.bomb_output, BOMBOUT_BUFFER, BIN_NAME,
+			__func__);
+		return ;
+	}
+	interpret_bomb_out(temp, data_p);
 }

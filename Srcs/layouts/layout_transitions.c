@@ -30,9 +30,8 @@ void	goto_layout_2(t_data *data_p, bool loading)
 	data_p->dispopts_s.view = 2;
 	if (open_usb_port(&data_p->portopts_s))
 	{
-		save_error(data_p->dispopts_s.bomb_output, BIG_BUFFER, BIN_NAME,
+		save_error(data_p->dispopts_s.bomb_output, BIG_BUFFER, " ! " BIN_NAME,
 			"port error");
-	//	main_layout(portopts_p, dispopts_p);
 		return ;
 	}
 	safer_strncpy(data_p->dispopts_s.bomb_output, "Acces autorise, "

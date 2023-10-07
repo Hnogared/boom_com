@@ -41,9 +41,14 @@ void	update_command(t_data *data_p)
 	int	c;
 
 	cbreak();
+//	timeout(200);
+	halfdelay(10);
 	c = wgetch(data_p->dispopts_s.cmd_win);
+//	fprintf(stderr, "%c\n", c);
 	switch (c)
 	{
+	case ERR:
+		break ;
 	case KEY_RESIZE:
 		resize(data_p);
 		break ;

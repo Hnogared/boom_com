@@ -30,11 +30,15 @@ static void	print_outputs(t_portopts portopts_s, t_dispopts dispopts_s)
 {
 	if (dispopts_s.view != DEFUSER_VIEW)
 	{
-		if (portopts_s.fd == -1 && dispopts_s.bomb_output[0])
+		if (dispopts_s.bomb_output[0]
+			&& (portopts_s.fd == -1 || dispopts_s.bomb_output[1] == '!'))
+		{
 			attron(COLOR_PAIR(1));
-		mvprintw(2, 0, "%s\n\n", dispopts_s.bomb_output);
-		if (portopts_s.fd == 1 && dispopts_s.bomb_output[0])
+			mvprintw(2, 0, "%s\n\n", dispopts_s.bomb_output);
 			attroff(COLOR_PAIR(1));
+		}
+		else
+			mvprintw(2, 0, "%s\n\n", dispopts_s.bomb_output);
 	}
 	if (dispopts_s.view == BOMB_VIEW)
 		return ;
