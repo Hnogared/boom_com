@@ -37,7 +37,6 @@
 # define LITTLE_BUFFER	80
 # define BIG_BUFFER		4096
 # define BOMBOUT_BUFFER	4096
-# define CMDOUT_BUFFER	4096
 
 # define BOMB_VIEW		0
 # define DEFUSER_VIEW	1
@@ -104,7 +103,7 @@ typedef struct s_dispopts
 	int		cmd_len;
 	char	prompt_char;
 	char	*cmd;
-	char	cmd_output[CMDOUT_BUFFER];
+	char	*cmd_output;
 	char	bomb_output[BOMBOUT_BUFFER];
 	WINDOW	*win;
 	WINDOW	*cmd_win;
@@ -136,7 +135,7 @@ extern t_data	g_data_s;
 
 /* Srcs/bomb_communication ************************************************** */
 /* bomb_read_write.c */
-void			read_bomb_out(t_portopts *portopts_p, t_dispopts *dispopts_p);
+void			read_bomb_out(t_data *data_p);
 
 /* bomb_out_history.c */
 t_history		*new_history_node(char *cmd, char *bomb_out, void *previous,
@@ -148,18 +147,18 @@ void			free_history(t_history *history_p);
 
 /* Srcs/builtins ************************************************************ */
 /* bit_stuffer.c */
-void			bit_stuffer(t_portopts *portopts_p, t_dispopts *dispopts_p);
+void			bit_stuffer(t_data *data_p);
 
 
 /* Srcs/cmd_win ************************************************************* */
 /* check_cmds.c */
 int				check_view_cmds(t_dispopts *dispopts_p);
-int				check_choice(t_portopts *portopts_p, t_dispopts *dispopts_p);
-int				check_help_cmds(t_portopts *portopts_p, t_dispopts *dispopts_p);
+int				check_choice(t_data *data_p);
+int				check_help_cmds(t_data *data_p);
 int				check_conn_cmds(t_portopts *portopts_p, t_dispopts *dispopts_p);
 
 /* cmd_win_display.c */
-void 			resize(t_portopts *portopts_p, t_dispopts *dispopts_p);
+void 			resize(t_data *data_p);
 void			print_cmd_win(WINDOW *cmd_win, bool for_resize);
 
 
@@ -174,7 +173,7 @@ void 			init_readline(void);
 /* command_handling.c */
 int				get_keypress(void);
 int				exec_command(t_data *data_p);
-void			update_command(t_portopts *portopts_p, t_dispopts *dispopts_s, t_rlncurses *rlncurses_p);
+void			update_command(t_data *data_p);
 
 
 /* Srcs/utils *************************************************************** */

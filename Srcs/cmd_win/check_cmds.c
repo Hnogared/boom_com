@@ -13,35 +13,38 @@ int	check_view_cmds(t_dispopts *dispopts_p)
 	return (1);
 }
 
-int	check_choice(t_portopts *portopts_p, t_dispopts *dispopts_p)
+int	check_choice(t_data *data_p)
 {
+	t_dispopts	*dispopts_p;
+
+	dispopts_p = &data_p->dispopts_s;
 	if ((dispopts_p->cmd)[0] == '2' && (dispopts_p->cmd)[1] == 0)
 	{
 		if (dispopts_p->layout == -2 || dispopts_p->layout == 1)
-			goto_layout_2(portopts_p, dispopts_p, dispopts_p->layout == 1);
+			goto_layout_2(data_p, dispopts_p->layout == 1);
 		else if (dispopts_p->layout == -3)
-			goto_layout_3(portopts_p, dispopts_p, false);
+			goto_layout_3(data_p, false);
 		else if (dispopts_p->layout == -4)
-			goto_layout_firewalloff(portopts_p, dispopts_p);
+			goto_layout_firewalloff(data_p);
 		else if (dispopts_p->layout == -5)
-			goto_layout_labyrinth(portopts_p, dispopts_p);
+			goto_layout_labyrinth(data_p);
 		else if (dispopts_p->layout == -6)
-			goto_layout_bytes(portopts_p, dispopts_p);
+			goto_layout_bytes(data_p);
 		else if (dispopts_p->layout == -7)
-			goto_layout_password(portopts_p, dispopts_p, false);
+			goto_layout_password(data_p, false);
 		else
-			goto_layout_1(portopts_p, dispopts_p);
+			goto_layout_1(data_p);
 	//	(dispopts_p->cmd)[0] = 0;
 		return (1);
 	}
 	if ((dispopts_p->cmd)[0] == '3' && (dispopts_p->cmd)[1] == 0)
 	{
 		if (dispopts_p->layout == 2)
-			goto_layout_3(portopts_p, dispopts_p, true);
+			goto_layout_3(data_p, true);
 		if (dispopts_p->layout == 5)
-			bit_stuffer(portopts_p, dispopts_p);
+			bit_stuffer(data_p);
 		if (dispopts_p->layout == 6)
-			goto_layout_password(portopts_p, dispopts_p, true);
+			goto_layout_password(data_p, true);
 	//	(dispopts_p->cmd)[0] = 0;
 		return (1);
 	}
@@ -87,35 +90,39 @@ int	check_conn_cmds(t_portopts *portopts_p, t_dispopts *dispopts_p)
 	return (0);
 }
 
-int	check_help_cmds(t_portopts *portopts_p, t_dispopts *dispopts_p)
+int	check_help_cmds(t_data *data_p)
 {
-	if (!strcmp("help", dispopts_p->cmd) && dispopts_p->view)
-		goto_layout_help(portopts_p, dispopts_p);
-	else if (!strcmp("help cmd", dispopts_p->cmd) && dispopts_p->view)
+	if (!strcmp("help", data_p->dispopts_s.cmd) && data_p->dispopts_s.view)
+		goto_layout_help(data_p);
+	else if (!strcmp("help cmd", data_p->dispopts_s.cmd)
+		&& data_p->dispopts_s.view)
 	{
-		strncpy(dispopts_p->cmd_output, "$> The *CONFEDERATION BOMB DEFUSER v4.6* is an interface for using disarming tools on terrorist devices.\n\n"
+		data_p->dispopts_s.cmd_output
+			= "$> The *CONFEDERATION BOMB DEFUSER v4.6* is an interface for using disarming tools on terrorist devices.\n\n"
 			"   There are two types of commands that can be sent through the program :\n"
 			"    * Direct commands that will be interpreted by the defuser itself.\n"
 			"    * Commands starting with '@' that will be sent to the bomb to interact with it.\n\n"
 			"   Please be aware that the Confederation cannot be taken as responsible for the outcome of\nany command sent to a bomb.\n\n"
-			"   You can type 'help' or read the manual (cmd 'man') for more information.\n", BIG_BUFFER);
-		dispopts_p->cmd_output[BIG_BUFFER - 1] = 0;
+			"   You can type 'help' or read the manual (cmd 'man') for more information.\n";
 	}
-	else if (!strcmp("help nav", dispopts_p->cmd) && dispopts_p->view)
+	else if (!strcmp("help nav", data_p->dispopts_s.cmd)
+		&& data_p->dispopts_s.view)
 	{
-		strncpy(dispopts_p->cmd_output, "$> It is possible to navigate and rearrange the workspace as needed.\n"
+		data_p->dispopts_s.cmd_output
+			= "$> It is possible to navigate and rearrange the workspace as needed.\n"
 			"   This can be achieved by using the following commands.\n\n"
 			"   NOTE : You can quickly cycle between workspace arrangements by pressing 'TAB'.\n\n"
 			"   List of commands to navigate through the GUI of the defuser :\n\n"
 			"   # exit              Close *CONFEDERATION BOMB DEFUSER v4.6*.\n"
 			"   # set-view bomb     Switch to bomb view only.\n"
 			"   # set-view defuser  Switch to defuser view only.\n"
-			"   # set-view split    Split the screen horizontally between the bomb and defuser views.\n", BIG_BUFFER);
-		dispopts_p->cmd_output[BIG_BUFFER - 1] = 0;
+			"   # set-view split    Split the screen horizontally between the bomb and defuser views.\n";
 	}
-	else if (!strcmp("help connect", dispopts_p->cmd) && dispopts_p->view)
+	else if (!strcmp("help connect", data_p->dispopts_s.cmd)
+		&& data_p->dispopts_s.view)
 	{
-		strncpy(dispopts_p->cmd_output, "$> Quick guide on how to setup a connection between your defuser and a bomb.\n\n"
+		data_p->dispopts_s.cmd_output
+			= "$> Quick guide on how to setup a connection between your defuser and a bomb.\n\n"
 			"   1. Connect one of the defuser's USB ports to the device to disarm.\n"
 			"   2. Run 'set-port' and select an output USB port.\n"
 			"   3. Following the port, use 'set-baudrate' to select a baud rate.\n"
@@ -128,19 +135,19 @@ int	check_help_cmds(t_portopts *portopts_p, t_dispopts *dispopts_p)
 			"   If this seems to be the case for you, try out different rates through the same port.\n\n"
 			"   More information on connecting to a bomb in the manual (cmd 'man').\n"
 			"   # set-port      Change the defuser output USB port.\n"
-			"   # set-baudrate  Change the port data transfer rate.\n", BIG_BUFFER);
-		dispopts_p->cmd_output[BIG_BUFFER - 1] = 0;
+			"   # set-baudrate  Change the port data transfer rate.\n";
 	}
-	else if (!strcmp("help hacks", dispopts_p->cmd) && dispopts_p->view)
+	else if (!strcmp("help hacks", data_p->dispopts_s.cmd)
+		&& data_p->dispopts_s.view)
 	{
-		strncpy(dispopts_p->cmd_output, "$> Quick guide on hacking attacks on electronics/informatics usign the defuser.\n\n"
+		data_p->dispopts_s.cmd_output
+			= "$> Quick guide on hacking attacks on electronics/informatics usign the defuser.\n\n"
 			"   1. Look for vulnerabilities : outdated software, open ports.\n"
 			"   2. Select one of the tools we provide to exploit a potential vulnerability.\n\n"
 			"   Available hacking programs:\n"
 			"   # firewall-ext [ID]  Program to overload a component's firewall.\n"
 			"   # bytestuffer [ID]   Make a given component's memory overflow.\n"
-			"   More information on hacking into electronic/informatic systems in the manual (cmd 'man').\n", BIG_BUFFER);
-		dispopts_p->cmd_output[BIG_BUFFER - 1] = 0;
+			"   More information on hacking into electronic/informatic systems in the manual (cmd 'man').\n";
 	}
 	else
 		return (0);

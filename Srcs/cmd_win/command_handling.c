@@ -23,8 +23,8 @@ int	exec_command(t_data *data_p)
 		return (0);
 	}
 	check_view_cmds(&data_p->dispopts_s);
-	check_help_cmds(&data_p->portopts_s, &data_p->dispopts_s);
-	check_choice(&data_p->portopts_s, &data_p->dispopts_s);
+	check_help_cmds(data_p);
+	check_choice(data_p);
 	check_conn_cmds(&data_p->portopts_s, &data_p->dispopts_s);
 	return (0);
 }
@@ -36,27 +36,26 @@ static void	forward_to_readline(char c, t_rlncurses *rlncurses_p)
 	rl_callback_read_char();
 }
 
-void	update_command(t_portopts *portopts_p, t_dispopts *dispopts_p,
-	t_rlncurses *rlncurses_p)
+void	update_command(t_data *data_p)
 {
 	int	c;
 
 	cbreak();
-	c = wgetch(dispopts_p->cmd_win);
+	c = wgetch(data_p->dispopts_s.cmd_win);
 	switch (c)
 	{
 	case KEY_RESIZE:
-		resize(portopts_p, dispopts_p);
+		resize(data_p);
 		break ;
 	case '\f':
 		CHECK(clearok, curscr, TRUE);
-		resize(portopts_p, dispopts_p);
+		resize(data_p);
 		break ;
 	case '\t':
-		dispopts_p->view = (dispopts_p->view + 1) % 3;
-		main_layout(portopts_p, dispopts_p);
+		data_p->dispopts_s.view = (data_p->dispopts_s.view + 1) % 3;
+		main_layout(data_p);
 		break ;
 	default:
-		forward_to_readline(c, rlncurses_p);
+		forward_to_readline(c, &data_p->rlncurses_s);
 	}
 }

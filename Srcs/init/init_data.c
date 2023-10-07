@@ -66,7 +66,7 @@ void	init_display(t_rlncurses *rlncurses_p, t_dispopts *dispopts_p)
 	dispopts_p->view = 1;
 	dispopts_p->prompt_char = '$';
 	dispopts_p->cmd = NULL;
-	dispopts_p->cmd_output[0] = 0;
+	dispopts_p->cmd_output = "";
 	dispopts_p->bomb_output[0] = 0;
 	init_ncurses(rlncurses_p, dispopts_p);
 	init_colors(dispopts_p);

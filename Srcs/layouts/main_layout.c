@@ -32,8 +32,7 @@ static void	print_outputs(t_portopts portopts_s, t_dispopts dispopts_s)
 	{
 		if (portopts_s.fd == -1 && dispopts_s.bomb_output[0])
 			attron(COLOR_PAIR(1));
-		mvprintw(2, 0, "%s\n\n",
-			ft_strtrim(dispopts_s.bomb_output, "$ \t\n\v\f\r"));
+		mvprintw(2, 0, "%s\n\n", dispopts_s.bomb_output);
 		if (portopts_s.fd == 1 && dispopts_s.bomb_output[0])
 			attroff(COLOR_PAIR(1));
 	}
@@ -69,7 +68,7 @@ static void	print_conn_error(t_portopts portopts_s)
 void	main_layout(t_data *data_p)
 {
 	CHECK(werase, data_p->dispopts_s.win);
-	read_bomb_out(&data_p->portopts_s, &data_p->dispopts_s);
+	read_bomb_out(data_p);
 	print_tabs(data_p->portopts_s, data_p->dispopts_s);
 	print_outputs(data_p->portopts_s, data_p->dispopts_s);
 	print_conn_error(data_p->portopts_s);

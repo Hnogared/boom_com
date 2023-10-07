@@ -1,16 +1,16 @@
 #include "../Includes/defuser_wizard.h"
 
-void resize(t_portopts *portopts_p, t_dispopts *dispopts_p)
+void resize(t_data *data_p)
 {
 	if (LINES >= 2)
 	{
-		CHECK(wresize, dispopts_p->cmd_win, 1, COLS);
-		CHECK(mvwin, dispopts_p->cmd_win, LINES - 1, 0);
+		CHECK(wresize, data_p->dispopts_s.cmd_win, 1, COLS);
+		CHECK(mvwin, data_p->dispopts_s.cmd_win, LINES - 1, 0);
 	}
 
 	// Batch refreshes and commit them with doupdate()
-	main_layout(portopts_p, dispopts_p);
-	print_cmd_win(dispopts_p->cmd_win, true);
+	main_layout(data_p);
+	print_cmd_win(data_p->dispopts_s.cmd_win, true);
 	CHECK(doupdate);
 }
 

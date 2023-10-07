@@ -3,14 +3,14 @@
 static void	display_instructions(void)
 {
 	mvprintw(2, 0, " Programme pour corrompre les donnees "
-		"d'une zone de memoire.\n");
-	printw(" Utilisez [Z | Q | S | D] pour vous deplacer "
-		"dans la memoire et la detruire.\n");
-	printw(" Appuyez sur [ESC] pour quitter le programme.\n");
+		"d'une zone de memoire.\n"
+		" Utilisez [Z | Q | S | D] pour vous deplacer "
+		"dans la memoire et la detruire.\n"
+		" Appuyez sur [ESC] pour quitter le programme.\n");
 	attron(COLOR_PAIR(1));
 	printw(" Restez sur le bon segment a l'aide des "
-		"potentiometres de memoire de la bombe.\n");
-	printw(" (un potentiometre est une molette que l'on peut tourner).\n");
+		"potentiometres de memoire de la bombe.\n"
+		" (un potentiometre est une molette que l'on peut tourner).\n");
 	attroff(COLOR_PAIR(1));
 	attron(A_BOLD);
 }
@@ -50,26 +50,23 @@ static int	check_answer(t_portopts *portopts_p, t_dispopts *dispopts_p)
 	if (strstr(temp, "end_lab"))
 	{
 		strncpy(dispopts_p->bomb_output, "�#erbonjou��memerror detected",
-			BIG_BUFFER - 1);
-		dispopts_p->bomb_output[BIG_BUFFER - 2] = 0;
+			BOMBOUT_BUFFER - 1);
+		dispopts_p->bomb_output[BOMBOUT_BUFFER - 2] = 0;
 		return (1);
 	}
 	fprintf(stderr, "%s\n", temp);
 	return (0);
 }
 
-void	bit_stuffer(t_portopts *portopts_p, t_dispopts *dispopts_p)
+void	bit_stuffer(t_data *data_p)
 {
 	int		state;
 	char	c;
 
-	if (write(portopts_p->fd, "start_lab", 9) == -1)
+	if (write(data_p->portopts_s.fd, "start_lab", 9) == -1)
 	{
-		strncpy(dispopts_p->bomb_output, "!> WRITING ERROR >> ",
-			BIG_BUFFER - 2);
-		strncpy(dispopts_p->bomb_output + 20, strerror(errno),
-			BIG_BUFFER - 2);
-		dispopts_p->bomb_output[BIG_BUFFER - 1] = 0;
+		save_error(data_p->dispopts_s.bomb_output, BOMBOUT_BUFFER, BIN_NAME,
+			__func__);
 		return ;
 	}
 	clear();
@@ -80,26 +77,23 @@ void	bit_stuffer(t_portopts *portopts_p, t_dispopts *dispopts_p)
 		c = get_keypress();
 		if (c == '\e')
 			break ;
-		state = -1 * ((c == 'z' && write(portopts_p->fd, "moveZ", 5) == -1)
-				|| (c == 'q' && write(portopts_p->fd, "moveQ", 5) == -1)
-				|| (c == 's' && write(portopts_p->fd, "moveS", 5) == -1)
-				|| (c == 'd' && write(portopts_p->fd, "moveD", 5) == -1));
+		state = -1 * ((c == 'z' && write(data_p->portopts_s.fd, "moveZ", 5) == -1)
+				|| (c == 'q' && write(data_p->portopts_s.fd, "moveQ", 5) == -1)
+				|| (c == 's' && write(data_p->portopts_s.fd, "moveS", 5) == -1)
+				|| (c == 'd' && write(data_p->portopts_s.fd, "moveD", 5) == -1));
 		printw("%c", c * (c == 'z' || c == 'q' || c == 's' || c == 'd'));
 	}
 	if (state == 0)
-		state = check_answer(portopts_p, dispopts_p);
+		state = check_answer(&data_p->portopts_s, &data_p->dispopts_s);
 	if (state < 0)
 	{
-		strncpy(dispopts_p->bomb_output, "!> WRITING ERROR >> ",
-			BIG_BUFFER - 2);
-		strncpy(dispopts_p->bomb_output + 20, strerror(errno),
-			BIG_BUFFER - 2);
-		dispopts_p->bomb_output[BIG_BUFFER - 1] = 0;
-		goto_layout_labyrinth(portopts_p, dispopts_p);
+		save_error(data_p->dispopts_s.bomb_output, BOMBOUT_BUFFER, BIN_NAME,
+			__func__);
+		goto_layout_labyrinth(data_p);
 		return ;
 	}
 	if (state)
-		goto_layout_bytes(portopts_p, dispopts_p);
+		goto_layout_bytes(data_p);
 	else
-		goto_layout_labyrinth(portopts_p, dispopts_p);
+		goto_layout_labyrinth(data_p);
 }
