@@ -19,9 +19,10 @@ int	main(void)
 		exit_helper(g_data_s);
 	attroff(COLOR_PAIR(1));
 
-	goto_layout_1(&g_data_s);
+//	goto_layout_1(&g_data_s);
 //	open_usb_port(&conn_options);
-//	goto_layout_labyrinth(&conn_options, &disp_options);
+	main_layout(&g_data_s);
+	goto_layout_labyrinth(&g_data_s);
 	while (1)
 	{
 		update_command(&g_data_s);

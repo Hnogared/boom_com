@@ -42,6 +42,7 @@ static void line_handler(char *line)
 		exec_command(&g_data_s);
 	free(g_data_s.dispopts_s.cmd);
 	g_data_s.dispopts_s.cmd = NULL;
+	read_bomb_out(&g_data_s);
 	main_layout(&g_data_s);
 }
 

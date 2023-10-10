@@ -49,12 +49,10 @@ static int	check_answer(t_portopts *portopts_p, t_dispopts *dispopts_p)
 		return (-1);
 	if (strstr(temp, "end_lab"))
 	{
-		strncpy(dispopts_p->bomb_output, "�#erbonjou��memerror detected",
-			BOMBOUT_BUFFER - 1);
-		dispopts_p->bomb_output[BOMBOUT_BUFFER - 2] = 0;
+		safer_strncpy(dispopts_p->bomb_output, "�#erbonjou��memerror detected",
+			BOMBOUT_BUFFER, 30);
 		return (1);
 	}
-	fprintf(stderr, "%s\n", temp);
 	return (0);
 }
 
@@ -62,13 +60,14 @@ void	bit_stuffer(t_data *data_p)
 {
 	int		state;
 	char	c;
-
+/*
 	if (write(data_p->portopts_s.fd, "start_lab", 9) == -1)
 	{
-		save_error(data_p->dispopts_s.bomb_output, BOMBOUT_BUFFER, BIN_NAME,
+		save_error(data_p->dispopts_s.bomb_output, BOMBOUT_BUFFER, " ! " BIN_NAME,
 			__func__);
 		return ;
 	}
+	*/
 	clear();
 	display_ui();
 	state = 0;
@@ -87,7 +86,7 @@ void	bit_stuffer(t_data *data_p)
 		state = check_answer(&data_p->portopts_s, &data_p->dispopts_s);
 	if (state < 0)
 	{
-		save_error(data_p->dispopts_s.bomb_output, BOMBOUT_BUFFER, BIN_NAME,
+		save_error(data_p->dispopts_s.bomb_output, BOMBOUT_BUFFER, " ! " BIN_NAME,
 			__func__);
 		goto_layout_labyrinth(data_p);
 		return ;
