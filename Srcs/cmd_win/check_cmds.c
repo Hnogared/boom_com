@@ -34,7 +34,6 @@ int	check_choice(t_data *data_p)
 			goto_layout_password(data_p, false);
 		else
 			goto_layout_1(data_p);
-	//	(dispopts_p->cmd)[0] = 0;
 		return (1);
 	}
 	if ((dispopts_p->cmd)[0] == '3' && (dispopts_p->cmd)[1] == 0)
@@ -45,7 +44,6 @@ int	check_choice(t_data *data_p)
 			bit_stuffer(data_p);
 		if (dispopts_p->layout == 6)
 			goto_layout_password(data_p, true);
-	//	(dispopts_p->cmd)[0] = 0;
 		return (1);
 	}
 	return (0);
