@@ -39,35 +39,45 @@ static void	display_ui(void)
 	curs_set(1);
 }
 
-static int	check_answer(t_portopts *portopts_p, t_dispopts *dispopts_p)
+static void	check_bomb_out(t_data *data_p, char *func_name)
 {
 	int		size;
-	char	temp[BIG_BUFFER];
+	char	temp[BOMBOUT_BUFFER];
 
-	size = read(portopts_p->fd, temp, BIG_BUFFER - 1);
-	if (size < -1)
-		return (-1);
-	if (strstr(temp, "end_lab"))
+	if (!data_p || data_p->portopts_s.fd < 0)
+		return ;
+	size = read(data_p->portopts_s.fd, temp, BOMBOUT_BUFFER - 1);
+	if (size == -1)
 	{
-		safer_strncpy(dispopts_p->bomb_output, "�#erbonjou��memerror detected",
-			BOMBOUT_BUFFER, 30);
-		return (1);
+		save_error(data_p->dispopts_s.bomb_output, BOMBOUT_BUFFER,
+			" ! " BIN_NAME, func_name);
+		goto_layout_labyrinth(data_p);
+		return ;
 	}
-	return (0);
+	temp[size] = 0;
+	if (!strstr(temp, "end_lab"))
+	{
+		goto_layout_labyrinth(data_p);
+		return ;
+	}
+	safer_strncpy(data_p->dispopts_s.bomb_output, "�#erbonjou��memerror detected",
+		BOMBOUT_BUFFER, 30);
+	goto_layout_bytes(data_p);
 }
 
 void	bit_stuffer(t_data *data_p)
 {
 	int		state;
 	char	c;
-/*
+
+	if (!data_p)
+		return ;
 	if (write(data_p->portopts_s.fd, "start_lab", 9) == -1)
 	{
 		save_error(data_p->dispopts_s.bomb_output, BOMBOUT_BUFFER, " ! " BIN_NAME,
 			__func__);
 		return ;
 	}
-	*/
 	clear();
 	display_ui();
 	state = 0;
@@ -80,19 +90,14 @@ void	bit_stuffer(t_data *data_p)
 				|| (c == 'q' && write(data_p->portopts_s.fd, "moveQ", 5) == -1)
 				|| (c == 's' && write(data_p->portopts_s.fd, "moveS", 5) == -1)
 				|| (c == 'd' && write(data_p->portopts_s.fd, "moveD", 5) == -1));
+		if (state == -1)
+		{
+			save_error(data_p->dispopts_s.bomb_output, BOMBOUT_BUFFER,
+				" ! " BIN_NAME, __func__);
+			goto_layout_labyrinth(data_p);
+			return ;
+		}
 		printw("%c", c * (c == 'z' || c == 'q' || c == 's' || c == 'd'));
 	}
-	if (state == 0)
-		state = check_answer(&data_p->portopts_s, &data_p->dispopts_s);
-	if (state < 0)
-	{
-		save_error(data_p->dispopts_s.bomb_output, BOMBOUT_BUFFER, " ! " BIN_NAME,
-			__func__);
-		goto_layout_labyrinth(data_p);
-		return ;
-	}
-	if (state)
-		goto_layout_bytes(data_p);
-	else
-		goto_layout_labyrinth(data_p);
+	check_bomb_out(data_p, __func__);
 }
