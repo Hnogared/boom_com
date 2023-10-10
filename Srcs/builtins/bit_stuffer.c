@@ -99,5 +99,5 @@ void	bit_stuffer(t_data *data_p)
 		}
 		printw("%c", c * (c == 'z' || c == 'q' || c == 's' || c == 'd'));
 	}
-	check_bomb_out(data_p, __func__);
+	check_bomb_out(data_p, (char *) __func__);
 }

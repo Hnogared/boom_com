@@ -40,6 +40,8 @@ static void line_handler(char *line)
 	g_data_s.dispopts_s.cmd = line;
 	if (*line != '@')
 		exec_command(&g_data_s);
+	else
+		write_bomb_in(&g_data_s, line + 1);
 	free(g_data_s.dispopts_s.cmd);
 	g_data_s.dispopts_s.cmd = NULL;
 	read_bomb_out(&g_data_s);

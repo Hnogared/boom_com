@@ -85,6 +85,7 @@ extern t_data	g_data_s;
 /* Srcs/bomb_communication ************************************************** */
 /* bomb_read_write.c */
 void			read_bomb_out(t_data *data_p);
+void			write_bomb_in(t_data *data_p, char *message);
 
 /* bomb_out_history.c */
 t_history		*new_history_node(char *cmd, char *bomb_out, void *previous,

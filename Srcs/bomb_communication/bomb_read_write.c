@@ -42,7 +42,7 @@ void	read_bomb_out(t_data *data_p)
 {
 	int	size;
 
-	if (data_p->portopts_s.fd == -1)
+	if (!data_p || data_p->portopts_s.fd == -1)
 	{
 		if (!data_p->dispopts_s.bomb_output[0]
 			|| data_p->dispopts_s.bomb_output[1] != '!')
@@ -60,4 +60,17 @@ void	read_bomb_out(t_data *data_p)
 	if (!size)
 		return ;
 	interpret_bomb_out(data_p->dispopts_s.bomb_output, size, data_p);
+}
+
+void	write_bomb_in(t_data *data_p, char *message)
+{
+	
+	if (!data_p || data_p->portopts_s.fd == -1 || write(data_p->portopts_s.fd,
+		message, strlen(message)) == -1)
+	{
+		if (!data_p->dispopts_s.bomb_output[0]
+			|| data_p->dispopts_s.bomb_output[1] != '!')
+			safer_strncpy(data_p->dispopts_s.bomb_output, " ! [ No device ] ",
+				BOMBOUT_BUFFER, 18);
+	}
 }
