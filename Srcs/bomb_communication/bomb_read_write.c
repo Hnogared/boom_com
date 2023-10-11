@@ -64,7 +64,6 @@ void	read_bomb_out(t_data *data_p)
 
 void	write_bomb_in(t_data *data_p, char *message)
 {
-	
 	if (!data_p || data_p->portopts_s.fd == -1 || write(data_p->portopts_s.fd,
 		message, strlen(message)) == -1)
 	{

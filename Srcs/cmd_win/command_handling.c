@@ -24,6 +24,7 @@ int	exec_command(t_data *data_p)
 	}
 	check_view_cmds(&data_p->dispopts_s);
 	check_help_cmds(data_p);
+	check_util_cmds(data_p);
 	check_choice(data_p);
 	check_conn_cmds(&data_p->portopts_s, &data_p->dispopts_s);
 	return (0);

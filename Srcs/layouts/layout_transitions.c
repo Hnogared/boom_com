@@ -23,9 +23,9 @@ void	goto_layout_1(t_data *data_p)
 	main_layout(data_p);
 }
 
-void	goto_layout_2(t_data *data_p, bool loading)
+void	goto_layout_2(t_data *data_p)
 {
-	if (loading == true)
+	if (data_p->dispopts_s.layout == 1)
 		main_menu_loading("Intrusion en cours...");
 	data_p->dispopts_s.view = 2;
 	if (open_usb_port(&data_p->portopts_s))
@@ -41,9 +41,9 @@ void	goto_layout_2(t_data *data_p, bool loading)
 	main_layout(data_p);
 }
 
-void	goto_layout_3(t_data *data_p, bool loading)
+void	goto_layout_3(t_data *data_p)
 {
-	if (loading == true)
+	if (data_p->dispopts_s.layout == 2)
 		main_menu_loading("Scan des fichiers de la bombe...");
 	safer_strncpy(data_p->dispopts_s.bomb_output,
 		"installed modules\n\n"

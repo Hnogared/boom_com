@@ -103,6 +103,7 @@ void			bit_stuffer(t_data *data_p);
 /* check_cmds.c */
 int				check_view_cmds(t_dispopts *dispopts_p);
 int				check_choice(t_data *data_p);
+int				check_util_cmds(t_data *data_p);
 int				check_help_cmds(t_data *data_p);
 int				check_conn_cmds(t_portopts *portopts_p, t_dispopts *dispopts_p);
 
@@ -158,8 +159,8 @@ size_t			strwidth(const char *s, size_t offset);
 /* layout_transitions.c */
 void			goto_layout_help(t_data *data_p);
 void			goto_layout_1(t_data *data_p);
-void			goto_layout_2(t_data *data_p, bool loading);
-void			goto_layout_3(t_data *data_p, bool loading);
+void			goto_layout_2(t_data *data_p);
+void			goto_layout_3(t_data *data_p);
 void			goto_layout_firewalloff(t_data *data_p);
 void			goto_layout_labyrinth(t_data *data_p);
 void			goto_layout_bytes(t_data *data_p);

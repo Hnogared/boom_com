@@ -18,13 +18,12 @@ int	check_choice(t_data *data_p)
 	t_dispopts	*dispopts_p;
 
 	dispopts_p = &data_p->dispopts_s;
-	if (((dispopts_p->cmd)[0] == '2' && (dispopts_p->cmd)[1] == 0)
-		|| !strcmp("bit_stuffer", dispopts_p->cmd))
+	if ((dispopts_p->cmd)[0] == '2' && (dispopts_p->cmd)[1] == 0)
 	{
 		if (dispopts_p->layout == -2 || dispopts_p->layout == 1)
-			goto_layout_2(data_p, dispopts_p->layout == 1);
+			goto_layout_2(data_p);
 		else if (dispopts_p->layout == -3)
-			goto_layout_3(data_p, false);
+			goto_layout_3(data_p);
 		else if (dispopts_p->layout == -4)
 			goto_layout_firewalloff(data_p);
 		else if (dispopts_p->layout == -5)
@@ -40,11 +39,30 @@ int	check_choice(t_data *data_p)
 	if ((dispopts_p->cmd)[0] == '3' && (dispopts_p->cmd)[1] == 0)
 	{
 		if (dispopts_p->layout == 2)
-			goto_layout_3(data_p, true);
+			goto_layout_3(data_p);
 		if (dispopts_p->layout == 5)
 			bit_stuffer(data_p);
 		if (dispopts_p->layout == 6)
 			goto_layout_password(data_p, true);
+		return (1);
+	}
+	return (0);
+}
+
+int	check_util_cmds(t_data *data_p)
+{
+	if (!data_p)
+		return (0);
+	if (data_p->dispopts_s.layout == 5
+		&& !strcmp("bit_stuffer", data_p->dispopts_s.cmd))
+	{
+		bit_stuffer(data_p);
+		return (1);
+	}
+	if (data_p->dispopts_s.layout == 3
+		&& !strncmp("firewall-ext ", data_p->dispopts_s.cmd, 13))
+	{
+		write_bomb_in(data_p, data_p->dispopts_s.cmd);
 		return (1);
 	}
 	return (0);

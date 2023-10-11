@@ -29,6 +29,7 @@ int	main(void)
 //	open_usb_port(&conn_options);
 //	main_layout(&g_data_s);
 //	goto_layout_labyrinth(&g_data_s);
+//	goto_layout_3(&g_data_s);
 	while (1)
 	{
 		update_command(&g_data_s);
