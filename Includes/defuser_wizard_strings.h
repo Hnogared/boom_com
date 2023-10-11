@@ -24,10 +24,9 @@
 # define MSG_LAYOUT3	" > Scan effectue\n"\
 	" * Vulnerabilite detectee au niveau du firewall.\n"\
 	" * Une attaque afin de le desactiver peut etre lancee avec la "\
-	"commande : '@firewall-ext <MODULE_ID>'\n"\
-	" * /!\\ Lors de l'utilisation de commandes commencant par '@', "\
-	"elles seront directement envoyees a la bombe sans etre corrigees "\
-	"auparavant par le desamorceur.\n\n"\
+	"commande 'firewall-ext', suivie de l'ID module contenant la faille.\n"\
+	" * Par exemple, afin d'attaquer l'ID FOO42 lancez : "\
+	"'firewall-ext FOO42'\n"\
 	" # [1] Quitter le programme (ou tapez 'exit')\n"\
 	" # [2] Deconnection de la bombe\n"
 
@@ -72,3 +71,9 @@
 	" # [2] Deconnection de la bombe\n"
 
 #endif
+
+/*
+	" * /!\\ Lors de l'utilisation de commandes commencant par '@', "\
+	"elles seront directement envoyees a la bombe sans etre corrigees "\
+	"auparavant par le desamorceur.\n\n"\
+*/
