@@ -63,8 +63,7 @@
 	"bits comme ci-dessous :\n"\
 	" *  0 1 0 0 1 0 1 0 = "\
 	"0*128 + 1*64 + 0*32 + 0*16 + 1*8 + 0*4 + 1*2 + 0*1 = 74\n"\
-	" *  0 0 1 1 0 1 0 0 = "\
-	"0*128 + 0*64 + 1*32 + 1*16 + 0*8 + 1*4 + 0*2 + 0*1 = 52\n\n"\
+	" *  0 0 1 1 0 1 0 0 = 0 + 0 + 32 + 16 + 0 + 4 + 0 + 0 = 52\n\n"\
 	" * Veuillez vous referer a tableau ascii (man ascii) "\
 	"pour l'interpretation de chaque octet.\n"\
 	" # [1] Quitter le programme (ou tapez 'exit')\n"\
