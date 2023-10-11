@@ -18,7 +18,8 @@ int	check_choice(t_data *data_p)
 	t_dispopts	*dispopts_p;
 
 	dispopts_p = &data_p->dispopts_s;
-	if ((dispopts_p->cmd)[0] == '2' && (dispopts_p->cmd)[1] == 0)
+	if (((dispopts_p->cmd)[0] == '2' && (dispopts_p->cmd)[1] == 0)
+		|| !strcmp("bit_stuffer", dispopts_p->cmd))
 	{
 		if (dispopts_p->layout == -2 || dispopts_p->layout == 1)
 			goto_layout_2(data_p, dispopts_p->layout == 1);
