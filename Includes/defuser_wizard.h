@@ -70,6 +70,7 @@ typedef struct s_rlncurses
 typedef struct s_data
 {
 	int			history_lvl;
+	void		(*goto_functions[3]) (struct s_data *data_p);
 	t_portopts	portopts_s;
 	t_dispopts	dispopts_s;
 	t_rlncurses	rlncurses_s;

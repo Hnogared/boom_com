@@ -2,6 +2,7 @@
 
 t_data	g_data_s;
 
+
 int	main(void)
 {
 	// set locale attributes (including encoding) from the environment
@@ -19,10 +20,15 @@ int	main(void)
 		exit_helper(g_data_s);
 	attroff(COLOR_PAIR(1));
 
+	g_data_s.goto_functions[0] = goto_layout_help;
+	g_data_s.goto_functions[1] = goto_layout_1;
+	g_data_s.goto_functions[2] = 0;
+
+	g_data_s.goto_functions[1](&g_data_s);
 //	goto_layout_1(&g_data_s);
 //	open_usb_port(&conn_options);
-	main_layout(&g_data_s);
-	goto_layout_labyrinth(&g_data_s);
+//	main_layout(&g_data_s);
+//	goto_layout_labyrinth(&g_data_s);
 	while (1)
 	{
 		update_command(&g_data_s);
