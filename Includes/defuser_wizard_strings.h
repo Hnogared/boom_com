@@ -4,6 +4,12 @@
 /* ************************************************************************** */
 /* strings defines                                                            */
 /* ************************************************************************** */
+# define MSG_SUDO	" * Tentative de connection en administrateur.\n"\
+	" * Veuillez taper le mot de passe afin de l'envoyer a la bombe\n"\
+	" * /!\\ Veuillez etre sur d'avoir le bon mot de passe /!\\\n\n"\
+	" # [1] Quitter le programme (ou tapez 'exit')\n"\
+	" # [2] Retour\n"
+
 # define MSG_HELP	" * Bienvenue sur l'aide au desamorcage.\n *\n"\
 	" # [1] Quitter le programme (ou tapez 'exit')\n"\
 	" # [2] Retour\n"

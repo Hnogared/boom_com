@@ -157,6 +157,7 @@ size_t			strwidth(const char *s, size_t offset);
 
 /* Srcs/layouts ************************************************************* */
 /* layout_transitions.c */
+void			goto_layout_sudo(t_data *data_p);
 void			goto_layout_help(t_data *data_p);
 void			goto_layout_1(t_data *data_p);
 void			goto_layout_2(t_data *data_p);

@@ -7,6 +7,14 @@ void	goto_layout_help(t_data *data_p)
 	main_layout(data_p);
 }
 
+void	goto_layout_sudo(t_data *data_p)
+{
+	data_p->dispopts_s.cmd_output = MSG_SUDO;
+	data_p->dispopts_s.layout *= -1;
+	main_layout(data_p);
+}
+
+
 void	goto_layout_1(t_data *data_p)
 {
 	if (data_p->portopts_s.fd > -1)

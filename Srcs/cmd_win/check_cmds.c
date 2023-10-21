@@ -33,7 +33,7 @@ int	check_choice(t_data *data_p)
 		else if (dispopts_p->layout == -7)
 			goto_layout_password(data_p, false);
 		else
-			goto_layout_1(data_p);
+			goto_layout_sudo(data_p);
 		return (1);
 	}
 	if ((dispopts_p->cmd)[0] == '3' && (dispopts_p->cmd)[1] == 0)
@@ -82,7 +82,7 @@ int	check_conn_cmds(t_portopts *portopts_p, t_dispopts *dispopts_p)
 			memmove(portopts_p->port + 5, temp, strlen(temp));
 			portopts_p->port[5 + strlen(temp)] = 0;
 		}
-		if (portopts_p->port && portopts_p->fd > -1 && cfgetispeed(portopts_p->toptions))
+		if (portopts_p->fd > -1 && cfgetispeed(portopts_p->toptions))
 			play_connect(portopts_p, dispopts_p);
 		return (1);
 	}
