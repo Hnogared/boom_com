@@ -24,7 +24,7 @@
 
 # define MSG_LAYOUT2	" > Connecte a la bombe\n\n"\
 	" # [1] Quitter le programme (ou tapez 'exit')\n"\
-	" # [2] Deconnection de la bombe\n"\
+	" # [2] Connection en mode administrateur\n"\
 	" # [3] Scan du systeme\n"
 
 # define MSG_LAYOUT3	" > Scan effectue\n"\
@@ -34,7 +34,7 @@
 	" * Par exemple, afin d'attaquer l'ID FOO42 lancez : "\
 	"'firewall-ext FOO42'\n"\
 	" # [1] Quitter le programme (ou tapez 'exit')\n"\
-	" # [2] Deconnection de la bombe\n"
+	" # [2] Connection en mode administrateur\n"\
 
 # define MSG_LAYOUT_FIREWALLOFF	" > Attaque reussie\n"\
 	" * Le firewall a ete partiellement desactive\n"\
@@ -48,19 +48,19 @@
 	"        []    []\n"\
 	"          [][]\n"\
 	" # [1] Quitter le programme (ou tapez 'exit')\n"\
-	" # [2] Deconnection de la bombe\n"
+	" # [2] Connection en mode administrateur\n"\
 
 # define MSG_LAYOUT_LAB	" > Firewall desactive, acces a la memoire ouvert\n"\
 	" * 'bit_stuffer' est un programme de corruption de memoire.\n"\
 	" * Lancez-le et faites overflow la memoire de la bombe pour en "\
 	"retirer des donnees\n\n"\
 	" # [1] Quitter le programme (ou tapez 'exit')\n"\
-	" # [2] Deconnection de la bombe\n"\
+	" # [2] Connection en mode administrateur\n"\
 	" # [3] Executer 'bit_stuffer'\n"
 
 # define MSG_LAYOUT_BYTES	" > Overflow de la memoire\n"\
 	" # [1] Quitter le programme (ou tapez 'exit')\n"\
-	" # [2] Deconnection de la bombe\n"\
+	" # [2] Connection en mode administrateur\n"\
 	" # [3] Extraction des donnees corrompues\n"
 
 # define MSG_LAYOUT_PASSWORD	" > Affichage de la memoire corrompue\n"\
@@ -73,7 +73,7 @@
 	" * Veuillez vous referer a tableau ascii (man ascii) "\
 	"pour l'interpretation de chaque octet.\n"\
 	" # [1] Quitter le programme (ou tapez 'exit')\n"\
-	" # [2] Deconnection de la bombe\n"
+	" # [2] Connection en mode administrateur\n"\
 
 #endif
 

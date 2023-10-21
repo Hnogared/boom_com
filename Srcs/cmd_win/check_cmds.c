@@ -46,6 +46,8 @@ int	check_choice(t_data *data_p)
 			goto_layout_password(data_p, true);
 		return (1);
 	}
+	if (dispopts_p->layout < 0)
+		write_bomb_in(data_p, dispopts_p->cmd);
 	return (0);
 }
 
